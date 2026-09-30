@@ -48,6 +48,7 @@ import { useMobilePagination } from "@/hooks/use-mobile-pagination";
 // Exam card
 import { ExamFileCard } from "./exam-file-card";
 import { ExamQuickViewDialog } from "./exam-quick-view-dialog";
+import { createExamPrintDialogStore, ExamPrintDialog } from "./exam-print-dialog";
 import { SimilarExamBlueprintModal } from "@/app/(director)/director/workbench/exams/similar/_components/similar-exam-blueprint-modal";
 
 import { ExamListRow } from "./exam-list-client-parts/exam-list-row";
@@ -211,6 +212,9 @@ export function ExamListClient({
   );
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  // 카드 「인쇄」 대화상자 — 목록 전체에 1개(인쇄 루트 중복 방지). 열림 상태는 스토어에 둔다: 목록
+  // state 로 두면 여는 순간 카드 전부(각자 첫 장 조판)가 다시 렌더되어 대화상자가 늦게 뜬다.
+  const [printDialogStore] = useState(createExamPrintDialogStore);
   // 과제 배포 컴포저 대상 시험지 — null 이면 닫힘(EXAM 프리셋 고정 진입).
   const [assignExam, setAssignExam] = useState<{
     id: string;
@@ -370,6 +374,16 @@ export function ExamListClient({
     setQuickViewExamId(examId);
     setQuickViewOpen(true);
   }, []);
+
+  // 카드 인쇄 — 빠른보기를 먼저 닫아 #exam-paper-print-root 가 둘이 되지 않게 한다(닫힘 애니메이션 중
+  // 겹치면 인쇄 컨트롤러가 첫 매칭 루트가 될 때까지 기다린다).
+  const openPrintDialog = useCallback(
+    (exam: ExamItem) => {
+      setQuickViewOpen(false); // 이미 닫혀 있으면 React 가 렌더 없이 넘긴다
+      printDialogStore.set({ examId: exam.id, title: exam.title, updatedAt: exam.updatedAt });
+    },
+    [printDialogStore],
+  );
 
   // ─── 과제 배포(U5) — 시험지 → AssignmentComposer preset EXAM 진입 ───
   // 국어 목록(subjectScope="KOREAN")은 서버 가드(createStudyAssignment KOREAN
@@ -714,6 +728,7 @@ export function ExamListClient({
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
                       onAssign={openAssignComposer}
+                      onPrint={openPrintDialog}
                       assignLocked={assignLocked}
                       deploymentSummary={deploymentSummaries[exam.id]}
                     />
@@ -768,6 +783,8 @@ export function ExamListClient({
         open={quickViewOpen}
         onOpenChange={setQuickViewOpen}
       />
+
+      <ExamPrintDialog store={printDialogStore} />
 
       {/* 과제 배포 컴포저 — EXAM 프리셋 고정(기본 태블릿 응시).
           완료 시 목록 새로고침 + 과제 관리 딥링크 토스트. */}

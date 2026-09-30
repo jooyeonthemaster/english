@@ -2,18 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
 import { logAppEvent } from "@/lib/app-events";
-import { buildBuilderHwpxDocument } from "./_lib/builder";
+import { incrementExamPrintCountRow } from "@/lib/exams/exam-print-count";
+import { buildExamHwpxDocument } from "./_lib/exam-document";
 import { packageHwpx } from "./_lib/package";
 import { MIMETYPE } from "./_lib/static-files";
-import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
-import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
-import { toEmbeddableImageDataUrl } from "@/lib/server-image";
-import type {
-  BuilderItem,
-  BuilderSettings,
-} from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
-import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
-import type { BuilderItemResolved } from "./_lib/render/question";
+import type { HwpxDocument } from "./_lib/types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -44,136 +37,14 @@ function formatExamDateLabel(value: Date | string | null): string {
   return Number.isNaN(date.getTime()) ? "" : EXAM_DATE_LABEL_FORMAT.format(date);
 }
 
-function parseSettings(settings: string | null): BuilderSettings | null {
-  if (!settings) return null;
-  try {
-    const parsed = JSON.parse(settings) as BuilderSettings;
-    if (
-      parsed?.source !== "exam-paper-builder-v1" &&
-      parsed?.source !== "exam-paper-builder-v2"
-    ) {
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-function resolveBuilderItems(
-  questions: ExamQuestionData[],
-  items: BuilderItem[],
-  blocks?: BuilderSettings["blocks"],
-): BuilderItemResolved[] {
-  const byQuestionId = new Map(
-    questions.map((item) => [item.question.id, item]),
+/** 묶음 유지(keep-policy) 진단 한 줄 — 흐름형 본문이 아니면(구형 표 경로) 정책을 부르지 않는다. */
+function keepDiagnosticsLine(doc: HwpxDocument, examId: string): string {
+  const keep = doc.diagnostics?.keep;
+  if (!keep) return `[export-hwpx] keep chains=- capped=- conflicts=- (not applied) exam=${examId}`;
+  return (
+    `[export-hwpx] keep chains=${keep.chains} capped=${keep.cappedChains} conflicts=${keep.breakConflicts}` +
+    ` flagged=${keep.flagged} droppedKeepLines=${keep.droppedKeepLines} enabled=${keep.enabled} exam=${examId}`
   );
-  // 문항 단위 서식(글자 크기·굵게·기울임·정렬)은 settings.blocks 에만 저장되므로
-  // (settings.items 는 레거시 문항 목록) localId·questionId 로 블록을 찾아 병합한다.
-  const blockByLocalId = new Map<string, NonNullable<typeof blocks>[number]>();
-  const blockByQuestionId = new Map<string, NonNullable<typeof blocks>[number]>();
-  for (const b of blocks ?? []) {
-    if (b.localId) blockByLocalId.set(b.localId, b);
-    if (b.questionId) blockByQuestionId.set(b.questionId, b);
-  }
-
-  return items
-    .map((item, index) => {
-      const original = byQuestionId.get(item.questionId);
-      if (!original) return null;
-      const forceSourcePassage = shouldForceBuilderSourcePassage(original, item);
-      const questionText = repairGrammarCorrectionQuestionText({
-        subType: original.question.subType,
-        questionText: item.questionText || original.question.questionText,
-        structuredData: (original.question as { structuredData?: unknown }).structuredData,
-      });
-      const fmtBlock =
-        (item.localId ? blockByLocalId.get(item.localId) : undefined) ??
-        blockByQuestionId.get(item.questionId);
-      return {
-        ...item,
-        questionText,
-        includePassage: item.includePassage !== false || forceSourcePassage,
-        orderNum: item.orderNum ?? index + 1,
-        points: item.points ?? original.points,
-        blockFontPt: fmtBlock?.blockFontPt ?? null,
-        blockBold: fmtBlock?.blockBold ?? false,
-        blockItalic: fmtBlock?.blockItalic ?? false,
-        blockAlign: fmtBlock?.blockAlign ?? "left",
-        // 강제 나눔(쪽/단)·「앞 항목에 붙이기」도 서식과 같은 이유로 blocks 가 정본이다
-        // (v2 빌더가 실제로 편집하는 배열). 레거시 items 저장분을 위해 item 값으로 폴백.
-        // HWPX 조판(appendQuestionGroups)이 이 두 값을 읽어 SPEC §3.2 를 적용한다.
-        breakBefore: fmtBlock?.breakBefore ?? item.breakBefore ?? "auto",
-        keepWithPrev: fmtBlock?.keepWithPrev ?? item.keepWithPrev ?? false,
-        sourceQuestion: original.question,
-      } as BuilderItemResolved;
-    })
-    .filter((it): it is BuilderItemResolved => Boolean(it));
-}
-
-function shouldForceBuilderSourcePassage(
-  original: ExamQuestionData,
-  item: Pick<BuilderItem, "questionText" | "passageContent">,
-) {
-  const passageContent = item.passageContent || original.question.passage?.content || "";
-  return shouldForceSourcePassage({
-    subType: original.question.subType,
-    questionText: item.questionText || original.question.questionText,
-    structuredData: (original.question as { structuredData?: unknown }).structuredData,
-    passage: { content: passageContent },
-  });
-}
-
-function applyBuilderSettings(
-  questions: ExamQuestionData[],
-  settings: BuilderSettings | null,
-): ExamQuestionData[] {
-  if (!settings?.items?.length) return questions;
-
-  const byQuestionId = new Map(
-    questions.map((item) => [item.question.id, item]),
-  );
-
-  return settings.items
-    .map((item, index) => {
-      const original = byQuestionId.get(item.questionId);
-      if (!original) return null;
-
-      const includePassage =
-        item.includePassage !== false || shouldForceBuilderSourcePassage(original, item);
-      const passage =
-        !includePassage
-          ? null
-          : {
-              title:
-                item.passageTitle || original.question.passage?.title || "",
-              content:
-                item.passageContent ||
-                original.question.passage?.content ||
-                "",
-            };
-
-      return {
-        ...original,
-        orderNum: index + 1,
-        points: item.points || original.points,
-        question: {
-          ...original.question,
-          questionText: repairGrammarCorrectionQuestionText({
-            subType: original.question.subType,
-            questionText: item.questionText || original.question.questionText,
-            structuredData: (original.question as { structuredData?: unknown }).structuredData,
-          }),
-          options: item.options
-            ? JSON.stringify(item.options)
-            : original.question.options,
-          correctAnswer:
-            item.correctAnswer ?? original.question.correctAnswer,
-          passage,
-        },
-      } satisfies ExamQuestionData;
-    })
-    .filter((item): item is ExamQuestionData => Boolean(item));
 }
 
 export async function GET(
@@ -222,64 +93,23 @@ export async function GET(
       );
     }
 
-    const settings = parseSettings(exam.settings);
-    const examQuestions = exam.questions as unknown as ExamQuestionData[];
-
-    // 한컴이 임베드 못 하는 이미지 포맷(webp 등)을 PNG 로 변환 — hp:pic 임베드에 png/jpg/gif/bmp 만.
-    // 본문 이미지 블록과 **학원 로고**를 함께 변환한다. 로고는 E36 에서 표지에 렌더되기
-    // 시작했는데(그 전에는 HWPX 어디에도 안 그려졌다) 여기서 빠뜨리면 webp 로고가
-    // cover.ts 의 디코드에서 조용히 탈락해 표지에 아무것도 안 나온다.
-    // (DOCX 라우트는 이미 같은 변환을 한다 — export-docx/route.ts 의 academyLogoDataUrl.)
-    if (settings) {
-      await Promise.all([
-        ...(Array.isArray(settings.blocks)
-          ? settings.blocks.map(async (b) => {
-              if (b.blockType === "image" && b.imageDataUrl) {
-                b.imageDataUrl = await toEmbeddableImageDataUrl(b.imageDataUrl);
-              }
-            })
-          : []),
-        (async () => {
-          if (settings.header?.academyLogoDataUrl) {
-            settings.header.academyLogoDataUrl = await toEmbeddableImageDataUrl(
-              settings.header.academyLogoDataUrl,
-            );
-          }
-        })(),
-      ]);
-    }
-
-    const resolvedItems = settings
-      ? resolveBuilderItems(examQuestions, settings.items, settings.blocks)
-      : examQuestions.map<BuilderItemResolved>((eq) => ({
-          questionId: eq.question.id,
-          orderNum: eq.orderNum,
-          points: eq.points,
-          sourceQuestion: eq.question,
-        }));
-    const fullExamQuestions = settings
-      ? applyBuilderSettings(examQuestions, settings)
-      : examQuestions;
-
-    const doc = buildBuilderHwpxDocument({
+    // 「무엇을 찍을지」(문항·지문·답란·배지·정답표)는 웹 상세·인쇄와 같은 공용 정본이 정한다
+    // (saved-paper-items.buildPaperItemsFromExam — docs/EXAM-PAPER-MODEL.md §1~§4). 여기서 재해석하지 않는다.
+    const { doc } = await buildExamHwpxDocument({
       title: exam.title,
-      settings,
-      resolvedItems,
+      settings: exam.settings,
+      questions: exam.questions,
       includeAnswers,
-      fullExamQuestions,
-      // 표지 정보 박스의 "시험일" 칸 — exam.examDate 는 settings 에 없어서 따로 넘긴다.
       examDateLabel: formatExamDateLabel(exam.examDate),
     });
+    console.info(keepDiagnosticsLine(doc, exam.id));
 
     const buffer = await packageHwpx(doc);
 
-    // 출력(HWPX/HWPX해설) 1회 → 인쇄 횟수 +1
+    // 출력(HWPX/HWPX해설) 1회 → 인쇄 횟수 +1 (updatedAt 은 그대로 — 내보내기는 수정이 아니다, COH-15)
     // 파일 버퍼 생성은 이미 끝났으므로 카운트 갱신 실패가 다운로드를 깨뜨리면 안 된다.
     try {
-      await prisma.exam.update({
-        where: { id: examId },
-        data: { printCount: { increment: 1 } },
-      });
+      await incrementExamPrintCountRow(exam.id, staff.academyId);
     } catch (err) {
       console.error("[export-hwpx] printCount 증가 실패(무시)", err);
     }

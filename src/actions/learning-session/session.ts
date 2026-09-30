@@ -33,8 +33,9 @@ export async function startSession(
   const session = await requireStudent();
   const studentId = session.studentId;
 
-  const passage = await prisma.passage.findUnique({
-    where: { id: passageId },
+  // 학원 범위(IDOR 수리 26-09-30) — 학생의 학원 지문만. 아래 세션·문항·분석은 이 지문 id 로만 찾는다.
+  const passage = await prisma.passage.findFirst({
+    where: { id: passageId, academyId: session.academyId },
     select: { id: true, title: true, content: true },
   });
   if (!passage) throw new Error("지문을 찾을 수 없습니다.");
@@ -81,7 +82,7 @@ export async function startSession(
   const questionIds: string[] = JSON.parse(prebuilt.questionIds);
   const [questions, analysis] = await Promise.all([
     prisma.naeshinQuestion.findMany({
-      where: { id: { in: questionIds } },
+      where: { id: { in: questionIds }, passageId: passage.id },
       include: { explanation: true },
     }),
     prisma.passageAnalysis.findUnique({
@@ -161,14 +162,19 @@ export async function startReviewSession(
   const session = await getStudentSession();
   if (!session) throw new Error("로그인이 필요합니다.");
 
-  const passage = await prisma.passage.findUnique({
-    where: { id: passageId },
+  // 학원 범위(IDOR 수리 26-09-30) — 학생의 학원 지문과 그 지문의 문항만.
+  const passage = await prisma.passage.findFirst({
+    where: { id: passageId, academyId: session.academyId },
     select: { id: true, title: true, content: true },
   });
   if (!passage) throw new Error("지문을 찾을 수 없습니다.");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: Record<string, unknown> = { id: { in: questionIds } };
+  const where: Record<string, unknown> = {
+    id: { in: questionIds },
+    passageId: passage.id,
+    academyId: session.academyId,
+  };
   if (category) where.learningCategory = category;
 
   const questions = await prisma.naeshinQuestion.findMany({

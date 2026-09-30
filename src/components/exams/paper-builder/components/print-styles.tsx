@@ -117,9 +117,12 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           box-sizing: border-box !important;
           border-radius: 0 !important;
           display: block !important;
-          /* HWPX 다운로드와 동일 글꼴(맑은 고딕)로 인쇄 */
+          /* HWPX 다운로드와 동일 글꼴(맑은 고딕)로 인쇄 — 미리보기가 쓰는 임베드 맑은 고딕
+             (Malgun Gothic Exam, globals.css @font-face)을 맨 앞에 둔다. 시스템 맑은 고딕이 없는
+             기기(맥)에서 인쇄만 다른 글꼴로 흘러 줄 수가 늘면, 미리보기 기준으로 나눈 칸이
+             인쇄에서 페이지 아래로 잘린다(overflow:hidden). */
           font-family:
-            "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif !important;
+            "Malgun Gothic Exam", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif !important;
         }
 
         /* 인쇄 시 내부 콘텐츠를 760 모델 치수로 고정하고 물리 용지에 균일 확대.
@@ -156,6 +159,50 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
         .exam-preview-page-frame:last-child .exam-a4-page {
           page-break-after: auto !important;
           break-after: auto !important;
+        }
+
+        /* 【최후 방어 — 26-09-29】 모든 준비 장치가 뚫려 아직 그려지지 않은(지연 마운트 전) 쪽이
+           인쇄 호스트에 섞이면, 조용한 백지 대신 눈에 띄는 안내를 그 쪽에 찍는다(이번 사고는 석 달
+           동안 신호가 없었다). #exam-print-host 범위라 목록 썸네일·다른 미리보기에는 걸리지 않는다.
+           프레임을 용지 한 장 크기로 세워 뒤 쪽의 쪽 나눔이 밀리지 않게 한다. */
+        #exam-print-host .exam-preview-page-frame[data-exam-page-mounted="false"] {
+          display: block !important;
+          box-sizing: border-box !important;
+          width: ${paperSpec.widthMm}mm !important;
+          height: ${paperSpec.heightMm}mm !important;
+          min-height: ${paperSpec.heightMm}mm !important;
+          overflow: hidden !important;
+          page-break-after: always !important;
+          break-after: page !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        #exam-print-host .exam-preview-page-frame[data-exam-page-mounted="false"]:last-child {
+          page-break-after: auto !important;
+          break-after: auto !important;
+        }
+        #exam-print-host .exam-preview-page-frame[data-exam-page-mounted="false"]::before {
+          content: "이 쪽은 인쇄 준비가 끝나지 않았습니다. 화면의 [인쇄] 버튼으로 다시 인쇄해 주세요.";
+          display: block;
+          padding: 110mm 16mm 0;
+          font-size: 14pt;
+          font-weight: 700;
+          line-height: 1.6;
+          text-align: center;
+          color: #111827;
+          font-family: "Malgun Gothic Exam", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif;
+        }
+
+        /* 대화상자(카드 인쇄 · 빠른보기) 안에서 인쇄할 때 Radix 스크롤 잠금
+           (react-remove-scroll-bar: body[data-scroll-locked]{overflow:hidden !important; margin-right…})
+           이 인쇄 미디어까지 걸려 첫 쪽만 나오는 브라우저(Firefox 등)가 있다 — 시험지 인쇄 중에만
+           푼다. 특이도 (0,2,2) 로 잠금 규칙 (0,1,1) 을 주입 순서와 무관하게 이긴다. */
+        html body.exam-print-active,
+        html body.exam-print-active[data-scroll-locked] {
+          overflow: visible !important;
+          height: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
       }
     `}</style>

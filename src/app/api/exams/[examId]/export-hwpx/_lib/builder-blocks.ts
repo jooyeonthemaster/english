@@ -5,7 +5,7 @@ import type { BuilderItemResolved } from "./render/question";
 import { estimateBlocksHeight } from "./section-xml";
 import { LINE_GAP_MARKER } from "@/components/exams/paper-builder/types";
 import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
-import type { BuilderBlock, BuilderItem } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+import type { BuilderBlock } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import type { BreakType } from "./break-plan";
 // 네이티브 2단 머리말: 전체폭 헤더를 "떠 있는(floating)" 표로 만든다.
 //  - 한컴은 머리말이 일반 흐름 표(treatAsChar="1")면 secPr 파싱을 망가뜨려 본문이
@@ -116,17 +116,13 @@ export function createBreakFlowState(): BreakFlowState {
 }
 
 /**
- * 항목의 강제 나눔 필드(SPEC §3.2)만 떼어 읽는다.
- *
- * HWPX 쪽 BuilderItemResolved(render/question.ts)에는 breakBefore/keepWithPrev 가 아직
- * 선언돼 있지 않다. 값 자체는 라우트의 resolveBuilderItems 가 settings(items/blocks)에서
- * 그대로 실어 보내므로 런타임에는 존재한다 → 저장 타입(BuilderItem)의 두 필드만 좁혀 본다.
- * (render/question.ts 는 이 개편의 담당 파일이 아니라 인터페이스를 넓히지 않았다.)
+ * 항목의 강제 나눔 필드(SPEC §3.2)만 떼어 읽는다. 두 필드는 BuilderItemResolved(render/question.ts)에
+ * 선언돼 있고, 값은 공용 정본 PaperItem → toPaperExportItem(paper-export-items)이 싣는다(라우트 입력).
  */
-type ItemBreakFields = Pick<BuilderItem, "breakBefore" | "keepWithPrev">;
+type ItemBreakFields = Pick<BuilderItemResolved, "breakBefore" | "keepWithPrev">;
 
 export function itemBreakFields(item: BuilderItemResolved): ItemBreakFields {
-  return item as BuilderItemResolved & ItemBreakFields;
+  return item;
 }
 
 /** 두 나눔 중 강한 쪽. page > column > 없음. */
@@ -259,6 +255,7 @@ export function renderCustomBlock(
     return [
       {
         kind: "p",
+        keepRole: "caption", // 섹션 제목이 단/쪽 끝에 홀로 남지 않게(keep-policy.ts)
         style: {
           align,
           leftMargin: 120,

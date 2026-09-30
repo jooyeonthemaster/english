@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -21,6 +22,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { buildPaperItemsFromExam, parseSavedPaperSettings } from "../paper-builder/saved-paper-items";
+import { useMissingSourcePassage } from "../exam-paper-builder-client-parts/missing-passage-warning";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_LABELS } from "./constants";
 import type { ExamDetail } from "./types";
 
@@ -37,6 +40,13 @@ interface HeaderSectionProps {
 export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps) {
   const router = useRouter();
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  // 「시험지 다운로드」(DOCX) 도 미리보기 툴바처럼 「원문 지문 없음」 경고 토스트를 띄운다(CC-12 · MPUI-7).
+  // 판정은 툴바와 같은 공용 정본(buildPaperItemsFromExam → useMissingSourcePassage 의 HWPX·DOCX 기준) — 막지 않는다.
+  const paperItems = useMemo(
+    () => buildPaperItemsFromExam(exam.questions, parseSavedPaperSettings(exam.settings)),
+    [exam.questions, exam.settings],
+  );
+  const missingPassage = useMissingSourcePassage(paperItems);
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
       <div className="flex items-start gap-3 min-w-0">
@@ -122,6 +132,7 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
                   download
                   onClick={(e) => {
                     e.currentTarget.href = `/api/exams/${exam.id}/export-docx?t=${Date.now()}`;
+                    missingPassage.warnExport("DOCX");
                   }}
                 >
                   <FileText className="size-4 mr-2" />
@@ -134,6 +145,7 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
                   download
                   onClick={(e) => {
                     e.currentTarget.href = `/api/exams/${exam.id}/export-docx?answers=true&t=${Date.now()}`;
+                    missingPassage.warnExport("DOCX");
                   }}
                 >
                   <FileText className="size-4 mr-2" />

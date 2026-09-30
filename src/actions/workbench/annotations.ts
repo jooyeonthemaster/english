@@ -16,9 +16,10 @@ import type {
 // so the next analysis run re-reads the latest teacher intent.
 // ---------------------------------------------------------------------------
 export async function getPassageAnnotations(passageId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
+  // 학원 범위 — 남의 학원 지문 id 는 빈 목록(존재 여부를 드러내지 않는다, IDOR 수리 26-09-30).
   const rows = await prisma.passageNote.findMany({
-    where: { passageId },
+    where: { passageId, passage: { academyId: staff.academyId } },
     orderBy: { order: "asc" },
   });
   return rows.map((r) => ({
@@ -91,22 +92,20 @@ export async function updatePassageAnalysis(
   analysisData: string
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const staff = await requireAuth();
 
-    const existing = await prisma.passageAnalysis.findUnique({
-      where: { passageId },
-    });
-
-    if (!existing) {
-      return { success: false, error: "분석 데이터가 존재하지 않습니다." };
-    }
-
-    await prisma.passageAnalysis.update({
-      where: { passageId },
+    // 학원 범위 — 지문이 이 학원 것일 때만 덮어쓴다(IDOR 수리 26-09-30). 없거나 남의 학원
+    // 지문이면 같은 문구로 떨어진다(존재 여부를 드러내지 않는다). 조회·갱신을 한 문장으로 묶는다.
+    const result = await prisma.passageAnalysis.updateMany({
+      where: { passageId, passage: { academyId: staff.academyId } },
       data: {
         analysisData,
       },
     });
+
+    if (result.count === 0) {
+      return { success: false, error: "분석 데이터가 존재하지 않습니다." };
+    }
 
     revalidatePath(`/director/workbench/passages/${passageId}`);
     return { success: true };

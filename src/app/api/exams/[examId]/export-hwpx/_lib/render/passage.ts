@@ -52,6 +52,29 @@ function makePassageParas(
   });
 }
 
+/**
+ * 세트 안내문 「[n~m] 다음 글을 읽고, 물음에 답하시오.」(공용 buildGroups 의 group.setPrompt) —
+ * 웹(a4-paper-page)처럼 지문 박스 첫머리, 지문 제목보다 위에 굵게 한 줄. 지문 첫 줄과 한 단에 둔다(caption).
+ */
+export function renderSetPrompt(setPrompt: string, compact: boolean): ParagraphNode[] {
+  const text = setPrompt.trim();
+  if (!text) return [];
+  return [
+    {
+      kind: "p",
+      keepRole: "caption",
+      style: { align: "LEFT", spaceAfter: 60, lineSpacingPct: compact ? 146 : 158 },
+      runs: [
+        txt(text, {
+          size: compact ? SIZE.bodyCompact : SIZE.body,
+          bold: true,
+          color: COLORS.black,
+        }),
+      ],
+    },
+  ];
+}
+
 export function renderPassage(opts: PassageOptions): BlockNode[] {
   const {
     passageTitle,
@@ -70,6 +93,7 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
   if (showPassageTitle && passageTitle.trim()) {
     inner.push({
       kind: "p",
+      keepRole: "caption", // 지문 제목은 지문 첫 줄과 한 단에(keep-policy.ts)
       style: { align: "LEFT", spaceAfter: 60, lineSpacingPct: 130 },
       runs: [
         txt(passageTitle.toUpperCase(), {

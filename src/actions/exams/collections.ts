@@ -8,6 +8,7 @@ import {
   assertExamsBelongToAcademy,
 } from "./_helpers";
 import type { ActionResult } from "./_types";
+import { pickFolderPatch } from "@/actions/workbench/_lib/folder-scope";
 import {
   buildExamCollectionSubjectScopeWhere,
   isMissingColumnError,
@@ -107,7 +108,8 @@ export async function createExamCollection(data: {
 
     const collection = await prisma.examCollection.create({
       // 과목 스탬핑 — 국어만 'KOREAN'. 미지정이면 subject 미포함(조건부 spread).
-      data: { ...baseData, ...(data.subject ? { subject: data.subject } : {}) },
+      // 서버 액션 인자는 신뢰할 수 없다 — 과목은 "KOREAN" 만 받는다(그 밖의 값은 영어 = 미포함).
+      data: { ...baseData, ...(data.subject === "KOREAN" ? { subject: "KOREAN" as const } : {}) },
       select: { id: true },
     });
     if (data.subject === "KOREAN") revalidatePath("/director/korean/exams");
@@ -116,7 +118,7 @@ export async function createExamCollection(data: {
   } catch (error) {
     // 우아한 강등 — 국어 스코프 생성인데 subject 컬럼이 아직 없으면(P2022) subject 를
     // 빼고 재시도한다(레거시=과목 미분리 공유 폴더로 생성, 502 대신 UX 유지).
-    if (data.subject && isMissingColumnError(error)) {
+    if (data.subject === "KOREAN" && isMissingColumnError(error)) {
       try {
         const collection = await prisma.examCollection.create({
           data: baseData,
@@ -143,7 +145,14 @@ export async function updateExamCollection(
     const staff = await requireStaffAuth();
     await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
 
-    await prisma.examCollection.update({ where: { id: collectionId }, data });
+    // 대량 할당 차단(IDOR-R5, 26-09-30) — 서버 액션 인자는 신뢰할 수 없다. 클라이언트 객체를 그대로 넘기면
+    // academyId(폴더를 남의 학원으로)·parentId(남의 학원 폴더 아래로)·subject 를 실어 보낼 수 있었다.
+    // 이름·설명·색만 통과시키고(지문·문제 폴더와 같은 pickFolderPatch), 쓰기도 학원 범위로 건다.
+    const updated = await prisma.examCollection.updateMany({
+      where: { id: collectionId, academyId: staff.academyId },
+      data: pickFolderPatch(data),
+    });
+    if (updated.count !== 1) throw new Error("폴더를 찾을 수 없습니다.");
     revalidatePath("/director/exams");
     return { success: true };
   } catch (error) {

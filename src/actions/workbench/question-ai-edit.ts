@@ -13,6 +13,7 @@ import {
 } from "@/lib/question-generation-plans";
 
 import { requireAuth } from "./_helpers";
+import { preserveSourcePassage } from "./_lib/source-passage-preserve";
 import type { ActionResult } from "./_types";
 
 type Rec = Record<string, unknown>;
@@ -226,12 +227,17 @@ export async function saveAiEditedAsNew(
     const withPlan = mergeQuestionGenerationPlanTag(baseTags, plan);
     const tags = withPlan.includes(AI_EDIT_TAG) ? withPlan : [...withPlan, AI_EDIT_TAG];
 
-    const structuredData = {
-      ...edited,
-      _generationPlan: plan,
-      _editedFrom: sourceQuestionId,
-      tags,
-    };
+    // 원본이 지문 삭제로 원문을 떼어 보관한 문제(_sourcePassage)라면 사본도 같은 원문을 잇는다 —
+    // passageId 를 승계하듯 보관 원문도 승계한다(클라이언트가 보낸 값은 버린다, PI-R3).
+    const structuredData = preserveSourcePassage(
+      {
+        ...edited,
+        _generationPlan: plan,
+        _editedFrom: sourceQuestionId,
+        tags,
+      },
+      source.structuredData,
+    );
 
     const optionsArr = Array.isArray(edited.options) ? edited.options : null;
     // SW-LEAK-1: 학생 노출 questionText 는 항상 서버에서 구조화 데이터로 재도출(마스킹 보장).
@@ -309,7 +315,11 @@ export async function applyAiEditToQuestion(
       readTags(edited.tags ?? existing.tags),
       plan,
     );
-    const structuredData = { ...edited, _generationPlan: plan, tags };
+    // 지문 삭제로 떼어 보관한 원문(_sourcePassage)은 덮어쓰기에도 남긴다(PI-R3).
+    const structuredData = preserveSourcePassage(
+      { ...edited, _generationPlan: plan, tags },
+      existing.structuredData,
+    );
     const optionsArr = Array.isArray(edited.options) ? edited.options : null;
     // SW-LEAK-1: 학생 노출 questionText 는 항상 서버에서 구조화 데이터로 재도출(마스킹 보장).
     const questionText = buildGeneratedQuestionText(structuredData);

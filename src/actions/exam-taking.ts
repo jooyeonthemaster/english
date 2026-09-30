@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getStudentSession } from "@/lib/auth-student";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 import { isKoQuestionType } from "@/lib/korean/registry";
@@ -41,9 +43,36 @@ function buildStudentQuestionText(question: {
 
 // ---------------------------------------------------------------------------
 // Student Exam Actions
+//
+// 인증·범위(IDOR 수리 26-09-30): 이 액션들은 예전에 인증 없이 클라이언트가 준 studentId·
+// submissionId 를 그대로 믿었다(남의 시험 문항·정답·해설을 읽고 답안을 바꿀 수 있었다).
+// 이제 학생 세션(student-session 쿠키)의 studentId·academyId 와 맞을 때만 동작한다.
+// 호출 화면(/exams)은 localStorage studentId 를 읽는데 그 값을 쓰는 코드가 없어 지금은
+// 「로그인이 필요합니다」로 멈춰 있다 — 정상 흐름에는 영향이 없다(운영 SELECT: 응시 12건 전부 같은 학원).
 // ---------------------------------------------------------------------------
 
+/** 학생 세션이 있고 그 학생이 요청한 studentId 와 같을 때만 세션을 돌려준다. */
+async function studentSessionFor(studentId: unknown) {
+  const session = await getStudentSession();
+  if (!session || typeof studentId !== "string" || session.studentId !== studentId) {
+    return null;
+  }
+  return session;
+}
+
+/** 로그인한 학생 본인의 응시 행 id 인지 확인한다(아니면 null). */
+async function ownSubmissionId(submissionId: unknown): Promise<string | null> {
+  const session = await getStudentSession();
+  if (!session || typeof submissionId !== "string") return null;
+  const row = await prisma.examSubmission.findFirst({
+    where: { id: submissionId, studentId: session.studentId },
+    select: { id: true },
+  });
+  return row ? row.id : null;
+}
+
 export async function getAvailableExams(studentId: string) {
+  if (!(await studentSessionFor(studentId))) return [];
   // Get student's class enrollments
   const enrollments = await prisma.classEnrollment.findMany({
     where: { studentId, status: "ENROLLED" },
@@ -106,9 +135,12 @@ export async function startExam(
   studentId: string
 ): Promise<ActionResult> {
   try {
-    // Check if exam exists and is available
-    const exam = await prisma.exam.findUnique({
-      where: { id: examId },
+    const session = await studentSessionFor(studentId);
+    if (!session) return { success: false, error: "로그인이 필요합니다." };
+
+    // Check if exam exists and is available — 학생의 학원 시험만.
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: session.academyId },
       include: {
         questions: {
           // 휴지통(soft delete) 가드 — 삭제된 문제는 학생 시험화면에 절대 노출 금지.
@@ -226,6 +258,9 @@ export async function saveAnswer(
   answer: string
 ): Promise<ActionResult> {
   try {
+    if (!(await ownSubmissionId(submissionId))) {
+      return { success: false, error: "답안을 저장할 수 없습니다." };
+    }
     const submission = await prisma.examSubmission.findUnique({
       where: { id: submissionId },
     });
@@ -252,6 +287,9 @@ export async function submitExam(
   submissionId: string
 ): Promise<ActionResult> {
   try {
+    if (!(await ownSubmissionId(submissionId))) {
+      return { success: false, error: "제출을 찾을 수 없습니다." };
+    }
     const submission = await prisma.examSubmission.findUnique({
       where: { id: submissionId },
       include: {
@@ -343,9 +381,20 @@ export async function submitExam(
   }
 }
 
+/**
+ * 결과를 볼 수 있는 응시 상태 — 제출(SUBMITTED)·채점(GRADED)뿐. 배정(ASSIGNED)·응시 중(IN_PROGRESS)에
+ * 결과를 돌려주면 시험 도중 서버 액션을 직접 불러 정답·해설을 받아 갈 수 있다(IDOR-R4, 26-09-30).
+ */
+const RESULT_VISIBLE_STATUSES = ["SUBMITTED", "GRADED"];
+
 export async function getExamResult(submissionId: string) {
-  const submission = await prisma.examSubmission.findUnique({
-    where: { id: submissionId },
+  // 학생 결과 화면(/exams/[examId]/result) 전용 — 교사 화면은 exam-grading·submission-review 액션을 쓴다.
+  // 결과 화면이 꺼져 있으면(SHOW_USER_RESULTS, 화면과 같은 플래그) 서버도 돌려주지 않는다.
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) return null;
+  // 정답·해설이 담기므로 로그인한 학생 본인의, 제출을 마친 응시 결과만 돌려준다.
+  if (!(await ownSubmissionId(submissionId))) return null;
+  const submission = await prisma.examSubmission.findFirst({
+    where: { id: submissionId, status: { in: RESULT_VISIBLE_STATUSES } },
     include: {
       exam: {
         include: {

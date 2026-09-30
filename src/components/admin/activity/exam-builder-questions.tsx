@@ -3,7 +3,8 @@
 // ============================================================================
 // ExamBuilderQuestions — 생성된 문제를 자료 뷰어에서 바로 보고, 원하는 문항을
 // 골라 "시험지 만들기 → DOCX" 로 즉석 출력한다. (학원 콘텐츠로 안 들어가도 됨)
-// 실제 시험지 생성(buildExamDocument)를 그대로 쓰는 /api/admin/exam-export 호출.
+// 보기·인쇄(/admin/exam-print)와 DOCX(/api/admin/exam-export)는 학원 시험지와 같은 공용 정본
+// (buildPaperItemsFromExam · buildExamDocxDocument)으로 만든다 — settings 없는 시험지와 같은 규칙.
 // ============================================================================
 
 import { useState } from "react";

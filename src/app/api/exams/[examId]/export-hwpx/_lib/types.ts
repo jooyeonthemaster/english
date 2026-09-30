@@ -74,7 +74,22 @@ export interface ParaStyle {
   spaceBefore?: number;
   spaceAfter?: number;
   lineSpacingPct?: number;  // 100 = single, 160 = ~1.6
+  // OWPML <hh:breakSetting> 플래그(HWP 5.0 문단 모양 속성1 bit16~18). 렌더러가 직접 쓰지
+  // 않는다 — keepRole 을 보고 keep-policy.ts(applyKeepPolicy)만 채운다.
+  widowOrphan?: boolean;    // 외톨이줄 보호
+  keepWithNext?: boolean;   // 다음 문단과 함께
+  keepLines?: boolean;      // 문단 보호(문단 안에서 나누지 않음)
 }
+
+/**
+ * 묶음 유지(keep-together) 의미 태그. 직렬화에는 영향이 없고, 흐름형 본문(네이티브 2단·
+ * 1단 흐름)에서 keep-policy.ts 가 breakSetting 플래그로 바꾼다. 표 셀 경로는 무시한다.
+ *   questionHead  "N. [점·유형] 발문" — 단/쪽 끝에 홀로 남으면 안 된다
+ *   caption       <보기>·<요약문> 라벨, ↓, 〈 보 기 〉/[조건], 지문 제목, 해설 라벨, 섹션 제목
+ *   optionHead    다중 빈칸 (A)/(B) 헤더 행
+ *   option        ①~⑤ 선지와 객관식 추가 슬롯 — 연속 선지끼리 한 묶음
+ */
+export type KeepRole = "questionHead" | "caption" | "optionHead" | "option";
 
 export interface ParagraphNode {
   kind: "p";
@@ -82,6 +97,7 @@ export interface ParagraphNode {
   runs: RunNode[];
   pageBreak?: boolean;
   columnBreak?: boolean;
+  keepRole?: KeepRole;
 }
 
 // =============================================================================
@@ -145,6 +161,14 @@ export interface TableNode {
   columnBreak?: boolean;
   // 지정 시 본문 흐름에서 빠진 "떠 있는" 표로 직렬화(전체폭 머리말용).
   float?: TableFloat;
+  /**
+   * 묶음 유지 역할(흐름형 본문의 최상위 표만) — 현재 "caption" 은 정답 배지 표(render/answer.ts):
+   * 배지가 단/쪽 끝에 홀로 남지 않게 뒤(해설 라벨)와 묶고, 바로 앞 선지 묶음도 배지와 묶는다.
+   * 렌더러는 역할만 단다 — keepWithNext 는 keep-policy.ts 만 채운다.
+   */
+  keepRole?: KeepRole;
+  /** keep-policy.ts 가 채운다. 표를 감싸는 문단의 paraPr(breakSetting keepWithNext)로 직렬화된다. */
+  keepWithNext?: boolean;
 }
 
 export interface ColumnControlNode {
@@ -199,6 +223,17 @@ export interface HwpxDocument {
   // 템플릿(세리프/산세리프)에 따른 본문 기본 글꼴. 미설정 시 ShapeRegistry 기본값 사용.
   defaultFontKr?: string;
   defaultFontLatin?: string;
+  // 직렬화에 쓰이지 않는 진단값(로그·테스트용). keep = keep-policy.ts applyKeepPolicy 통계.
+  diagnostics?: {
+    keep?: {
+      enabled: boolean;
+      flagged: number;
+      chains: number;
+      cappedChains: number;
+      breakConflicts: number;
+      droppedKeepLines: number;
+    };
+  };
 }
 
 // =============================================================================

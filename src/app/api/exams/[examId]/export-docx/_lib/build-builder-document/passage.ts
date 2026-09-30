@@ -3,6 +3,7 @@ import { formatSentenceInsertPassageMarkers } from "@/components/exams/paper-bui
 import { parseFormattedText } from "../parse-formatted-text";
 import { COLOR, FONT, KR_FONT } from "../styles";
 import type { DocChild } from "../types";
+import { docxKeep } from "../keep-policy";
 import type { SummaryWritingDocBlocks } from "./model";
 import { BODY_LINE_HEIGHT, BODY_LINE_HEIGHT_COMPACT, SIZE_BODY, SIZE_BODY_COMPACT, SIZE_META, SIZE_PASSAGE_TITLE, bodyFont, exactLineSpacing } from "./sizes";
 
@@ -33,10 +34,12 @@ export function buildPassage(opts: {
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
   const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
 
+  // 지문 제목 = 역할 caption(keep-policy.ts) — 지문 첫 줄과 한 단에. 지문 본문 문단은 역할 없음(묶지 않는다).
   const titlePara: Paragraph | null =
     showPassageTitle && passageTitle.trim()
       ? new Paragraph({
           spacing: { after: 60 },
+          ...docxKeep("caption", { hasNext: true }),
           children: [
             new TextRun({
               text: passageTitle.toUpperCase(),
@@ -83,8 +86,10 @@ export function buildPassageTitleParagraph(
   showPassageTitle: boolean,
 ): Paragraph | null {
   if (!showPassageTitle || !passageTitle.trim()) return null;
+  // 내장 지문 제목 = caption — 바로 뒤 문항 머리와 한 단에.
   return new Paragraph({
     spacing: { before: 20, after: 30 },
+    ...docxKeep("caption", { hasNext: true }),
     children: [
       new TextRun({
         text: passageTitle.toUpperCase(),
@@ -133,8 +138,11 @@ export function shouldPlaceInlinePassageBeforeBody(subType: string): boolean {
 
 export function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
   return [
+    // 「주어진 문장」 라벨 = caption(HW-3) — 단 바닥에 라벨만 남고 내용이 다음 단에서 시작하지 않게.
+    // 내용 문단은 역할 없음(사슬 끝 — 첫 줄만 함께 간다).
     new Paragraph({
       spacing: { before: 40, after: 30 },
+      ...docxKeep("caption", { hasNext: true }),
       children: [
         new TextRun({
           text: "주어진 문장",

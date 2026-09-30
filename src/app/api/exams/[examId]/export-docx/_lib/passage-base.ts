@@ -3,29 +3,30 @@ import {
   Paragraph,
   Table,
   TableCell,
-  TableLayoutType,
   TableRow,
   TextRun,
-  WidthType,
 } from "docx";
 import { COLOR, FONT, KR_FONT, PASSAGE_SIZE } from "./styles";
 import { thinBox } from "./borders";
 import { parseFormattedText } from "./parse-formatted-text";
+import { LEGACY_DEFAULT_COLUMN_WIDTH_DXA, gridCellWidth, gridTable, tableGrid } from "./table-geometry";
 
 // ---------------------------------------------------------------------------
 // Base Components
 // ---------------------------------------------------------------------------
 
-export function passageTable(contentParagraphs: Paragraph[]): Table {
-  return new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    layout: TableLayoutType.FIXED,
+export function passageTable(
+  contentParagraphs: Paragraph[],
+  contentWidthDxa: number = LEGACY_DEFAULT_COLUMN_WIDTH_DXA,
+): Table {
+  const grid = tableGrid(contentWidthDxa, [1]);
+  return gridTable(grid, {
     rows: [
       new TableRow({
         children: [
           new TableCell({
             borders: thinBox(COLOR.black, 4), // 0.5pt thick border
-            width: { size: 100, type: WidthType.PERCENTAGE },
+            width: gridCellWidth(grid, 0),
             margins: { top: 160, bottom: 160, left: 240, right: 240 },
             children: contentParagraphs,
           }),

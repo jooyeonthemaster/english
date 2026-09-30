@@ -1,0 +1,395 @@
+{
+ "source": "Chromium(playwright) 실측 — .tmp-crm/lee89/expl-calib.mts, 시험지 글꼴 Malgun Gothic Exam, 26-09-30",
+ "rows": [
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "bullet",
+   "segs": [
+    {
+     "text": "예술이 단순히 현실의 부정적인 면을 보여주는 것을 넘어, 실질적인 집단적 행동(collective action)과 변화를 촉구하는 매개체임을 이해한다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    38
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "① [I](a) [틀림] / [II](b) [맞음] / [III](c) [틀림] / [IV](a) [틀림] / [V](b) [맞음]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    71
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "③ [I](a) [틀림] / [II](a) [틀림] / [III](c) [틀림] / [IV](a) [틀림] / [V](c) [틀림] -> 모든 항목이 어법상 틀린 것으로 구성됨. (정답)",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    71
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "④ [I](c) [틀림] / [II](b) [맞음] / [III](c) [틀림] / [IV](a) [틀림] / [V](c) [틀림]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    71
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "⑤ [I](c) [틀림] / [II](a) [틀림] / [III](a) [맞음] / [IV](b) [맞음] / [V](a) [맞음]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    71
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "이 문항은 지문의 핵심 주제인 '우리의 행동 범위와 감정적 영향력 사이의 간극'을 바탕으로, 가정법 과거 구문(If + 주어 + were to-V, 주어 + would/should/could/might + 동사원형)과 사역동사 make의 수동태 형태(be made to-V)를 결합하여 영작하는 능력을 평가합니다. '만약 우리가 ~을 고려한다면'은 'If we were to consider...'로 영작하여 실현 가능성이 희박하거나 가정의 느낌을 강조하고, 뒤따르는 명사구는 관계대명사 that을 사용하여 'the global systems that make our clothes and devices'로 표현합니다. 주절의 '~을 깨닫게 될 것이다'는 사역동사 make의 수동태 구문인 'would be made to realize...'를 사용하여 인과적 강제성을 지닌 어조를 살리고, realize의 목적어로 간접의문문 'how far our actions reach beyond our feelings'를 연결하여 의미를 완성합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    39,
+    88,
+    138,
+    182,
+    234,
+    271,
+    330,
+    376,
+    428,
+    476
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "이들을 논리적, 문법적으로 결합하면 'the illusion keeping us from admitting that earlier sacrifices were in vain that persisting will justify our past investment(이전의 희생들이 헛수고였음을 인정하는 것을 막아주면서, 지속하는 것이 우리의 과거 투자를 정당화해 줄 것이라는 환상)'가 되어 지문의 논리적 흐름을 가장 정확하게 요약 및 함축합니다. 따라서 올바른 숫자 배열은 10-7-8-6-4-1-2-3-5가 됩니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    50,
+    126,
+    172,
+    209,
+    249
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "전체 논리 흐름 분석:",
+     "bold": true
+    }
+   ],
+   "browserStarts": [
+    0
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "wrong",
+   "segs": [
+    {
+     "text": "(a) ",
+     "bold": true,
+     "tone": "label"
+    },
+    {
+     "text": "(a)의 threatened(위협받는)는 '마지막 기회 관광'의 유인 요인이 되는 멸종 위기종이나 파괴되어 가는 빙하, 산호초 등 '사라질 위기에 처한' 자연 명소를 나타내므로 적절합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    48,
+    90
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "지문에서 Randy는 스케이트보드 타기를 시도조차 하지 않았는데, 그 이유는 \"I could never do that!(난 저걸 절대 못 해!)\"라고 생각했기 때문입니다. 즉, 자신의 능력이나 역량에 대한 강한 의심이 행동하지 않게 만드는 원인입니다. 문장의 후반부에서도 \"If students doubt their competency...\"(학생들이 자신의 역량을 의심하면...)라고 언급하며, 핵심적인 심리적 요인으로 '역량, 능력'을 꼽고 있습니다. 따라서 빈칸에 들어갈 단어로 가장 적절한 것은 '역량, 유능함'을 뜻하는 competency의 의미상 동의어인 ⑤ efficacy(효능감)입니다. 지문 앞부분에서도 스케이트보더가 \"이 도전에 동참하는 다른 사람들처럼 강한 효능감(efficacy)을 가지고 있었다\"고 설명하는 흐름과 완벽히 일치합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    40,
+    92,
+    132,
+    177,
+    224,
+    265,
+    309,
+    351,
+    395
+   ]
+  },
+  {
+   "col": 330,
+   "compact": false,
+   "kind": "wrong",
+   "segs": [
+    {
+     "text": "(D) ",
+     "bold": true,
+     "tone": "label"
+    },
+    {
+     "text": "agree의 목적어 역할을 하는 명사절을 이끌며 뒤에 완벽한 문장 구조(S+V+C)를 갖추고 있으므로 접속사 that이 적절하나, 선행사가 없다는 점에 매몰되어 what으로 고치려는 심리를 자극합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    42,
+    84
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "bullet",
+   "segs": [
+    {
+     "text": "예술이 단순히 현실의 부정적인 면을 보여주는 것을 넘어, 실질적인 집단적 행동(collective action)과 변화를 촉구하는 매개체임을 이해한다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    41
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "① [I](a) [틀림] / [II](b) [맞음] / [III](c) [틀림] / [IV](a) [틀림] / [V](b) [맞음]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "③ [I](a) [틀림] / [II](a) [틀림] / [III](c) [틀림] / [IV](a) [틀림] / [V](c) [틀림] -> 모든 항목이 어법상 틀린 것으로 구성됨. (정답)",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    77
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "④ [I](c) [틀림] / [II](b) [맞음] / [III](c) [틀림] / [IV](a) [틀림] / [V](c) [틀림]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "⑤ [I](c) [틀림] / [II](a) [틀림] / [III](a) [맞음] / [IV](b) [맞음] / [V](a) [맞음]",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "이 문항은 지문의 핵심 주제인 '우리의 행동 범위와 감정적 영향력 사이의 간극'을 바탕으로, 가정법 과거 구문(If + 주어 + were to-V, 주어 + would/should/could/might + 동사원형)과 사역동사 make의 수동태 형태(be made to-V)를 결합하여 영작하는 능력을 평가합니다. '만약 우리가 ~을 고려한다면'은 'If we were to consider...'로 영작하여 실현 가능성이 희박하거나 가정의 느낌을 강조하고, 뒤따르는 명사구는 관계대명사 that을 사용하여 'the global systems that make our clothes and devices'로 표현합니다. 주절의 '~을 깨닫게 될 것이다'는 사역동사 make의 수동태 구문인 'would be made to realize...'를 사용하여 인과적 강제성을 지닌 어조를 살리고, realize의 목적어로 간접의문문 'how far our actions reach beyond our feelings'를 연결하여 의미를 완성합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    42,
+    88,
+    143,
+    189,
+    243,
+    289,
+    353,
+    404,
+    455,
+    517
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "이들을 논리적, 문법적으로 결합하면 'the illusion keeping us from admitting that earlier sacrifices were in vain that persisting will justify our past investment(이전의 희생들이 헛수고였음을 인정하는 것을 막아주면서, 지속하는 것이 우리의 과거 투자를 정당화해 줄 것이라는 환상)'가 되어 지문의 논리적 흐름을 가장 정확하게 요약 및 함축합니다. 따라서 올바른 숫자 배열은 10-7-8-6-4-1-2-3-5가 됩니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    60,
+    135,
+    179,
+    222,
+    264
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "전체 논리 흐름 분석:",
+     "bold": true
+    }
+   ],
+   "browserStarts": [
+    0
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "wrong",
+   "segs": [
+    {
+     "text": "(a) ",
+     "bold": true,
+     "tone": "label"
+    },
+    {
+     "text": "(a)의 threatened(위협받는)는 '마지막 기회 관광'의 유인 요인이 되는 멸종 위기종이나 파괴되어 가는 빙하, 산호초 등 '사라질 위기에 처한' 자연 명소를 나타내므로 적절합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    51,
+    94
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "text",
+   "segs": [
+    {
+     "text": "지문에서 Randy는 스케이트보드 타기를 시도조차 하지 않았는데, 그 이유는 \"I could never do that!(난 저걸 절대 못 해!)\"라고 생각했기 때문입니다. 즉, 자신의 능력이나 역량에 대한 강한 의심이 행동하지 않게 만드는 원인입니다. 문장의 후반부에서도 \"If students doubt their competency...\"(학생들이 자신의 역량을 의심하면...)라고 언급하며, 핵심적인 심리적 요인으로 '역량, 능력'을 꼽고 있습니다. 따라서 빈칸에 들어갈 단어로 가장 적절한 것은 '역량, 유능함'을 뜻하는 competency의 의미상 동의어인 ⑤ efficacy(효능감)입니다. 지문 앞부분에서도 스케이트보더가 \"이 도전에 동참하는 다른 사람들처럼 강한 효능감(efficacy)을 가지고 있었다\"고 설명하는 흐름과 완벽히 일치합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    43,
+    99,
+    141,
+    199,
+    242,
+    286,
+    337,
+    377
+   ]
+  },
+  {
+   "col": 336,
+   "compact": true,
+   "kind": "wrong",
+   "segs": [
+    {
+     "text": "(D) ",
+     "bold": true,
+     "tone": "label"
+    },
+    {
+     "text": "agree의 목적어 역할을 하는 명사절을 이끌며 뒤에 완벽한 문장 구조(S+V+C)를 갖추고 있으므로 접속사 that이 적절하나, 선행사가 없다는 점에 매몰되어 what으로 고치려는 심리를 자극합니다.",
+     "bold": false
+    }
+   ],
+   "browserStarts": [
+    0,
+    43,
+    89
+   ]
+  }
+ ]
+}

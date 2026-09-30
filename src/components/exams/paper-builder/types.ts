@@ -1,4 +1,5 @@
 import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
+import type { ExplanationSlice } from "./explanation-layout";
 
 export type OptionItem = { label: string; text: string };
 
@@ -236,12 +237,16 @@ export type StructRow = {
 export type RenderItemPart = {
   source: PaperItem;
   partKey: string;
+  /** 이 조각에 배치된 블록들의 추정 높이 합(개발 진단 전용 — 렌더 실측과 대조). */
+  estHeight?: number;
   showHeader: boolean;
   showAnswer: boolean;
   showObjectiveAnswer: boolean;
   showCustomBlock: boolean;
   // 인라인 정답·해설(해설 포함 PDF) 블록을 이 part 끝에 렌더할지.
   showExplanation: boolean;
+  // 이 part 에 놓인 해설 조각(exam-font 조판 — 해설이 칸·쪽 경계에서 줄 단위로 갈라진다). 없으면 해설 전체.
+  explanation?: ExplanationSlice;
   questionRenderedLines: string[];
   questionStartLineIndex: number;
   questionTotalLines: number;
@@ -289,6 +294,16 @@ export type PaginationSettings = {
   // (특히 구조화 박스 유형) 원자 페이지 표가 넘쳐 통째로 다음 장으로 밀리는 것을
   // 막기 위해 모든 페이지 용량에서 추가로 뺀다(미지정 시 0 — 웹 미리보기 영향 없음).
   contentSafetyPx?: number;
+  // 실측 넘침 가드(hooks/use-overflow-guarded-pagination) 전용 — `${렌더 페이지 index}:${칸 index}`
+  // 칸의 용량에서 추가로 뺄 px. 미리보기에 그려진 칸이 페이지 아래로 넘치면 가드가 채운다.
+  columnCapacityAdjust?: Readonly<Record<string, number>>;
+  // 줄바꿈 추정 모델. "exam-font" = 미리보기가 쓰는 임베드 글꼴 실측 폭 + 브라우저 줄바꿈 규칙
+  // (exam-text-wrap.ts). 미지정(기본 "legacy") = 종전 평균 폭 근사 — HWPX 분할은 한컴 렌더에
+  // 맞춰 보정된 값이라 그대로 둔다.
+  textMetrics?: "legacy" | "exam-font";
+  // 다중 빈칸 조합 선지의 표면 모양. "grid"(기본 — 미리보기 컬럼 헤더 그리드: 값이 좁은 열 안에서
+  // 접힌다) / "inline"(HWPX — 「값1 …… 값2」 한 문단). 높이 추정 모델이 다르다.
+  multiBlankOptionLayout?: "grid" | "inline";
 };
 
 export type HeaderPatch = Partial<{

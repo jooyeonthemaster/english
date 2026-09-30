@@ -1,6 +1,6 @@
 import { AlignmentType, BorderStyle, Paragraph, TextRun, UnderlineType } from "docx";
 import { formatInlineMarkersForSubtype, multiBlankOptionMatrix, optionDisplayLabel, optionDisplayTextForSubtype, optionOrdinalLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
-import { buildMultiBlankOptionsTable } from "../render-options";
+import { buildMultiBlankOptionsTable, optionKeep } from "../render-options";
 import {
   KO_BOGI_HEADER_LINE_RE,
   KO_CONDITION_HEADER_LINE,
@@ -11,15 +11,17 @@ import {
   koPaperSegmentsFromModel,
   koPaperStemText,
 } from "@/components/exams/paper-builder/korean/ko-paper-adapter";
-import { questionHasEmbeddedPassage, shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
-import { sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
-import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import type { PaperExportItem } from "@/components/exams/paper-builder/paper-export-items";
+import { resolvePaperLayout } from "@/components/exams/paper-builder/paper-layout-defaults";
+import { questionHasEmbeddedPassage } from "@/components/exams/paper-builder/passage-policy";
+import { isFlowStructuredSubtype, sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
 import { isSummaryCompleteMc, isSummaryCompleteSubtype, splitSummaryCompleteMcQuestionText } from "@/components/exams/paper-builder/summary-complete-mc-layout";
 import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { formatSummaryCompleteMcSummaryForDisplay, readSummaryBlankAnswersFromQuestionLike } from "@/lib/summary-complete-mc";
 import { isSummaryWriting } from "@/lib/summary-writing";
 import { NONE, bdr } from "../borders";
+import { docxKeep, estimateTextLines, isStandaloneLabelLine } from "../keep-policy";
 import { parseFormattedText } from "../parse-formatted-text";
 import { COLOR, FONT, KR_FONT } from "../styles";
 import type { DocChild } from "../types";
@@ -27,6 +29,7 @@ import { buildAnswerBlock } from "./answer";
 import type { BuilderItemResolved, BuilderLayout } from "./model";
 import { parseTopicSentenceWritingBlocks } from "./model";
 import { buildGivenBox, buildPassage, buildPassageTitleParagraph, extractGivenBlock, parseSummaryWritingBlocks, shouldPlaceInlinePassageBeforeBody, stripOriginalBlock } from "./passage";
+import { builderPageGeometry } from "./page-geometry";
 import { BODY_LINE_HEIGHT, BODY_LINE_HEIGHT_COMPACT, SIZE_BODY, SIZE_BODY_COMPACT, SIZE_META, SIZE_OPTION, SIZE_OPTION_COMPACT, SIZE_QNUM, SIZE_QNUM_COMPACT, SUBTYPE_LABELS_DOCX, bodyFont, exactLineSpacing } from "./sizes";
 import { firstQuestionLineForHeader, printablePassageTitle, safeParseOptions } from "./util";
 
@@ -36,20 +39,38 @@ import { firstQuestionLineForHeader, printablePassageTitle, safeParseOptions } f
 // 문항 (번호 + 메타 + 본문 + 옵션 + 답란)
 // =============================================================================
 
+/**
+ * 문서 조립(assemble)이 넘기는 문항 — 공용 어댑터 toPaperExportItem 의 결과.
+ * printInlinePassage = 웹이 이 문항 안(구조화 본문)에 그리는 지문(없으면 ""). 문항 안 지문은
+ * 이 값으로만 정한다(includePassage 재해석 금지 — paper-export-items.ts 머리 계약).
+ */
+export type DocxQuestionItem = BuilderItemResolved & Pick<PaperExportItem, "printInlinePassage">;
+
 export function buildQuestionBlock(
-  item: BuilderItemResolved,
+  item: DocxQuestionItem,
   layout: BuilderLayout,
   includeAnswers: boolean,
+  opts: {
+    /** 이 문항이 속한 그룹의 지문 박스가 그려졌는가(웹 fragment.includePassage) — 내장 지문 제목 판정용. */
+    groupPassageShown?: boolean;
+  } = {},
 ): DocChild[] {
   const result: DocChild[] = [];
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta === true;
-  const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
+  // 표시 기본값은 웹과 같은 단일 원천(resolvePaperLayout — showQuestionMeta 기본 false,
+  // showAnswerSpace 기본 true, showPassageTitle 기본 DEFAULT_SHOW_PASSAGE_TITLE).
+  const display = resolvePaperLayout({ layout });
+  const showMeta = display.showQuestionMeta;
+  const showAnswerSpace = display.showAnswerSpace && !includeAnswers;
+  // 문항 안의 표(다중 빈칸 선지·정답 배지)가 들어갈 본문 단 폭(DXA).
+  const bodyColumnWidthDxa = builderPageGeometry(layout).bodyColumnWidthDxa;
 
   const orderNum = item.orderNum ?? 0;
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
-  const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || subType : "";
+  // 메타 배지의 유형 이름 — 라벨 표에 없으면 유형 부분을 생략한다(원시 코드 「UNKNOWN」 등을 찍지 않는다).
+  // 웹 a4-paper-page 의 `subType && SUBTYPE_LABELS[subType] ? " · 라벨" : ""` 와 같은 폴백(HW-4).
+  const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || "" : "";
   const questionText = normalizeQuestionText(
     formatInlineMarkersForSubtype(
       item.questionText ?? item.sourceQuestion.questionText ?? "",
@@ -78,7 +99,7 @@ export function buildQuestionBlock(
   const summaryMc = isSummaryCompleteMc(subType);
   const summaryWriting = isSummaryWriting(subType);
   const topicSentenceWriting = subType === "TOPIC_SENTENCE_WRITING";
-  const showPassageTitle = layout.showPassageTitle === true;
+  const showPassageTitle = display.showPassageTitle;
   const passageTitle = printablePassageTitle(item);
   const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
   const hasEmbeddedSourcePassage = questionHasEmbeddedPassage({
@@ -86,22 +107,27 @@ export function buildQuestionBlock(
     questionText,
     passage: { content: passageContent },
   });
-  // 출처 지문 인라인 렌더는 item.includePassage 토글을 존중한다(웹 question-body-layout 과 동일).
-  // CONDITIONAL_WRITING 처럼 정답이 지문 문장 번역인 유형은 기본 includePassage=false 라 미동봉.
-  const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) &&
-    item.includePassage !== false &&
-    !summaryMc &&
-    !hasEmbeddedSourcePassage;
-  const inlinePassageContent = passageContent
-    ? formatSourcePassageForQuestionItems(passageContent, [item]).trim()
-    : "";
+  // 문항 안 지문 — 공용 판정 결과(웹 structuredSegments 의 passage 박스, 세트 멤버는 "")를 그대로 그린다.
+  // 요약문 완성·요약문/주제문 영작·주제·제목·내용일치·조건 영작 등 모든 유형이 이 한 값만 본다.
+  const inlinePassage = (item.printInlinePassage ?? "").trim();
+  const inlinePassageBlocks = (usesSentenceInsertMarkers: boolean) =>
+    inlinePassage
+      ? buildPassage({
+          passageTitle,
+          passageContent: inlinePassage,
+          passageStyle: "plain",
+          showPassageTitle,
+          compact,
+          usesSentenceInsertMarkers,
+        })
+      : [];
   const summaryPartsForHeader = summaryComplete
     ? splitSummaryCompleteMcQuestionText(questionText)
     : null;
   // KO(국어) 문항: structuredData → 렌더모델(발문·마킹지문·보기·조건). null 이면
   // (미등록 유형·데이터 결손) 아래 표준 폴백(questionText 라인 렌더)으로 강등된다.
-  const koModel = koPaperRenderModel(item);
+  // 지문 박스는 printInlinePassage 가 있을 때만(세트 멤버·지문 끔은 억제 — 웹 koStructuredSegments 미러).
+  const koModel = koPaperRenderModel({ ...item, includePassage: inlinePassage.length > 0 });
   // KO 렌더모델의 stem 이 비면(데이터 결손 방어) questionText 첫 줄 폴백 — 발문이
   // 통째로 사라진 문항이 인쇄되지 않게 한다(웹 koStemForItem 의 폴백과 동일 규칙).
   const koStemText =
@@ -113,8 +139,10 @@ export function buildQuestionBlock(
     : "";
   const headerQuestionText =
     summaryPartsForHeader?.stem || genericHeaderQuestionText;
+  // 내장 지문 유형의 지문 제목(웹 a4-paper-page showBodyPassageTitle): 구조화 본문이 아니고
+  // 그룹 지문 박스가 그려지지 않았을 때만.
   const embeddedPassageTitle =
-    hasEmbeddedSourcePassage && !summaryWriting && !topicSentenceWriting
+    hasEmbeddedSourcePassage && !isFlowStructuredSubtype(subType) && !opts.groupPassageShown
       ? buildPassageTitleParagraph(passageTitle, showPassageTitle)
       : null;
   if (embeddedPassageTitle) result.push(embeddedPassageTitle);
@@ -129,8 +157,8 @@ export function buildQuestionBlock(
       color: COLOR.black,
     }),
   ];
-  if (showMeta) {
-    const metaText = subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`;
+  const metaText = !showMeta ? "" : subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`;
+  if (metaText) {
     headerRuns.push(
       new TextRun({
         text: metaText,
@@ -153,13 +181,21 @@ export function buildQuestionBlock(
     );
   }
 
-  result.push(
+  // 머리 문단 = 역할 questionHead(keep-policy.ts): keepLines + (문항 안에 뒤 요소가 있으면) keepNext.
+  // 뒤 요소가 있는지는 문항 블록을 다 만든 뒤에야 알므로 자리만 잡아 두고 맨 끝에 끼워 넣는다.
+  // 비정상적으로 긴 머리(요약문 완성 발문에 지문이 붙은 저장본 등)는 KEEP_MAX_LINES 상한으로 본문처럼 다룬다.
+  const headerIndex = result.length;
+  const headerLines = estimateTextLines(
+    `${orderNum}. ${metaText}${headerQuestionText}`,
+    Math.max(bodySize, qNumSize),
+    bodyColumnWidthDxa,
+  );
+  const headerParagraph = (hasNext: boolean) =>
     new Paragraph({
       spacing: { before: 80, after: questionText ? 40 : 80 },
       children: headerRuns,
-      keepNext: true,
-    }),
-  );
+      ...docxKeep("questionHead", { hasNext, lines: headerLines }),
+    });
 
   if (questionText) {
     if (koModel) {
@@ -174,6 +210,7 @@ export function buildQuestionBlock(
             seg.boxStyle === "passage" ? "passage" : "given",
             bodySize,
             lh,
+            bodyColumnWidthDxa,
           ),
         );
       }
@@ -184,18 +221,7 @@ export function buildQuestionBlock(
       // 정답계열([빈칸 정답]/modelAnswer 등)은 직렬화에 없으므로 절대 렌더되지 않는다(SW-LEAK-1).
       const sw = parseSummaryWritingBlocks(questionText);
 
-      if (passageContent) {
-        result.push(
-          ...buildPassage({
-            passageTitle,
-            passageContent: inlinePassageContent || passageContent,
-            passageStyle: "plain",
-            showPassageTitle,
-            compact,
-            usesSentenceInsertMarkers: false,
-          }),
-        );
-      }
+      result.push(...inlinePassageBlocks(false));
 
       if (sw.gloss) {
         result.push(
@@ -295,18 +321,7 @@ export function buildQuestionBlock(
       // 정답계열(modelAnswer/blanks[].answer 등)은 직렬화에 없으므로 절대 렌더되지 않는다(SW-LEAK-1).
       const tsw = parseTopicSentenceWritingBlocks(questionText);
 
-      if (passageContent) {
-        result.push(
-          ...buildPassage({
-            passageTitle,
-            passageContent: inlinePassageContent || passageContent,
-            passageStyle: "plain",
-            showPassageTitle,
-            compact,
-            usesSentenceInsertMarkers: false,
-          }),
-        );
-      }
+      result.push(...inlinePassageBlocks(false));
 
       if (tsw.gloss) {
         result.push(
@@ -406,23 +421,14 @@ export function buildQuestionBlock(
           item.correctAnswer ?? item.sourceQuestion.correctAnswer,
         ),
       );
-      if (passageContent) {
-        result.push(
-          ...buildPassage({
-            passageTitle,
-            passageContent: inlinePassageContent || passageContent,
-            passageStyle: "plain",
-            showPassageTitle,
-            compact,
-            usesSentenceInsertMarkers: false,
-          }),
-        );
-      }
+      result.push(...inlinePassageBlocks(false));
       if (summaryMc) {
         result.push(
           new Paragraph({
             alignment: AlignmentType.CENTER,
             spacing: { before: 20, after: 50 },
+            // ↓ = caption(HWPX 와 같다) — 요약문과 한 단에.
+            ...docxKeep("caption", { hasNext: Boolean(maskedSummary) }),
             children: [
               new TextRun({
                 text: "\u2193",
@@ -510,27 +516,19 @@ export function buildQuestionBlock(
       result.push(...buildGivenBox(givenText.replace(/\s*\n\s*/g, " "), bodySize, lh));
     }
 
-    if (
-      inlineSourcePassage &&
-      shouldPlaceInlinePassageBeforeBody(subType) &&
-      inlinePassageContent
-    ) {
-      result.push(
-        ...buildPassage({
-          passageTitle,
-          passageContent: inlinePassageContent,
-          passageStyle: "plain",
-          showPassageTitle,
-          compact,
-          usesSentenceInsertMarkers: false,
-        }),
-      );
+    if (shouldPlaceInlinePassageBeforeBody(subType)) {
+      result.push(...inlinePassageBlocks(false));
     }
 
-    // SENTENCE_TRANSFORM: 지문을 인라인으로 보여줄 때만 [원문] 블록을 제거한다(원문이
+    // SENTENCE_TRANSFORM: 지문을 동봉하면(includePassage) [원문] 블록을 제거한다(원문이
     // 지문에 밑줄로 노출되므로 중복). 지문을 감추면 [원문] 을 남겨 전환 대상 문장을 제공.
+    // 계약 예외(COH-7): 이것은 「지문을 찍을지」 판정이 아니라 웹 structuredSegments 의 본문 텍스트 규칙
+    // 미러라서 웹과 같은 술어(item.includePassage)를 쓴다. 지문을 찍을지는 printInlinePassage 로만 정한다
+    // (위 inlinePassageBlocks). printInlinePassage 로 바꾸면 세트 멤버(공유 지문은 그룹 박스 — inline "")에서
+    // [원문] 이 되살아나 웹과 어긋난다. 「저장값 true 인데 지문이 비었다」 경우는 웹·HWPX 와 똑같이 [원문]
+    // 도 지문도 찍히지 않는다 — 세 출력을 함께 바꿀 일이다(보고됨).
     const visibleRestText =
-      subType === "SENTENCE_TRANSFORM" && inlineSourcePassage
+      subType === "SENTENCE_TRANSFORM" && item.includePassage !== false
         ? stripOriginalBlock(restText || questionText)
         : restText || questionText;
     const questionLines = visibleRestText.split("\n");
@@ -559,6 +557,12 @@ export function buildQuestionBlock(
 
     bodyQuestionParagraphs.forEach((text, idx) => {
       const trimmed = text.trim();
+      // 단독 라벨 줄(「[조건]」 등)만 caption — HWPX 구역 라벨(labelPara)과 같다. 그 밖 본문 줄은 역할 없음.
+      const labelKeep = isStandaloneLabelLine(trimmed)
+        ? docxKeep("caption", {
+            hasNext: idx < bodyQuestionParagraphs.length - 1 || options.length > 0,
+          })
+        : {};
       result.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
@@ -575,7 +579,10 @@ export function buildQuestionBlock(
                 : 30,
             ...exactLineSpacing(bodySize, lh),
           },
-          keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
+          // 본문 문단 = 역할 없음 → keep 속성 없음(keep-policy.ts). 선지 앞 마지막 본문 문단(대개 지문 전체)에
+          // keepNext 를 걸면 한컴 2024가 그 문단을 통째로 선지와 한 단에 두려다 큰 빈 단·사슬 포기(선지 쪼개짐·
+          // 머리 줄 고아)를 냈다(HW-1). 선지 묶음 자체는 optionKeep 이 지킨다.
+          ...labelKeep,
           children:
             trimmed.length === 0
               ? [new TextRun({ text: " ", font: bodyFont, size: bodySize })]
@@ -594,25 +601,22 @@ export function buildQuestionBlock(
       );
     });
 
-    if (
-      inlineSourcePassage &&
-      !shouldPlaceInlinePassageBeforeBody(subType) &&
-      inlinePassageContent
-    ) {
-      result.push(
-        ...buildPassage({
-          passageTitle,
-          passageContent: inlinePassageContent,
-          passageStyle: "plain",
-          showPassageTitle,
-          compact,
-          usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
-        }),
-      );
+    if (!shouldPlaceInlinePassageBeforeBody(subType)) {
+      result.push(...inlinePassageBlocks(subType === "SENTENCE_INSERT"));
     }
     }
     }
   }
+
+  // 선지 묶음(①~⑤ + 객관식 추가 선지 칸)은 단·쪽 경계에서 갈리지 않게 한 덩어리(optionKeep).
+  const objectiveSlots =
+    showAnswerSpace && options.length > 0 && (item.objectiveAnswerSlots ?? 0) > 0
+      ? Math.max(1, Math.min(10, item.objectiveAnswerSlots ?? 0))
+      : 0;
+  const lastOptionBundleIndex = options.length + objectiveSlots - 1;
+  // 정답포함에서도 선지 묶음 → 정답 배지 다리는 두지 않는다(HWPX keep-policy 와의 의도된 차이 — keep-policy.ts
+  // 대응표). Word 는 keepNext 사슬(선지 + 배지 + 「해설」 + 첫 줄 ≈ 단의 40%)을 상한 없이 통째로 옮겨 25% 넘는
+  // 빈 단이 A 해설 0→10, B 해설 0→9 로 늘었다(26-09-30 실측). 배지는 뒤 해설과만 묶는다(answer.ts).
 
   // 옵션 (preview 와 동일하게 원문자 번호 + 유형별 선택지 표시)
   if (options.length > 0) {
@@ -626,6 +630,8 @@ export function buildQuestionBlock(
           size: optionSize,
           bold: qBold,
           italics: qItalic,
+          widthDxa: bodyColumnWidthDxa,
+          keepWithNext: objectiveSlots > 0,
         }),
       );
     } else {
@@ -637,6 +643,7 @@ export function buildQuestionBlock(
         new Paragraph({
           spacing: { after: 60, ...exactLineSpacing(optionSize, lh) },
           indent: { left: 376, hanging: 290 }, // 미리보기 선지: 번호 min-w-18px + gap-1.5(6px)
+          ...optionKeep(idx === lastOptionBundleIndex),
           children: [
             new TextRun({
               text: optionDisplayLabel(subType, idx, opt.label),
@@ -665,12 +672,8 @@ export function buildQuestionBlock(
   }
 
   // 객관식 추가 선지
-  if (
-    showAnswerSpace &&
-    options.length > 0 &&
-    (item.objectiveAnswerSlots ?? 0) > 0
-  ) {
-    const slots = Math.max(1, Math.min(10, item.objectiveAnswerSlots ?? 0));
+  if (objectiveSlots > 0) {
+    const slots = objectiveSlots;
     const objectiveAnswerTexts = item.objectiveAnswerTexts || [];
     for (let slotIndex = 0; slotIndex < slots; slotIndex += 1) {
       const optionIndex = options.length + slotIndex;
@@ -680,6 +683,7 @@ export function buildQuestionBlock(
         new Paragraph({
           spacing: { after: 60, ...exactLineSpacing(optionSize, lh) },
           indent: { left: 376, hanging: 290 }, // 미리보기 선지: 번호 min-w-18px + gap-1.5(6px)
+          ...optionKeep(optionIndex === lastOptionBundleIndex),
           children: [
             new TextRun({
               text: optionOrdinalLabel(optionIndex),
@@ -756,10 +760,12 @@ export function buildQuestionBlock(
         explanation: item.sourceQuestion.explanation,
         hasOptions: options.length > 0,
         subType: item.sourceQuestion.subType,
+        widthDxa: bodyColumnWidthDxa,
       }),
     );
   }
 
+  result.splice(headerIndex, 0, headerParagraph(result.length > headerIndex));
   return result;
 }
 
@@ -774,6 +780,7 @@ function buildKoStructBox(
   style: "passage" | "given",
   bodySize: number,
   lh: number,
+  widthDxa: number,
 ): DocChild[] {
   // 행 경계를 넘는 __밑줄__ 마킹(운문 행간 마킹)은 행별 균형 마크업으로 정규화 —
   // 행 단위 parseFormattedText 가 홀수 `__` 를 리터럴로 인쇄하는 결함 방지.
@@ -782,6 +789,12 @@ function buildKoStructBox(
     .map((line) => line.trim())
     .filter(Boolean);
   const out: DocChild[] = [];
+  // 〈보기〉·[조건] 머리 = caption(HWPX ko-box 와 같다) — 박스 첫 행과 한 단에.
+  const headerKeep = (line: string) =>
+    docxKeep("caption", {
+      hasNext: lines.length > 1,
+      lines: estimateTextLines(line, SIZE_META, widthDxa),
+    });
 
   lines.forEach((line, idx) => {
     // 헤더("〈 보 기 〉"/"[조건]")는 어댑터가 given 박스에만 만든다 — 지문 첫 행이
@@ -791,6 +804,7 @@ function buildKoStructBox(
         new Paragraph({
           alignment: AlignmentType.CENTER,
           spacing: { before: 40, after: 30 },
+          ...headerKeep(line),
           children: [
             new TextRun({
               text: line,
@@ -808,6 +822,7 @@ function buildKoStructBox(
       out.push(
         new Paragraph({
           spacing: { before: 40, after: 30 },
+          ...headerKeep(line),
           children: [
             new TextRun({
               text: line,

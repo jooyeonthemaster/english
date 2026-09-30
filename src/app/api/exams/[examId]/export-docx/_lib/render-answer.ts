@@ -1,15 +1,13 @@
 import {
   Paragraph,
-  Table,
   TableCell,
-  TableLayoutType,
   TableRow,
   TextRun,
-  WidthType,
 } from "docx";
 import { COLOR, FONT, KR_FONT, LABEL_SIZE, PASSAGE_SIZE, QUESTION_SIZE, SMALL_SIZE } from "./styles";
 import { thinBox } from "./borders";
 import { safeParseJSON } from "./helpers";
+import { LEGACY_DEFAULT_COLUMN_WIDTH_DXA, gridCellWidth, gridTable, tableGrid } from "./table-geometry";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
@@ -19,22 +17,22 @@ import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 export function renderAnswer(
   q: ExamQuestionData["question"],
-  options: ParsedOption[]
+  options: ParsedOption[],
+  contentWidthDxa: number = LEGACY_DEFAULT_COLUMN_WIDTH_DXA,
 ): DocChild[] {
   const result: DocChild[] = [];
   const answerText = formatStoredQuestionCorrectAnswer(q);
 
   const answerLabel = options.length > 0 ? "정답" : "정답:";
-  const answerTable = new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    layout: TableLayoutType.FIXED,
+  const grid = tableGrid(contentWidthDxa, [1]);
+  const answerTable = gridTable(grid, {
     rows: [
       new TableRow({
         children: [
           new TableCell({
             borders: thinBox(COLOR.black, 4),
             shading: { fill: COLOR.answerBg },
-            width: { size: 100, type: WidthType.PERCENTAGE },
+            width: gridCellWidth(grid, 0),
             margins: { top: 60, bottom: 60, left: 120, right: 120 },
             children: [
               new Paragraph({

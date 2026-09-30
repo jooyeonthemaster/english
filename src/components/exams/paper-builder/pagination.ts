@@ -3,8 +3,12 @@ import { formatInlineMarkersForSubtype, formatSentenceInsertPassageMarkers, shou
 import { isFlowStructuredSubtype, isGichulLetterOptionItem, questionStemAndBody } from "./question-body-layout";
 import { isLineGapItem, LINE_GAP_MAX_PX, BLOCK_PX_PER_PT, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
 import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
-import type { FlowBlock, PaginationResult } from "./pagination-types";
-import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateExplanationBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, multiBlankOptionsHeaderHeight, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
+import type { FlowBlock, PaginationKeepSettings, PaginationResult } from "./pagination-types";
+import { forcedPerPageEnabled, keepOptionGroupsEnabled, keptRunEnd, keptRunHeadFreshCost, keptRunTailHeight } from "./pagination-keep";
+import { estimateMultiBlankOptionHeights } from "./multi-blank-grid-metrics";
+import { buildExplanationRows } from "./explanation-content";
+import { appendExplanationUnit, layoutExplanationUnits } from "./explanation-layout";
+import { GIVEN_BOX_CHROME, QUESTION_BODY_TOP_GAP, continuationPartChrome, itemRenderOverhead, questionStemPointsSuffix, stemLineCount, textMetricsOf, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateExplanationBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, multiBlankOptionsHeaderHeight, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, resolveItemFontPx } from "./pagination-metrics";
 
 export type {
   PaginationResult,
@@ -49,10 +53,23 @@ function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings
     case "section": {
       const sectionFontSize = ptPx ?? 15;
       const sectionLineH = ptPx ? ptPx * 1.4 : 12;
-      return 38 + estimateTextLines(item.blockTitle || item.blockText || " ", columnWidth, sectionFontSize) * sectionLineH;
+      return (
+        38 +
+        estimateTextLines(
+          item.blockTitle || item.blockText || " ",
+          columnWidth,
+          sectionFontSize,
+          textMetricsOf(settings),
+        ) *
+          sectionLineH
+      );
     }
     case "text":
-      return 20 + estimateTextLines(item.blockText || " ", columnWidth, bodyFontSize) * (ptPx ? ptPx * 1.4 : compact ? 14 : 16);
+      return (
+        20 +
+        estimateTextLines(item.blockText || " ", columnWidth, bodyFontSize, textMetricsOf(settings)) *
+          (ptPx ? ptPx * 1.4 : compact ? 14 : 16)
+      );
     case "divider":
       return 18 + Math.max(1, item.dividerThickness);
     case "spacer":
@@ -79,28 +96,47 @@ function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings
   }
 }
 
-export function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): PaginationResult {
+export function paginateGroups(
+  groups: PaperGroup[],
+  settings: PaginationSettings & PaginationKeepSettings,
+): PaginationResult {
   const pages: PaperPage[] = [];
   let pageIndex = 0;
   let columnIndex = 0;
   let currentPage: PaperPage = Array.from({ length: settings.columns }, () => []);
   let columnHeights = Array.from({ length: settings.columns }, () => 0);
-  // forceTwoPerPage 전용: 현재 페이지에 이미 배치된 "문항(문제)" 개수.
+  // 「쪽당 N문제」 강제 배치 — 해설 포함 모드에서는 끈다(forcedPerPageEnabled, HWPX 와 같은 정책 · E1).
+  const forcedPerPage = forcedPerPageEnabled(settings);
+  // forcedPerPage 전용: 현재 페이지에 이미 배치된 "문항(문제)" 개수.
   // 지문 묶음은 한 덩어리로 유지하되, 한 페이지가 columns(=쪽당 문제 수)개를
   // 넘지 않도록 제한하는 데 쓴다.
   let pageQuestionCount = 0;
+  // 칸별 배치 블록 수·페이지별 추정치(실측 넘침 가드용 — PaginationResult.columns).
+  let columnBlockCounts = Array.from({ length: settings.columns }, () => 0);
+  const columnsInfo: NonNullable<PaginationResult["columns"]> = [];
 
   const passageTitleShownFor = new Set<string>();
   const headerRenderedFor = new Set<string>();
   const overflowItems = new Set<string>();
   const passageContinuationReserveFragments = new Set<string>();
 
+  function recordPage() {
+    const baseCapacity = pageMetrics(settings, pageIndex).capacity;
+    pages.push(currentPage);
+    columnsInfo.push({
+      used: [...columnHeights],
+      capacity: Array.from({ length: settings.columns }, () => baseCapacity),
+      blocks: [...columnBlockCounts],
+    });
+  }
+
   function pushCurrentPage() {
-    if (currentPage.some((column) => column.length > 0)) pages.push(currentPage);
+    if (currentPage.some((column) => column.length > 0)) recordPage();
     pageIndex += 1;
     columnIndex = 0;
     currentPage = Array.from({ length: settings.columns }, () => []);
     columnHeights = Array.from({ length: settings.columns }, () => 0);
+    columnBlockCounts = Array.from({ length: settings.columns }, () => 0);
     pageQuestionCount = 0;
   }
 
@@ -115,8 +151,21 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
   function currentCapacity() {
     // 강제 2문제/페이지 모드: 칸 용량을 무한으로 둬 자동 분할·오버플로 advance 를
     // 모두 비활성화하고, 그룹 경계에서만 칸을 넘긴다(아래 루프).
-    if (settings.forceTwoPerPage) return Number.POSITIVE_INFINITY;
-    return pageMetrics(settings, pageIndex).capacity;
+    if (forcedPerPage) return Number.POSITIVE_INFINITY;
+    // 실측 넘침 가드 보정 — 키는 **렌더** 페이지 index(= 이 페이지가 들어갈 pages 자리)다.
+    const adjust = settings.columnCapacityAdjust?.[`${pages.length}:${columnIndex}`] ?? 0;
+    return pageMetrics(settings, pageIndex).capacity - adjust;
+  }
+
+  // advanceColumn() 뒤 칸의 용량(currentCapacity 와 같은 규칙) — 선지 묶음이 빈 다음 칸에 들어가는지 볼 때 쓴다.
+  function nextColumnCapacity() {
+    if (columnIndex < settings.columns - 1) {
+      const adjust = settings.columnCapacityAdjust?.[`${pages.length}:${columnIndex + 1}`] ?? 0;
+      return pageMetrics(settings, pageIndex).capacity - adjust;
+    }
+    const renderPage = pages.length + (currentPage.some((column) => column.length > 0) ? 1 : 0);
+    const adjust = settings.columnCapacityAdjust?.[`${renderPage}:0`] ?? 0;
+    return pageMetrics(settings, pageIndex + 1).capacity - adjust;
   }
 
   function ensureFragment(group: PaperGroup): RenderFragment {
@@ -156,6 +205,8 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const hasPassageOrParts = fragment.parts.length > 0 || fragment.passageRenderedLines.length > 0;
     const partGap = hasPassageOrParts ? ITEM_GAP : 0;
     const isFreshStart = !headerRenderedFor.has(item.localId);
+    // 이어지는 조각은 머리에 「(N번 계속)」 라벨이 붙는다 — 그 자리를 함께 예약한다.
+    const continuationChrome = isFreshStart ? 0 : continuationPartChrome(settings);
     const part: RenderItemPart = {
       source: item,
       partKey: `${item.localId}@p${pageIndex}c${columnIndex}f${fragment.id}n${fragment.parts.length}`,
@@ -164,6 +215,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       showObjectiveAnswer: false,
       showCustomBlock: false,
       showExplanation: false,
+      estHeight: 0,
       questionRenderedLines: [],
       questionStartLineIndex: 0,
       questionTotalLines: 0,
@@ -173,7 +225,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       isContinuation: !isFreshStart,
     };
     fragment.parts.push(part);
-    columnHeights[columnIndex] += partGap;
+    columnHeights[columnIndex] += partGap + continuationChrome;
     return part;
   }
 
@@ -215,6 +267,9 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const sameStructPart =
         !!lastStructPart && lastStructPart.source.localId === block.item.localId;
       let structCost = block.lineHeight;
+      if (!sameStructPart && headerRenderedFor.has(block.item.localId)) {
+        structCost += continuationPartChrome(settings);
+      }
       if (!sameFragment) {
         structCost += col.length > 0 ? GROUP_GAP : 0;
       } else if (!sameStructPart) {
@@ -238,6 +293,10 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         sameFragment &&
         (lastFrag!.parts.length > 0 || lastFrag!.passageRenderedLines.length > 0);
       if (hasPassageOrParts) cost += ITEM_GAP;
+      // 헤더를 이미 앞 칸에서 그린 문항이면 이 조각 머리에 「(N번 계속)」 라벨이 붙는다.
+      if (headerRenderedFor.has(item.localId)) cost += continuationPartChrome(settings);
+      // 해설 조각이 문항 조각 맨 처음에 놓이면 첫 행의 위 여백을 그리지 않는다(exam-explanation-block).
+      if (block.kind === "explanation" && block.unit) cost -= block.unit.topGap;
     }
     return cost;
   }
@@ -355,8 +414,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const fontPx = resolveItemFontPx(item, settings);
       const lineH = questionLineHeight(settings, fontPx);
 
-      const stemRendered = formatInlineMarkersForSubtype(stem, subType);
-      const stemLineCount = Math.max(1, questionToLines(stemRendered, settings, fontPx).length);
+      // 발문은 헤더에 통째로 렌더된다 — 「[3점]」 꼬리까지 포함해 실제 그려지는 문자열로 줄 수를 센다.
+      const stemRendered =
+        formatInlineMarkersForSubtype(stem, subType) +
+        questionStemPointsSuffix(item, stem, settings.showQuestionMeta);
+      const stemLines = stemLineCount(item, stemRendered, settings, fontPx);
 
       const structured = isFlowStructuredSubtype(subType);
       const bodyRendered = structured ? "" : formatInlineMarkersForSubtype(body, subType);
@@ -368,10 +430,13 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
 
       // 헤더(번호 + 지시문)는 항상 통째로 렌더 → stem 줄 수만큼 높이를 잡는다.
       // 본문(평문 지문 / 구조화 박스)은 별도 줄 블록으로 흘려보내 칸 경계에서 쪼갠다.
+      // 본문(평문 p.mt-1 / 구조화 div.mt-1)이 붙으면 그 위 여백 4px 을 더한다(exam-font 모드 실측).
+      const hasBodyBelowHeader = structured ? structBlocks.length > 0 : bodyLines.length > 0;
       const metaHeight =
-        ITEM_RENDER_OVERHEAD +
+        itemRenderOverhead(settings) +
         questionMetaHeight(settings) +
-        stemLineCount * lineH +
+        stemLines * lineH +
+        (hasBodyBelowHeader && textMetricsOf(settings) === "exam-font" ? QUESTION_BODY_TOP_GAP : 0) +
         (structured ? 0 : givenText ? GIVEN_BOX_CHROME : 0) +
         (structured ? 0 : embeddedPassageBodyChrome(item, settings));
 
@@ -382,7 +447,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         // firstLine 은 더 이상 헤더 표시에 쓰지 않는다(지시문은 item 에서 직접 렌더).
         firstLine: null,
         // 고아(orphan) 방지 계산용 — 지시문 + 본문 줄 수 기준.
-        totalLines: stemLineCount + bodyLines.length + structBlocks.length,
+        totalLines: stemLines + bodyLines.length + structBlocks.length,
         height: metaHeight,
       });
       // 각주 줄("* word: 뜻")은 본문 마지막 줄과 한 블록으로 묶는다(줄 단위 흐름에서 각주만 다음 칸/쪽으로 밀리는 것 방지 —
@@ -410,6 +475,12 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       // 갈라지면 한 줄 배치가 두 동강 난다. 첫 선지에만 한 줄 높이를 주고 나머지는 0 으로
       // 둬 원자적으로 같은 조각에 남게 한다(비용 0 인 블록은 절대 넘치지 않는다).
       const gichulLetterOptions = isGichulLetterOptionItem(item);
+      // 다중 빈칸 조합 선지(컬럼 헤더 그리드)는 값이 좁은 열 안에서 접혀 인라인 추정과 크게 다르다
+      // — 그리드 트랙 크기를 재현한 행 높이를 쓴다(multi-blank-grid-metrics.ts). null 이면 종전 추정.
+      const multiBlankHeights =
+        !gichulLetterOptions && settings.multiBlankOptionLayout !== "inline"
+          ? estimateMultiBlankOptionHeights(item, settings)
+          : null;
       if (shouldRenderOptionListForSubtype(subType) || gichulLetterOptions) {
         item.options.forEach((option, index) => {
           blocks.push({
@@ -418,7 +489,9 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
             item,
             option,
             index,
-            height: gichulLetterOptions
+            height: multiBlankHeights
+              ? multiBlankHeights[index]
+              : gichulLetterOptions
               ? index === 0
                 ? questionLineHeight(settings, item.blockFontPt != null ? fontPx : undefined) +
                   OPTION_BLOCK_TOP_GAP
@@ -466,20 +539,28 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       if (settings.template === "worksheet" && item.teacherNote) {
         blocks.push({ kind: "note", group, item, height: estimateTeacherNoteHeight(item, settings) });
       }
-      // 해설 포함 PDF: 각 문항 뒤에 인라인 정답·해설 블록(원자 단위)을 더한다.
+      // 해설 포함 PDF: 각 문항 뒤에 인라인 정답·해설. exam-font(미리보기 · 인쇄)는 렌더 줄 단위 흐름 단위로 나눠
+      // 칸 · 쪽 경계에서 갈라지게 한다(한 칸보다 긴 해설이 종이 끝에서 잘리던 PRINT-R3). legacy 는 종전 원자 블록.
       if (settings.includeAnswers) {
-        blocks.push({
-          kind: "explanation",
-          group,
-          item,
-          height: estimateExplanationBlockHeight(item, settings),
-        });
+        if (textMetricsOf(settings) === "exam-font") {
+          const units = layoutExplanationUnits(
+            buildExplanationRows(item),
+            pageMetrics(settings, 0).columnWidth,
+            settings.density === "compact",
+          );
+          for (const unit of units) blocks.push({ kind: "explanation", group, item, height: unit.height, unit });
+        } else {
+          blocks.push({ kind: "explanation", group, item, height: estimateExplanationBlockHeight(item, settings) });
+        }
       }
     }
   }
 
   let isFirstBlockOverall = true;
   let forcedGroupId: string | null = null;
+  // 선지 묶음(pagination-keep.ts) — 머리를 놓은 칸에 묶음 전체가 들어갔으면 이 index 까지는 칸을 넘기지 않는다.
+  const keepOptions = keepOptionGroupsEnabled(settings);
+  let keepStayUntil = -1;
 
   for (let blockIndex = 0; blockIndex < blocks.length; blockIndex += 1) {
     const block = blocks[blockIndex];
@@ -498,7 +579,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     //  - 그룹 하나가 예산보다 크면(예: 지문 묶음 3문제) 그 페이지에는 그 묶음만
     //    배치된다(분리 금지).
     // (섹션/구분선 등 비문항 블록은 칸을 차지하지 않도록 트리거하지 않는다.)
-    if (settings.forceTwoPerPage) {
+    if (forcedPerPage) {
       const isQuestionGroup = block.group.items[0]?.blockType === "question";
       if (isQuestionGroup && block.group.id !== forcedGroupId) {
         const groupQuestionCount = block.group.items.filter(
@@ -527,6 +608,20 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
     }
 
+    // 선지 묶음 머리: 이 칸에 묶음이 다 안 들어가고 빈 다음 칸에는 들어가면 머리 앞에서 넘긴다.
+    // 한 칸보다 긴 묶음은 넘기지 않고 종전처럼 블록 단위로 흘린다(EXAM-PAPER-MODEL §9 예외).
+    const runEnd = keepOptions && blockIndex > keepStayUntil ? keptRunEnd(blocks, blockIndex) : -1;
+    if (runEnd > blockIndex && columnHeights[columnIndex] > 0 && !headerForceStay) {
+      const tail = keptRunTailHeight(blocks, blockIndex, runEnd);
+      if (
+        columnHeights[columnIndex] + marginalCostForBlock(block) + tail > currentCapacity() &&
+        keptRunHeadFreshCost(block, settings) + tail <= nextColumnCapacity()
+      ) {
+        advanceColumn();
+      }
+    }
+    const keepStay = blockIndex <= keepStayUntil;
+
     let cost = marginalCostForBlock(block);
     let colHasContent = columnHeights[columnIndex] > 0;
     const wouldCreateQuestionOrphan =
@@ -547,7 +642,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
 
     const wouldOverflow = colHasContent && columnHeights[columnIndex] + cost > currentCapacity();
 
-    if (wouldOverflow && !headerForceStay) {
+    if (wouldOverflow && !headerForceStay && !keepStay) {
       advanceColumn();
     }
 
@@ -591,12 +686,14 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
     } else if (block.kind === "custom") {
       const part = ensurePart(fragment, block.item);
+      part.estHeight = (part.estHeight ?? 0) + block.height;
       part.showHeader = false;
       part.showCustomBlock = true;
       headerRenderedFor.add(block.item.localId);
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "question-meta") {
       const part = ensurePart(fragment, block.item);
+      part.estHeight = (part.estHeight ?? 0) + block.height;
       if (!headerRenderedFor.has(block.item.localId)) {
         headerRenderedFor.add(block.item.localId);
         part.showHeader = true;
@@ -612,6 +709,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
     } else if (block.kind === "question-line") {
       const part = ensurePart(fragment, block.item);
+      part.estHeight = (part.estHeight ?? 0) + block.height;
       if (part.questionRenderedLines.length === 0) {
         part.questionStartLineIndex = block.lineIndex;
         part.questionTotalLines = block.totalLines;
@@ -620,6 +718,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "struct-line") {
       const part = ensurePart(fragment, block.item);
+      part.estHeight = (part.estHeight ?? 0) + block.height;
       const segInPart = part.structRows.some((row) => row.segIndex === block.segIndex);
       if (!segInPart) columnHeights[columnIndex] += block.segChrome;
       part.structRows.push({
@@ -634,6 +733,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       columnHeights[columnIndex] += block.lineHeight;
     } else if (block.kind === "option") {
       const part = ensurePart(fragment, block.item);
+      part.estHeight = (part.estHeight ?? 0) + block.height;
       part.options.push({ option: block.option, originalIndex: block.index });
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "objective-answer") {
@@ -648,17 +748,35 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       ensurePart(fragment, block.item);
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "explanation") {
+      const lastPart = fragment.parts[fragment.parts.length - 1];
+      const atPartStart = !lastPart || lastPart.source.localId !== block.item.localId;
       const part = ensurePart(fragment, block.item);
       part.showExplanation = true;
-      columnHeights[columnIndex] += block.height;
+      let height = block.height;
+      if (block.unit) {
+        if (atPartStart) height -= block.unit.topGap;
+        part.explanation ??= { containerStart: false, atPartStart, pieces: [] };
+        appendExplanationUnit(part.explanation, block.unit);
+        part.explanation.estHeight = (part.explanation.estHeight ?? 0) + height;
+        part.estHeight = (part.estHeight ?? 0) + height;
+      }
+      columnHeights[columnIndex] += height;
     }
 
+    if (runEnd > blockIndex) {
+      const fits =
+        columnHeights[columnIndex] + keptRunTailHeight(blocks, blockIndex, runEnd) <= currentCapacity();
+      keepStayUntil = fits ? runEnd : -1;
+    }
+
+    columnBlockCounts[columnIndex] += 1;
     isFirstBlockOverall = false;
   }
 
-  if (currentPage.some((column) => column.length > 0)) pages.push(currentPage);
+  if (currentPage.some((column) => column.length > 0)) recordPage();
   return {
     pages: pages.length > 0 ? pages : [Array.from({ length: settings.columns }, () => [])],
     overflowItems,
+    columns: columnsInfo,
   };
 }

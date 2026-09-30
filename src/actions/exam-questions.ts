@@ -17,6 +17,10 @@ interface ActionResult {
 
 // ---------------------------------------------------------------------------
 // Exam Question Management
+//
+// 학원 범위(IDOR 수리 26-09-30): 이 파일은 src/actions/exams/* 의 옛 복제본이다(시험 생성
+// 마법사가 getQuestionBank 를 아직 여기서 가져온다). exams/* 에는 이미 걸려 있던 학원 범위를
+// 여기에도 똑같이 건다 — 시험·문제·지문·반·학교는 전부 세션 academyId 로만 찾는다.
 // ---------------------------------------------------------------------------
 
 export async function addQuestionsToExam(
@@ -84,7 +88,14 @@ export async function removeQuestionFromExam(
   examQuestionId: string
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // 이 학원 시험에 달린 연결 행만 지운다(exams/questions.ts 와 같은 가드).
+    const link = await prisma.examQuestion.findFirst({
+      where: { id: examQuestionId, examId, exam: { academyId: staff.academyId } },
+      select: { id: true },
+    });
+    if (!link) return { success: false, error: "문제 연결을 찾을 수 없습니다." };
 
     await prisma.examQuestion.delete({
       where: { id: examQuestionId },
@@ -106,7 +117,23 @@ export async function reorderExamQuestions(
   orderedIds: string[]
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // 시험이 이 학원 것이고, 모든 연결 행이 그 시험 것이어야 한다(exams/questions.ts 와 같은 가드).
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
+    if (orderedIds.length > 0) {
+      const valid = await prisma.examQuestion.findMany({
+        where: { id: { in: orderedIds }, examId },
+        select: { id: true },
+      });
+      if (valid.length !== new Set(orderedIds).size) {
+        return { success: false, error: "일부 문제 연결이 이 시험에 속하지 않습니다." };
+      }
+    }
 
     const updates = orderedIds.map((id, index) =>
       prisma.examQuestion.update({
@@ -140,9 +167,11 @@ export async function getQuestionBank(
     search?: string;
   }
 ) {
-  await requireStaffAuth();
+  // 학원 범위는 세션이 정한다 — 인자는 호환용(마법사는 자기 학원 id 를 넘긴다).
+  const staff = await requireStaffAuth();
+  void academyId;
 
-  const where: Record<string, unknown> = { academyId };
+  const where: Record<string, unknown> = { academyId: staff.academyId };
   where.deletedAt = null;
 
   if (filters?.type && filters.type !== "ALL") where.type = filters.type;
@@ -166,10 +195,11 @@ export async function getQuestionBank(
 // ---------------------------------------------------------------------------
 
 export async function getClassesForFilter(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  void academyId;
 
   const classes = await prisma.class.findMany({
-    where: { academyId, isActive: true },
+    where: { academyId: staff.academyId, isActive: true },
     select: { id: true, name: true },
     orderBy: { name: "asc" },
   });
@@ -178,10 +208,11 @@ export async function getClassesForFilter(academyId: string) {
 }
 
 export async function getSchoolsForFilter(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  void academyId;
 
   const schools = await prisma.school.findMany({
-    where: { academyId },
+    where: { academyId: staff.academyId },
     select: { id: true, name: true },
     orderBy: { name: "asc" },
   });
@@ -210,6 +241,14 @@ export async function createQuestion(
       where: { id: examId, academyId: staff.academyId },
     });
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
+    // 지문도 이 학원 것이어야 한다(exams/legacy.ts 와 같은 가드).
+    if (data.passageId) {
+      const passage = await prisma.passage.findFirst({
+        where: { id: data.passageId, academyId: staff.academyId },
+        select: { id: true },
+      });
+      if (!passage) return { success: false, error: "지문을 찾을 수 없습니다." };
+    }
 
     const question = await prisma.question.create({
       data: {
@@ -257,7 +296,13 @@ export async function deleteQuestion(
   questionId: string
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+    // 이 학원 문제만 지운다(exams/legacy.ts 와 같은 가드).
+    const owned = await prisma.question.findFirst({
+      where: { id: questionId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!owned) return { success: false, error: "문제를 찾을 수 없습니다." };
     await prisma.examQuestion.deleteMany({ where: { questionId } });
     await prisma.question.delete({ where: { id: questionId } });
     revalidatePath(`/admin`);

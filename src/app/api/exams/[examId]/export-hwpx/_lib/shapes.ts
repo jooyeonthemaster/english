@@ -37,6 +37,11 @@ export interface ParaShapeSpec {
   spaceBefore: number;
   spaceAfter: number;
   lineSpacingPct: number;
+  // <hh:breakSetting> 플래그. 키 순서는 dedupe 키(JSON.stringify)의 일부라 기본 모양(id 0)과
+  // paraShapeFromStyle 이 반드시 같은 순서로 채운다 — 어긋나면 기본 모양이 id 0 으로 합쳐지지 않는다.
+  widowOrphan: boolean;
+  keepWithNext: boolean;
+  keepLines: boolean;
 }
 
 export interface BorderFillSpec {
@@ -135,6 +140,10 @@ export class ShapeRegistry {
       spaceAfter: 0,
       // 미리보기 본문 line-height 1.58 과 일치(이전 160 은 한컴 기본값이라 미세 드리프트).
       lineSpacingPct: 158,
+      // id 0 은 언제나 "플래그 전부 0" — 바탕글·표 감싸는 문단·단 제어 문단이 이 id 를 쓴다.
+      widowOrphan: false,
+      keepWithNext: false,
+      keepLines: false,
     });
   }
 
@@ -212,6 +221,9 @@ export class ShapeRegistry {
       spaceBefore: s.spaceBefore ?? 0,
       spaceAfter: s.spaceAfter ?? 0,
       lineSpacingPct: s.lineSpacingPct ?? 158,
+      widowOrphan: !!s.widowOrphan,
+      keepWithNext: !!s.keepWithNext,
+      keepLines: !!s.keepLines,
     });
   }
 

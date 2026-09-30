@@ -14,6 +14,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { PlanTier } from "@/lib/admin-analytics-types";
+import type { ActivityCategory } from "@/lib/admin-activity-types";
 
 // ─── 소스 유니온 ─────────────────────────────────────────────────────────────
 
@@ -29,11 +30,80 @@ function jobMember(
   )} ${where}`;
 }
 
-/** app_events 멤버 — eventType 으로 카테고리를 가른다. */
+// ─── app_events 분류 (관리자 활동 피드와 같은 규칙) ─────────────────────────────
+//
+// 종전 CASE 는 PAGE_VIEW·LOGIN 이 아니면 전부 EXPORT 로 셌다. 그래서 지문 삭제(PASSAGE_DELETE)와
+// 준비 실패로 print() 를 부르지도 못한 인쇄(EXAM_EXPORT format 'print', outcome 'blocked' 등)가 내보내기
+// 통계에 섞였다(26-09-30). 이제 피드(_app-event-activity.ts describeAppEvent)의 분류를 따른다:
+//   · PAGE_VIEW → PAGE_VIEW, LOGIN → AUTH, PASSAGE_DELETE → CONTENT, *_EXPORT → EXPORT, 그 밖 → CONTENT
+//   · 인쇄는 outcome 이 'printed'(또는 원격 측정 이전 행처럼 없음)일 때만 내보내기다. 그 밖의 outcome 은
+//     피드에서 FAILED(「시험지 인쇄 실패/미완료」)이고, 분석 유니온에서는 뺀다(만든 것이 없는 원격 측정).
+// 규칙은 표 하나(APP_EVENT_CATEGORY_RULES)에서 SQL(CASE)과 JS 판정(appEventAnalyticsCategory)을 함께 만든다
+// — 단위 테스트가 JS 판정을 피드 분류와 대조하고, SQL 은 같은 표에서 나왔음을 문자열로 확인한다.
+
+type AppEventRule =
+  | { eventType: string; category: ActivityCategory }
+  | { eventTypeSuffix: string; category: ActivityCategory };
+
+/** 위에서부터 첫 일치. 어디에도 안 맞으면 APP_EVENT_FALLBACK_CATEGORY. */
+export const APP_EVENT_CATEGORY_RULES: readonly AppEventRule[] = [
+  { eventType: "PAGE_VIEW", category: "PAGE_VIEW" },
+  { eventType: "LOGIN", category: "AUTH" },
+  { eventType: "PASSAGE_DELETE", category: "CONTENT" },
+  { eventTypeSuffix: "_EXPORT", category: "EXPORT" },
+];
+export const APP_EVENT_FALLBACK_CATEGORY: ActivityCategory = "CONTENT";
+
+/** SQL 문자열 상수(규칙 표의 값 — 모두 대문자 · 밑줄뿐이라 인용만 하면 된다). */
+function sqlLiteral(value: string): string {
+  if (!/^[A-Z_]+$/.test(value)) throw new Error(`app_events rule literal must be [A-Z_]+: ${value}`);
+  return `'${value}'`;
+}
+
+function ruleCondition(rule: AppEventRule): string {
+  return "eventType" in rule
+    ? `"eventType" = ${sqlLiteral(rule.eventType)}`
+    : `right("eventType", ${rule.eventTypeSuffix.length}) = ${sqlLiteral(rule.eventTypeSuffix)}`;
+}
+
+/** app_events 행 → 값 CASE 식(분류 → 표시값 매핑을 받는다 — 기능 유니온이 같은 규칙으로 기능명을 만든다). */
+export function appEventCaseSql(label: (category: ActivityCategory) => string): Prisma.Sql {
+  const whens = APP_EVENT_CATEGORY_RULES.map(
+    (rule) => `WHEN ${ruleCondition(rule)} THEN ${sqlLiteral(label(rule.category))}`,
+  );
+  return Prisma.raw(`CASE ${whens.join(" ")} ELSE ${sqlLiteral(label(APP_EVENT_FALLBACK_CATEGORY))} END`);
+}
+
+/**
+ * 끝나지 않은 인쇄(print() 에 이르지 못함) — 분석에서 뺀다. 피드(describePrint)처럼 outcome 이 빈 문자열이
+ * 아닌 **문자열**이고 'printed' 가 아닐 때만이다(없음 · null · 숫자는 원격 측정 이전 행으로 보고 내보내기).
+ * NULL 안전: 식이 NULL 이 되면 `NOT (…)` 가 행을 조용히 떨어뜨리므로 IS NOT DISTINCT FROM · COALESCE 로 감싼다.
+ */
+export const APP_EVENT_UNFINISHED_PRINT_SQL = Prisma.raw(
+  `("eventType" = 'EXAM_EXPORT' AND ("metadata"->>'format') IS NOT DISTINCT FROM 'print' AND COALESCE(jsonb_typeof("metadata"->'outcome') = 'string' AND ("metadata"->>'outcome') NOT IN ('printed', ''), false))`,
+);
+
+/** JS 판정(같은 규칙 표) — 분석 유니온에 들어가면 그 분류, 빠지면(끝나지 않은 인쇄) null. */
+export function appEventAnalyticsCategory(eventType: string, metadata: unknown): ActivityCategory | null {
+  const meta =
+    typeof metadata === "object" && metadata !== null && !Array.isArray(metadata)
+      ? (metadata as Record<string, unknown>)
+      : {};
+  const outcome = typeof meta.outcome === "string" && meta.outcome.length > 0 ? meta.outcome : "printed";
+  if (eventType === "EXAM_EXPORT" && meta.format === "print" && outcome !== "printed") return null;
+  for (const rule of APP_EVENT_CATEGORY_RULES) {
+    if ("eventType" in rule ? eventType === rule.eventType : eventType.endsWith(rule.eventTypeSuffix)) {
+      return rule.category;
+    }
+  }
+  return APP_EVENT_FALLBACK_CATEGORY;
+}
+
+/** app_events 멤버 — 피드와 같은 분류(APP_EVENT_CATEGORY_RULES), 끝나지 않은 인쇄는 제외. */
 function appEventsMember(from: Date | null): Prisma.Sql {
-  const where = from ? Prisma.sql`WHERE "createdAt" >= ${from}` : Prisma.empty;
-  // 타임라인(_sources.ts)과 동일한 분기 순서: PAGE_VIEW→PAGE_VIEW, LOGIN→AUTH, 그 외→EXPORT.
-  return Prisma.sql`SELECT "academyId" AS academy_id, "createdAt" AS created_at, CASE WHEN "eventType" = 'PAGE_VIEW' THEN 'PAGE_VIEW' WHEN "eventType" = 'LOGIN' THEN 'AUTH' ELSE 'EXPORT' END AS category FROM "app_events" ${where}`;
+  const conds = [Prisma.sql`NOT ${APP_EVENT_UNFINISHED_PRINT_SQL}`];
+  if (from) conds.unshift(Prisma.sql`"createdAt" >= ${from}`);
+  return Prisma.sql`SELECT "academyId" AS academy_id, "createdAt" AS created_at, ${appEventCaseSql((c) => c)} AS category FROM "app_events" WHERE ${Prisma.join(conds, " AND ")}`;
 }
 
 /** 9-소스 유니온 (타임라인 _sources.ts 와 동일 집합). */

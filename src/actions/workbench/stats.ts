@@ -7,8 +7,11 @@ import { requireAuth } from "./_helpers";
 // Stats
 // ---------------------------------------------------------------------------
 
-export async function getWorkbenchStats(academyId: string) {
-  await requireAuth();
+export async function getWorkbenchStats(academyIdArg: string) {
+  // 학원 범위는 세션이 정한다 — 인자는 호환용(호출부는 staff.academyId 를 넘긴다, IDOR 수리 26-09-30).
+  const staff = await requireAuth();
+  void academyIdArg;
+  const academyId = staff.academyId;
 
   const [
     totalPassages,
@@ -101,10 +104,12 @@ export async function getWorkbenchStats(academyId: string) {
 // ---------------------------------------------------------------------------
 
 export async function getAcademySchools(academyId: string) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(getWorkbenchStats 와 같은 이유).
+  const staff = await requireAuth();
+  void academyId;
 
   return prisma.school.findMany({
-    where: { academyId },
+    where: { academyId: staff.academyId },
     select: { id: true, name: true, type: true, publisher: true },
     orderBy: { name: "asc" },
   });

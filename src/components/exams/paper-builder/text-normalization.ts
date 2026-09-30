@@ -154,6 +154,18 @@ export function normalizeQuestionText(text: string): string {
     .join("\n\n");
 }
 
+/**
+ * 문항 본문 표시용 문단 접힘 — renderQuestionTextInline 이 그리기 직전에 적용하는 규칙과 **같은 것**.
+ * 각주 블록("* word: 뜻") 앞 빈 줄은 한 줄로, 그 밖의 빈 줄은 공백으로 접힌다(= 한 흐름으로 이어진다).
+ * 추정이 이 규칙을 안 쓰면 문단마다 빈 줄 1줄 + 덜 찬 줄이 생겨 문항 높이가 부풀고, 칸 아래가 빈다.
+ */
+export function collapseBodyParagraphsForDisplay(text: string): string {
+  return text
+    .replace(/\n{2,}(?=[*＊]\s*[A-Za-z])/g, "\n")
+    .replace(/\n{2,}/g, " ")
+    .replace(/[ \t]{2,}/g, " ");
+}
+
 export function normalizeInlineText(text: string): string {
   return normalizeBaseText(text).replace(/[ \t]{2,}/g, " ");
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { getStaffSession } from "@/lib/auth";
 import { getTodayRangeKST } from "@/lib/date-utils";
 import { prisma } from "@/lib/prisma";
 import { getTodaySchedule, getClassStatus } from "./_helpers";
@@ -135,6 +136,11 @@ export async function getTeacherRecentExams(
   staffId: string
 ): Promise<RecentExamResult[]> {
   try {
+    // 인증·학원 범위(IDOR 수리 26-09-30) — 시험 점수를 담으므로 세션의 학원만. 호출부(교사
+    // 대시보드)는 getStaffSession 의 academyId 를 그대로 넘긴다.
+    const staff = await getStaffSession();
+    if (!staff || staff.academyId !== academyId) return [];
+
     const myClassIds = (
       await prisma.class.findMany({
         where: { academyId, teacherId: staffId, isActive: true },

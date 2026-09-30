@@ -44,9 +44,9 @@ export async function POST(request: NextRequest) {
       };
     };
 
-    // Fetch passage context
+    // Fetch passage context — 학원 범위(IDOR 수리 26-09-30): 남의 학원 문제·지문은 404.
     const question = await prisma.question.findFirst({
-      where: { id: questionId, deletedAt: null },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       include: {
         passage: {
           select: { content: true, title: true, grade: true,

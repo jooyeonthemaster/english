@@ -1,12 +1,29 @@
-import { AlignmentType, BorderStyle, HeightRule, ImageRun, Paragraph, Table, TableCell, TableLayoutType, TableRow, TextRun, VerticalAlign, WidthType } from "docx";
+import { AlignmentType, BorderStyle, HeightRule, ImageRun, Paragraph, TableCell, TableRow, TextRun, VerticalAlign } from "docx";
 import { NONE, bdr, noBorders } from "../borders";
 import { COLOR } from "../styles";
+import {
+  gridCellInnerDxa,
+  gridCellWidth,
+  gridTable,
+  tableGrid,
+  tableGridWithFixed,
+  type DocxTableGrid,
+  type DocxTableGridMode,
+} from "../table-geometry";
 import type { DocChild } from "../types";
 import type { BuilderHeader } from "./model";
+import { builderPageGeometry } from "./page-geometry";
 import { SIZE_INFO, SIZE_INSTRUCTIONS, SIZE_SUBTITLE, SIZE_TITLE, SIZE_TITLE_COMPACT, bodyFont } from "./sizes";
 import { dataUrlToImage } from "./util";
 
 
+
+// 상단 박스 좌/우 셀 여백 — 중첩 표(제목·정보)의 그릇 폭 계산에도 쓴다.
+const LEFT_CELL_MARGINS = { top: 0, bottom: 60, left: 0, right: 120 };
+const RIGHT_CELL_MARGINS = { top: 0, bottom: 60, left: 120, right: 0 };
+// 좌(소제목+제목) : 우(학교/반/이름) 비율 — 종전 Word 렌더(6800:2900 을 100% 로 늘림)와 같게.
+const HEADER_COLUMN_WEIGHTS = [6800, 2900];
+const LOGO_CELL_DXA = 740;
 
 // =============================================================================
 // 페이지 헤더 (1페이지 상단)
@@ -16,7 +33,18 @@ export function buildPage1Header(
   header: BuilderHeader,
   title: string,
   compact: boolean,
+  /**
+   * 1쪽 머리표 구역(1단)의 본문 폭 DXA — builderPageGeometry(layout).pageContentWidthDxa.
+   * 생략하면 "fill": tblW 만 100%(Word 는 종전처럼 100% 폭), tblGrid·셀 폭(tcW)은 A4 추정
+   * 폭의 DXA(B4 면 한컴에서 좁게).
+   */
+  pageContentWidthDxa?: number,
 ): DocChild[] {
+  const mode: DocxTableGridMode = pageContentWidthDxa != null ? "exact" : "fill";
+  const containerDxa =
+    pageContentWidthDxa ??
+    builderPageGeometry({ density: compact ? "compact" : "comfortable" }).pageContentWidthDxa;
+  const outerGrid = tableGrid(containerDxa, HEADER_COLUMN_WEIGHTS, mode);
   const subtitle = header.subtitle?.trim() || "";
   const studentNameLabel = header.studentNameLabel?.trim() || "이름";
   const schoolName = header.schoolName?.trim() || "";
@@ -61,13 +89,17 @@ export function buildPage1Header(
   );
 
   // 로고가 있으면 별도 셀로 분리하여 왼쪽 정렬
+  const leftInnerDxa = gridCellInnerDxa(outerGrid, 0, LEFT_CELL_MARGINS);
+  const leftGrid: DocxTableGrid = logoImg
+    ? tableGridWithFixed(leftInnerDxa, [LOGO_CELL_DXA, null], mode)
+    : tableGrid(leftInnerDxa, [1], mode);
   const leftCells: TableCell[] = [];
   if (logoImg) {
     leftCells.push(
       new TableCell({
         borders: noBorders(),
         verticalAlign: VerticalAlign.TOP,
-        width: { size: 740, type: WidthType.DXA },
+        width: gridCellWidth(leftGrid, 0),
         margins: { top: 0, bottom: 0, left: 0, right: 160 },
         children: [
           new Paragraph({
@@ -88,15 +120,13 @@ export function buildPage1Header(
     new TableCell({
       borders: noBorders(),
       verticalAlign: VerticalAlign.TOP,
-      width: { size: 100, type: WidthType.PERCENTAGE },
+      width: gridCellWidth(leftGrid, leftCells.length),
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
       children: leftCellChildren,
     }),
   );
 
-  const leftTable = new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    layout: TableLayoutType.FIXED,
+  const leftTable = gridTable(leftGrid, {
     borders: {
       top: NONE, bottom: NONE, left: NONE, right: NONE,
       insideHorizontal: NONE, insideVertical: NONE,
@@ -105,17 +135,17 @@ export function buildPage1Header(
   });
 
   // 오른쪽: 학교 / 반 / 이름 (각 줄에 하단 보더, 라벨 / 값)
-  const rightCellChildren = buildInfoBlock({
-    studentNameLabel,
-    schoolName,
-    className,
-  });
+  const rightCellChildren = buildInfoBlock(
+    {
+      studentNameLabel,
+      schoolName,
+      className,
+    },
+    tableGrid(gridCellInnerDxa(outerGrid, 1, RIGHT_CELL_MARGINS), [30, 70], mode),
+  );
 
   // 상단 박스: 좌측(소제목+제목) | 우측(학교/반/이름) — 가장 아래에 두꺼운 보더
-  const headerTable = new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    layout: TableLayoutType.FIXED,
-    columnWidths: [6800, 2900],
+  const headerTable = gridTable(outerGrid, {
     borders: {
       top: NONE, left: NONE, right: NONE,
       insideHorizontal: NONE, insideVertical: NONE,
@@ -129,15 +159,15 @@ export function buildPage1Header(
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
             verticalAlign: VerticalAlign.TOP,
-            margins: { top: 0, bottom: 60, left: 0, right: 120 },
-            width: { size: 6800, type: WidthType.DXA },
+            margins: LEFT_CELL_MARGINS,
+            width: gridCellWidth(outerGrid, 0),
             children: [leftTable],
           }),
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
             verticalAlign: VerticalAlign.TOP,
-            margins: { top: 0, bottom: 60, left: 120, right: 0 },
-            width: { size: 2900, type: WidthType.DXA },
+            margins: RIGHT_CELL_MARGINS,
+            width: gridCellWidth(outerGrid, 1),
             children: rightCellChildren,
           }),
         ],
@@ -169,11 +199,15 @@ export function buildPage1Header(
   return result;
 }
 
-function buildInfoBlock(opts: {
-  studentNameLabel: string;
-  schoolName: string;
-  className: string;
-}): DocChild[] {
+function buildInfoBlock(
+  opts: {
+    studentNameLabel: string;
+    schoolName: string;
+    className: string;
+  },
+  /** 라벨 30 : 값 70 — 오른쪽 셀 안쪽 폭에서 나눈 그리드. */
+  grid: DocxTableGrid,
+): DocChild[] {
   const { studentNameLabel, schoolName, className } = opts;
 
   const rowsData: Array<{ label: string; value: string }> = [
@@ -192,7 +226,7 @@ function buildInfoBlock(opts: {
               top: NONE, left: NONE, right: NONE,
               bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
             },
-            width: { size: 30, type: WidthType.PERCENTAGE },
+            width: gridCellWidth(grid, 0),
             verticalAlign: VerticalAlign.BOTTOM,
             margins: { top: 10, bottom: 30, left: 0, right: 80 },
             children: [
@@ -214,7 +248,7 @@ function buildInfoBlock(opts: {
               top: NONE, left: NONE, right: NONE,
               bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
             },
-            width: { size: 70, type: WidthType.PERCENTAGE },
+            width: gridCellWidth(grid, 1),
             verticalAlign: VerticalAlign.BOTTOM,
             margins: { top: 10, bottom: 30, left: 0, right: 0 },
             children: [
@@ -238,9 +272,7 @@ function buildInfoBlock(opts: {
   );
 
   return [
-    new Table({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      layout: TableLayoutType.FIXED,
+    gridTable(grid, {
       borders: {
         top: NONE, bottom: NONE, left: NONE, right: NONE,
         insideHorizontal: NONE, insideVertical: NONE,

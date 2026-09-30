@@ -172,8 +172,9 @@ export async function getPassageWrongDetail(passageId: string) {
   const session = await requireStudent();
   const studentId = session.studentId;
 
-  const passage = await prisma.passage.findUnique({
-    where: { id: passageId },
+  // 학원 범위(IDOR 수리 26-09-30) — 학생의 학원 지문만(본문을 돌려주므로).
+  const passage = await prisma.passage.findFirst({
+    where: { id: passageId, academyId: session.academyId },
     select: { id: true, title: true, content: true },
   });
   if (!passage) throw new Error("지문을 찾을 수 없습니다.");

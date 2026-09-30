@@ -3,6 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logAppEvent } from "@/lib/app-events";
+import {
+  parsePrintEventMeta,
+  printEventCountsAsPrint,
+  type ExamPrintEventMeta,
+} from "@/lib/exams/print-event-meta";
+import { incrementExamPrintCountRow } from "@/lib/exams/exam-print-count";
 import {
   assertClassBelongsToAcademy,
   assertExamBelongsToAcademy,
@@ -439,23 +446,44 @@ export async function publishExam(examId: string): Promise<ActionResult> {
  * incrementExamPrintCount — PDF 인쇄(window.print) 시 인쇄 횟수를 +1 한다.
  * HWPX/DOCX 내보내기는 각 export 라우트에서 직접 증가시키므로, 이 액션은
  * 클라이언트에서만 일어나는 브라우저 인쇄를 집계하기 위한 보완 경로다.
+ *
+ * meta(선택, 26-09-29): 인쇄 컨트롤러가 보내는 원격 측정. 검증을 통과하면 app_events 에
+ * EXAM_EXPORT {format:'print', title, ...meta} 를 남긴다(관리자 활동 피드 「시험지 내보내기 (PRINT)」).
+ * outcome='blocked'(준비 실패로 print() 를 부르지 않음)는 인쇄 횟수에 넣지 않는다.
+ * meta 없이 부르는 종전 호출은 종전 그대로 +1 만 한다.
  */
-export async function incrementExamPrintCount(examId: string) {
+export async function incrementExamPrintCount(examId: string, meta?: ExamPrintEventMeta | null) {
   try {
     const staff = await requireStaffAuth();
     const exam = await prisma.exam.findFirst({
       where: { id: examId, academyId: staff.academyId },
-      select: { id: true },
+      select: { id: true, title: true },
     });
     if (!exam) return { success: false as const, error: "시험을 찾을 수 없습니다." };
 
-    await prisma.exam.update({
-      where: { id: examId },
-      data: { printCount: { increment: 1 } },
-    });
+    const counts = printEventCountsAsPrint(meta);
+    if (counts) {
+      // 인쇄는 수정이 아니다 — updatedAt(목록 「마지막 수정」·카드 인쇄 캐시 키)을 올리지 않는다(COH-15).
+      await incrementExamPrintCountRow(exam.id, staff.academyId);
+    }
 
-    revalidatePath("/director/exams");
-    revalidatePath("/director/workbench/exams");
+    const printMeta = parsePrintEventMeta(meta);
+    if (printMeta) {
+      await logAppEvent({
+        academyId: staff.academyId,
+        actorType: "STAFF",
+        actorId: staff.id ?? null,
+        eventType: "EXAM_EXPORT",
+        resourceType: "EXAM",
+        resourceId: exam.id,
+        metadata: { format: "print", title: exam.title, ...printMeta },
+      });
+    }
+
+    if (counts) {
+      revalidatePath("/director/exams");
+      revalidatePath("/director/workbench/exams");
+    }
     return { success: true as const };
   } catch (error) {
     const message =

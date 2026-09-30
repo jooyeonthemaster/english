@@ -3,19 +3,26 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "./_helpers";
+import { pickFolderPatch } from "./_lib/folder-scope";
 
 // ---------------------------------------------------------------------------
 // M1 Passage Draft Collections — Folder-like organization for extraction
 // drafts. Mirrors collections-passage.ts so the same useFolderManager hook
 // and FolderSection component can drive both UIs.
+//
+// 학원 범위(IDOR 수리 26-09-30): 목록·수정·삭제·상위 폴더도 세션 academyId 로 건다
+// (담기·빼기는 원래부터 걸려 있었다). 인자 academyId 는 호환용이고 쓰지 않는다.
 // ---------------------------------------------------------------------------
 
 const MANAGE_PATH = "/director/workbench/passages/import/jobs";
+const FOLDER_NOT_FOUND = "폴더를 찾을 수 없습니다.";
 
 export async function getM1DraftCollections(academyId: string) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(모든 호출부가 staff.academyId 를 넘긴다).
+  const staff = await requireAuth();
+  void academyId;
   return prisma.m1PassageDraftCollection.findMany({
-    where: { academyId },
+    where: { academyId: staff.academyId },
     include: {
       _count: {
         select: {
@@ -69,6 +76,14 @@ export async function createM1DraftCollection(data: {
 }) {
   const staff = await requireAuth();
   try {
+    // 상위 폴더도 이 학원 것이어야 한다 — 남의 학원 폴더 아래로 붙이지 못하게.
+    if (data.parentId) {
+      const parent = await prisma.m1PassageDraftCollection.findFirst({
+        where: { id: data.parentId, academyId: staff.academyId },
+        select: { id: true },
+      });
+      if (!parent) return { success: false as const, error: FOLDER_NOT_FOUND };
+    }
     const collection = await prisma.m1PassageDraftCollection.create({
       data: {
         academyId: staff.academyId,
@@ -91,12 +106,14 @@ export async function updateM1DraftCollection(
   collectionId: string,
   data: { name?: string; description?: string; color?: string },
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.m1PassageDraftCollection.update({
-      where: { id: collectionId },
-      data,
+    // 학원 범위 + 허용 필드만(academyId·parentId 를 실어 보내도 무시).
+    const result = await prisma.m1PassageDraftCollection.updateMany({
+      where: { id: collectionId, academyId: staff.academyId },
+      data: pickFolderPatch(data),
     });
+    if (result.count === 0) return { success: false as const, error: FOLDER_NOT_FOUND };
     revalidatePath(MANAGE_PATH);
     return { success: true as const };
   } catch (error) {
@@ -107,11 +124,13 @@ export async function updateM1DraftCollection(
 }
 
 export async function deleteM1DraftCollection(collectionId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.m1PassageDraftCollection.delete({
-      where: { id: collectionId },
+    // 학원 범위 — 남의 학원 폴더 id 는 count 0.
+    const result = await prisma.m1PassageDraftCollection.deleteMany({
+      where: { id: collectionId, academyId: staff.academyId },
     });
+    if (result.count === 0) return { success: false as const, error: FOLDER_NOT_FOUND };
     revalidatePath(MANAGE_PATH);
     return { success: true as const };
   } catch (error) {

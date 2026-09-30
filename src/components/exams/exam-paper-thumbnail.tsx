@@ -1,24 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getExamPreviewData } from "@/actions/exams";
 import { cn } from "@/lib/utils";
 import { ExamFirstPagePreview } from "./exam-detail-paper-preview";
+import { loadExamPreviewData } from "./exam-preview-data-cache";
 import type { ExamDetail } from "./exam-detail-client-parts/types";
 
 // ---------------------------------------------------------------------------
 // 시험지 카드 좌측의 "첫 장" 실제 렌더 미리보기.
 //   - 목록 페이로드에는 문항 본문이 없으므로, 카드가 화면에 보일 때 examId 별로
-//     getExamPreviewData 를 lazy 호출해 실제 시험지 데이터를 받아온다.
+//     getExamPreviewData 를 lazy 호출해 실제 시험지 데이터를 받아온다 — 카드 인쇄 대화상자와
+//     같은 캐시(exam-preview-data-cache, 키 examId+version)를 거쳐 인쇄 클릭 때 다시 받지 않는다.
 //   - 받아온 데이터를 ExamFirstPagePreview(상세 미리보기와 동일 파이프라인)로
 //     첫 페이지 한 장만 렌더해, 부모 칸의 폭에 맞춰 위→아래로 채운다.
 // ---------------------------------------------------------------------------
 
 export function ExamCardPaperPreview({
   examId,
+  version,
   className,
 }: {
   examId: string;
+  /** 목록의 exam.updatedAt — 캐시 키. 카드 인쇄 대화상자도 같은 값을 넘겨 결과를 공유한다. */
+  version?: string | Date | null;
   className?: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -63,7 +67,8 @@ export function ExamCardPaperPreview({
     startedRef.current = true;
     let cancelled = false;
     setState("loading");
-    getExamPreviewData(examId)
+    // low — 썸네일은 한 건씩 서버 액션 큐로 보낸다(인쇄 대화상자의 high 요청이 앞질러 나가게).
+    loadExamPreviewData(examId, version, "low")
       .then((data) => {
         if (cancelled) return;
         if (!data || data.questions.length === 0) {
@@ -79,6 +84,8 @@ export function ExamCardPaperPreview({
     return () => {
       cancelled = true;
     };
+    // version 은 캐시 키일 뿐 — 바뀌어도(시험지 편집이 updatedAt 을 올린다) 이미 그린 첫 장은 다시 받지 않는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, examId]);
 
   return (

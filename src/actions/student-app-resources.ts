@@ -371,10 +371,11 @@ export async function getStudentEnrollments() {
 // getPassageTranslations — 지문 문장별 해석 (Stories 모드용)
 // ---------------------------------------------------------------------------
 export async function getPassageTranslations(passageId: string): Promise<Record<number, string>> {
-  await requireStudent();
+  const session = await requireStudent();
 
-  const analysis = await prisma.passageAnalysis.findUnique({
-    where: { passageId },
+  // 학원 범위(IDOR 수리 26-09-30) — 학생의 학원 지문의 분석만.
+  const analysis = await prisma.passageAnalysis.findFirst({
+    where: { passageId, passage: { academyId: session.academyId } },
     select: { analysisData: true },
   });
 

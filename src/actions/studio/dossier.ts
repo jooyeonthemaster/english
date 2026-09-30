@@ -551,7 +551,7 @@ export async function getStudioPassageDossier(input: {
  * PassageAnalysisModal 이 소비하는 passage 형태(generate-page-client.tsx:2044-2057
  * 배선 정본)와 구조 호환되는 슬림 페이로드. notes·questions 는 도시에 팝오버
  * 슬림 계약(§3.9.4 — 제목·본문·analysisData)에 따라 빈 배열로 내린다.
- * ⚠ getWorkbenchPassage 재사용 금지 — academyId 미스코프(§12 금지 목록).
+ * 여기서 직접 조회한다 — getWorkbenchPassage 는 26-09-29 학원 범위가 걸렸지만(§12 금지 사유 해소) notes·questions 까지 싣는 무거운 형태라 슬림 계약과 맞지 않는다.
  */
 export interface StudioPassageAnalysisData {
   passage: {

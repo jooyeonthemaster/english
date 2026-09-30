@@ -22,6 +22,7 @@ import {
 } from "./render-section-inline";
 import { renderOptions } from "./render-options";
 import { renderAnswer } from "./render-answer";
+import { LEGACY_DEFAULT_COLUMN_WIDTH_DXA } from "./table-geometry";
 import type { DocChild, ExamQuestionData, ParsedOption, ParsedSection } from "./types";
 import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
@@ -69,7 +70,9 @@ function renderSummaryWritingGloss(section: ParsedSection): DocChild[] {
 
 export function buildQuestionElements(
   eq: ExamQuestionData,
-  includeAnswer: boolean
+  includeAnswer: boolean,
+  /** 본문 한 단 폭(DXA) — 선지 표·답란·정답 박스 표의 그릇 폭. */
+  contentWidthDxa: number = LEGACY_DEFAULT_COLUMN_WIDTH_DXA,
 ): DocChild[] {
   const elements: DocChild[] = [];
   const q = eq.question;
@@ -193,7 +196,7 @@ export function buildQuestionElements(
   }
 
   // 4. Render Options
-  elements.push(...renderOptions(options, q.subType));
+  elements.push(...renderOptions(options, q.subType, contentWidthDxa));
 
   // 5. Render Subjective Writing Area (if no options and no included answer, perfect for printed tests)
   if (options.length === 0 && !includeAnswer) {
@@ -202,12 +205,12 @@ export function buildQuestionElements(
     ) || (q.subType && q.subType.includes("영작")));
 
     // Always provide a writing space for subjective questions
-    elements.push(...renderWritingSpace(isWriting));
+    elements.push(...renderWritingSpace(isWriting, contentWidthDxa));
   }
 
   // 6. Answer Key / Explanation
   if (includeAnswer) {
-    elements.push(...renderAnswer(q, options));
+    elements.push(...renderAnswer(q, options, contentWidthDxa));
   }
 
   // Divider

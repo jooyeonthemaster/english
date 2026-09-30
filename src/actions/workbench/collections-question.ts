@@ -7,10 +7,26 @@ import {
   buildCollectionSubjectScopeWhere,
   isMissingColumnError,
 } from "./_collection-where";
+import { pickFolderPatch, sanitizeIdList } from "./_lib/folder-scope";
 
 // ---------------------------------------------------------------------------
 // Question Collections (playlist-style)
+//
+// 학원 범위(IDOR 수리 26-09-30): 모든 액션이 세션 academyId 로 폴더·문제를 거른다.
+// 인자 academyId 는 호환용이고 쓰지 않는다. 남의 학원 폴더 id 는 「컬렉션을 찾을 수
+// 없습니다」, 남의 학원 문제 id 는 조용히 빠진다(존재 여부를 드러내지 않는다).
 // ---------------------------------------------------------------------------
+
+const COLLECTION_NOT_FOUND = "컬렉션을 찾을 수 없습니다.";
+
+async function isOwnedQuestionFolder(collectionId: unknown, academyId: string) {
+  if (typeof collectionId !== "string" || collectionId.length === 0) return false;
+  const row = await prisma.questionCollection.findFirst({
+    where: { id: collectionId, academyId },
+    select: { id: true },
+  });
+  return row !== null;
+}
 
 export async function getQuestionCollections(
   academyId: string,
@@ -19,11 +35,14 @@ export async function getQuestionCollections(
     subject?: "KOREAN";
   },
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(모든 호출부가 staff.academyId 를 넘긴다).
+  const staff = await requireAuth();
+  void academyId;
+  const scopedAcademyId = staff.academyId;
   // 폴더 "N개" 배지 — 지문 세트는 멤버 N개가 아니라 "세트 1개"로 센다(일반 문제와 동일한 시각 단위).
   // 삭제(휴지통) 문제 제외. items._count(prisma)는 distinct setId 를 못 세므로 JS 로 집계.
   const items = await prisma.questionCollectionItem.findMany({
-    where: { collection: { academyId }, question: { deletedAt: null } },
+    where: { collection: { academyId: scopedAcademyId }, question: { deletedAt: null } },
     select: {
       collectionId: true,
       question: { select: { inSet: true, setId: true } },
@@ -56,7 +75,7 @@ export async function getQuestionCollections(
     const collections = await prisma.questionCollection.findMany({
       // 과목 스코프(항상 적용) — 국어/영어 폴더 완전 분리. 기존(subject null)
       // 폴더는 전부 영어로 간주돼 영어 목록에 그대로 남는다(무회귀).
-      where: { academyId, ...buildCollectionSubjectScopeWhere(opts?.subject) },
+      where: { academyId: scopedAcademyId, ...buildCollectionSubjectScopeWhere(opts?.subject) },
       include: childrenSelect,
       orderBy: { name: "asc" },
     });
@@ -73,7 +92,7 @@ export async function getQuestionCollections(
     // 않도록 명시 select 로 재조회하고, 반환 형태는 subject:null 로 맞춘다.
     if (!isMissingColumnError(error)) throw error;
     const rows = await prisma.questionCollection.findMany({
-      where: { academyId },
+      where: { academyId: scopedAcademyId },
       select: {
         id: true,
         academyId: true,
@@ -139,6 +158,10 @@ export async function createQuestionCollection(data: {
     color: data.color || null,
   };
   try {
+    // 상위 폴더도 이 학원 것이어야 한다 — 남의 학원 폴더 아래로 붙이지 못하게.
+    if (baseData.parentId && !(await isOwnedQuestionFolder(baseData.parentId, staff.academyId))) {
+      return { success: false as const, error: COLLECTION_NOT_FOUND };
+    }
     const collection = await prisma.questionCollection.create({
       data: {
         ...baseData,
@@ -181,14 +204,15 @@ export async function updateQuestionCollection(
   collectionId: string,
   data: { name?: string; description?: string }
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.questionCollection.update({
-      where: { id: collectionId },
-      data,
-      // RETURNING 최소화 — subject 컬럼 미반영 DB에서도 이름변경이 깨지지 않게.
-      select: { id: true },
+    // 학원 범위 + 허용 필드만(academyId·parentId·subject 를 실어 보내도 무시).
+    // updateMany 는 RETURNING 이 없어 subject 컬럼 미반영 DB 에서도 깨지지 않는다.
+    const result = await prisma.questionCollection.updateMany({
+      where: { id: collectionId, academyId: staff.academyId },
+      data: pickFolderPatch(data),
     });
+    if (result.count === 0) return { success: false as const, error: COLLECTION_NOT_FOUND };
     revalidatePath("/director/questions");
     return { success: true as const };
   } catch (error) {
@@ -199,13 +223,13 @@ export async function updateQuestionCollection(
 }
 
 export async function deleteQuestionCollection(collectionId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.questionCollection.delete({
-      where: { id: collectionId },
-      // RETURNING 최소화 — subject 컬럼 미반영 DB에서도 삭제가 깨지지 않게.
-      select: { id: true },
+    // 학원 범위 — 남의 학원 폴더 id 는 count 0(RETURNING 없음 → subject 컬럼 미반영 DB 안전).
+    const result = await prisma.questionCollection.deleteMany({
+      where: { id: collectionId, academyId: staff.academyId },
     });
+    if (result.count === 0) return { success: false as const, error: COLLECTION_NOT_FOUND };
     revalidatePath("/director/questions");
     return { success: true as const };
   } catch (error) {
@@ -219,20 +243,32 @@ export async function addQuestionsToCollection(
   collectionId: string,
   questionIds: string[]
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
+    // 학원 범위 — 폴더도 문제도 이 학원 것만(남의 학원 문제를 내 폴더에 담지 못하게).
+    if (!(await isOwnedQuestionFolder(collectionId, staff.academyId))) {
+      return { success: false as const, error: COLLECTION_NOT_FOUND };
+    }
+    const requestedIds = sanitizeIdList(questionIds);
+    const owned = requestedIds.length
+      ? await prisma.question.findMany({
+          where: { id: { in: requestedIds }, academyId: staff.academyId },
+          select: { id: true },
+        })
+      : [];
+    const ownedSet = new Set(owned.map((q) => q.id));
+    const ownedIds = requestedIds.filter((id) => ownedSet.has(id));
+
     // Compute the items that will ACTUALLY be inserted (not already present)
     // so the caller can reconcile its optimistic UI counts with the DB. Using
     // skipDuplicates alone hides this — createMany never reports which rows it
     // skipped — so the client would over-count.
     const existing = await prisma.questionCollectionItem.findMany({
-      where: { collectionId, questionId: { in: questionIds } },
+      where: { collectionId, questionId: { in: ownedIds } },
       select: { questionId: true },
     });
     const existingSet = new Set(existing.map((e) => e.questionId));
-    const addedIds = [...new Set(questionIds)].filter(
-      (id) => !existingSet.has(id),
-    );
+    const addedIds = ownedIds.filter((id) => !existingSet.has(id));
     if (addedIds.length === 0) {
       return { success: true as const, addedIds: [] as string[] };
     }
@@ -266,13 +302,17 @@ export async function removeQuestionsFromCollection(
   collectionId: string,
   questionIds: string[]
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
+    // 학원 범위 — 남의 학원 폴더에서는 아무것도 빼지 않는다.
+    if (!(await isOwnedQuestionFolder(collectionId, staff.academyId))) {
+      return { success: false as const, error: COLLECTION_NOT_FOUND };
+    }
     // Resolve which of the requested items are actually in the collection so
     // the caller can reconcile counts against the DB (the rest were never
     // members and must not be counted as removals).
     const existing = await prisma.questionCollectionItem.findMany({
-      where: { collectionId, questionId: { in: questionIds } },
+      where: { collectionId, questionId: { in: sanitizeIdList(questionIds) } },
       select: { questionId: true },
     });
     const removedIds = existing.map((e) => e.questionId);

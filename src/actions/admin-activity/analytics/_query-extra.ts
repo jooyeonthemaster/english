@@ -9,6 +9,8 @@
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import type { ActivityCategory } from "@/lib/admin-activity-types";
+import { APP_EVENT_UNFINISHED_PRINT_SQL, appEventCaseSql } from "./_query";
 
 // ─── 기능 유니온 ─────────────────────────────────────────────────────────────
 
@@ -17,12 +19,32 @@ const JOB_STATUS = Prisma.raw(
   `CASE WHEN "status" = 'COMPLETED' THEN 'SUCCESS' WHEN "status" IN ('FAILED', 'DEAD') THEN 'FAILED' ELSE 'PENDING' END`,
 );
 
-function whereFrom(from: Date | null, academyId?: string): Prisma.Sql {
+function whereFrom(from: Date | null, academyId?: string, extra?: Prisma.Sql): Prisma.Sql {
   const parts: Prisma.Sql[] = [];
   if (from) parts.push(Prisma.sql`"createdAt" >= ${from}`);
   if (academyId) parts.push(Prisma.sql`"academyId" = ${academyId}`);
+  if (extra) parts.push(extra);
   if (parts.length === 0) return Prisma.empty;
   return Prisma.sql`WHERE ${Prisma.join(parts, " AND ")}`;
+}
+
+/**
+ * app_events 분류 → 기능명. 분류 규칙은 _query.ts APP_EVENT_CATEGORY_RULES(관리자 활동 피드와 같은 규칙) 하나다.
+ * 내보내기가 아닌 이벤트(지문 삭제 PASSAGE_DELETE 등 CONTENT)는 'OTHER_EVENT' — FEATURE_ORDER 밖이라 기능별
+ * 추이 · 채택률 · 학원 기능 분해에서는 빠지고, 시간대 히트맵 · 학원 활동량에만 든다.
+ */
+const APP_EVENT_FEATURE: Record<ActivityCategory, string> = {
+  PAGE_VIEW: "PAGEVIEW",
+  AUTH: "LOGIN",
+  EXPORT: "EXPORT",
+  CONTENT: "OTHER_EVENT",
+  EXTRACTION: "OTHER_EVENT",
+  AI_GENERATION: "OTHER_EVENT",
+};
+
+/** app_events 멤버 — 끝나지 않은 인쇄(print() 에 이르지 못함)는 내보내기가 아니라 뺀다. */
+function appEventsFeature(from: Date | null, academyId?: string): Prisma.Sql {
+  return Prisma.sql`SELECT "academyId" AS academy_id, "createdAt" AS created_at, ${appEventCaseSql((c) => APP_EVENT_FEATURE[c])} AS feature, 'INFO'::text AS status_norm FROM "app_events" ${whereFrom(from, academyId, Prisma.sql`NOT ${APP_EVENT_UNFINISHED_PRINT_SQL}`)}`;
 }
 
 /** 잡 테이블 멤버 (status_norm = 정규화 상태). */
@@ -51,12 +73,7 @@ function infoFeature(
 
 function buildFeatureUnion(from: Date | null, academyId?: string): Prisma.Sql {
   const members = [
-    infoFeature(
-      "app_events",
-      Prisma.sql`CASE WHEN "eventType" = 'PAGE_VIEW' THEN 'PAGEVIEW' WHEN "eventType" = 'LOGIN' THEN 'LOGIN' ELSE 'EXPORT' END`,
-      from,
-      academyId,
-    ),
+    appEventsFeature(from, academyId),
     jobFeature("extraction_jobs", Prisma.sql`'EXTRACTION'`, from, academyId),
     jobFeature(
       "workbench_ai_jobs",

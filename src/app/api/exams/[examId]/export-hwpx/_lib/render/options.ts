@@ -87,6 +87,7 @@ export function multiBlankOptionsHeaderBlock(opts: {
   });
   return {
     kind: "p",
+    keepRole: "optionHead",
     style: {
       align: "LEFT",
       // 선지 값이 시작하는 텍스트 컬럼(마커 뒤)에 맞춰 시작한다 — 호출자의 선지 문단
@@ -143,6 +144,8 @@ export function renderOptions(opts: {
     }
     blocks.push({
       kind: "p",
+      // 선지 묶음 유지(keep-policy.ts): 연속 선지끼리 한 단/쪽에 둔다.
+      keepRole: "option",
       style: {
         align: "LEFT",
         // 미리보기 선지는 원문자 marker(min-w-[18px]) + gap-1.5 뒤에 텍스트가 오고,

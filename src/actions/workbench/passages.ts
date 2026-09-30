@@ -7,6 +7,17 @@ import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
 import { buildWorkbenchPassageWhere } from "./_passage-where";
 import { PRIME_REPORT_MARKERS } from "./passage-constants";
+import {
+  deletePassagesGuarded,
+  describePassageDeleteError,
+  loadPassageDeletionImpact,
+} from "./_lib/passage-delete-store";
+import { RESTRICT_RELATION_LABELS } from "./_lib/passage-delete-guard";
+import type {
+  PassageDeleteNoun,
+  PassageDeletionConfirm,
+  PassageDeletionImpact,
+} from "./_lib/passage-delete-message";
 import type {
   WorkbenchPassageFilters,
   ActionResult,
@@ -82,13 +93,16 @@ export async function getWorkbenchPassages(
   academyId: string,
   filters?: WorkbenchPassageFilters
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다 — 인자 academyId 는 호환용(모든 호출부가 staff.academyId 를
+  // 넘긴다). 클라이언트가 남의 학원 id 를 넘겨도 자기 학원 목록만 나온다.
+  const staff = await requireAuth();
+  void academyId;
 
   const page = filters?.page || 1;
   const limit = filters?.limit || 20;
   const skip = (page - 1) * limit;
 
-  const where = buildWorkbenchPassageWhere(academyId, filters);
+  const where = buildWorkbenchPassageWhere(staff.academyId, filters);
 
   const [passages, total] = await Promise.all([
     prisma.passage.findMany({
@@ -135,9 +149,11 @@ export async function findWorkbenchPassageDuplicates(
   academyId: string,
   filters?: { analyzedOnly?: boolean },
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(getWorkbenchPassages 와 같은 이유).
+  const staff = await requireAuth();
+  void academyId;
 
-  const where: Record<string, unknown> = { academyId };
+  const where: Record<string, unknown> = { academyId: staff.academyId };
   if (filters?.analyzedOnly) where.analysis = { isNot: null };
 
   // Pull the minimum fields needed for grouping + cluster card render.
@@ -201,10 +217,11 @@ export async function findWorkbenchPassageDuplicates(
 }
 
 export async function getWorkbenchPassage(passageId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
 
-  const passage = await prisma.passage.findUnique({
-    where: { id: passageId },
+  // 학원 범위 — 남의 학원 지문 id 는 null(호출부의 「찾을 수 없음」 경로).
+  const passage = await prisma.passage.findFirst({
+    where: { id: passageId, academyId: staff.academyId },
     include: {
       school: { select: { id: true, name: true, type: true } },
       notes: { orderBy: { order: "asc" } },
@@ -689,8 +706,9 @@ export async function updateWorkbenchPassage(
       }
     }
 
-    await prisma.passage.update({
-      where: { id: passageId },
+    // 학원 범위 — 남의 학원 지문 id 는 count 0 으로 떨어진다(IDOR 수리 26-09-29).
+    const result = await prisma.passage.updateMany({
+      where: { id: passageId, academyId },
       data: {
         title: data.title,
         content: data.content,
@@ -704,6 +722,9 @@ export async function updateWorkbenchPassage(
         tags: data.tags ? JSON.stringify(data.tags) : undefined,
       },
     });
+    if (result.count === 0) {
+      return { success: false, error: "지문을 찾을 수 없습니다." };
+    }
 
     revalidatePath("/director/workbench/passages");
     return { success: true };
@@ -714,55 +735,108 @@ export async function updateWorkbenchPassage(
   }
 }
 
+// ---------------------------------------------------------------------------
+// 지문 삭제 — 전부 _lib/passage-delete-guard.ts 정책을 거친다(docs/EXAM-PAPER-MODEL.md §5).
+//   학원 범위 강제 · 동일 지문이면 참조를 옮겨 연결 · 아니면 문항에 원문 보관 ·
+//   PASSAGE_DELETE 감사 이벤트. 확인창은 getPassageDeletionImpact 로 사실을 말한다.
+// ---------------------------------------------------------------------------
+
+/** 삭제 전 영향 범위(읽기 전용) + 그대로 띄울 확인창 문구. */
+export async function getPassageDeletionImpact(
+  passageIds: string[],
+  options?: { noun?: PassageDeleteNoun },
+): Promise<
+  | { success: true; impact: PassageDeletionImpact; confirm: PassageDeletionConfirm }
+  | { success: false; error: string }
+> {
+  try {
+    const staff = await requireAuth();
+    const r = await loadPassageDeletionImpact(staff.academyId, passageIds, options?.noun);
+    return { success: true as const, ...r };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "삭제 영향 범위를 확인하지 못했습니다.";
+    return { success: false as const, error: message };
+  }
+}
+
 export async function deleteWorkbenchPassage(
   passageId: string
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
-
-    await prisma.passage.delete({ where: { id: passageId } });
-
-    revalidatePath("/director/workbench/passages");
+    const staff = await requireAuth();
+    const r = await deletePassagesGuarded({
+      academyId: staff.academyId,
+      actorId: staff.id,
+      ids: [passageId],
+      via: "deleteWorkbenchPassage",
+    });
+    if (r.outcomes.length > 0) revalidatePath("/director/workbench/passages");
+    if (r.error) return { success: false, error: describePassageDeleteError(r.error) };
+    if (r.blocked.length > 0) {
+      const labels = [
+        ...new Set(
+          r.blocked.flatMap((b) => b.blockedBy.map((x) => RESTRICT_RELATION_LABELS[x.relation])),
+        ),
+      ];
+      return {
+        success: false,
+        error: `${labels.join("·")}에 연결된 지문이라 삭제할 수 없습니다. 먼저 연결을 해제해 주세요.`,
+      };
+    }
+    if (r.outcomes.length === 0) {
+      return { success: false, error: "지문을 찾을 수 없습니다." };
+    }
     return { success: true };
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "지문 삭제 중 오류가 발생했습니다.";
-    return { success: false, error: message };
+    return { success: false, error: describePassageDeleteError(error) };
   }
 }
 
 // Bulk delete: scoped to caller's academy so cross-tenant ids silently no-op
-// instead of erroring out the whole batch.
+// instead of erroring out the whole batch. 청크(트랜잭션)가 중간에 실패하면 앞
+// 청크는 이미 지워졌으므로 success:true + deleted<requested + error 로 알린다.
 export async function bulkDeleteWorkbenchPassages(
   passageIds: string[],
 ): Promise<{
   success: boolean;
   requested: number;
   deleted: number;
+  /** RESTRICT 참조(튜터 수업 등) 때문에 지우지 않은 수. */
+  blocked?: number;
+  /** 실제로 지운 id — 화면에서 이것만 걷어 낸다. */
+  deletedIds?: string[];
   error?: string;
 }> {
+  const requested = Array.isArray(passageIds) ? passageIds.length : 0;
   try {
     const staff = await requireAuth();
-    if (passageIds.length === 0) {
+    if (requested === 0) {
       return { success: true, requested: 0, deleted: 0 };
     }
-    const result = await prisma.passage.deleteMany({
-      where: { id: { in: passageIds }, academyId: staff.academyId },
+    const r = await deletePassagesGuarded({
+      academyId: staff.academyId,
+      actorId: staff.id,
+      ids: passageIds,
+      via: "bulkDeleteWorkbenchPassages",
     });
-    revalidatePath("/director/workbench/passages");
+    const deleted = r.outcomes.length;
+    if (deleted > 0) revalidatePath("/director/workbench/passages");
+    const error = r.error ? describePassageDeleteError(r.error) : undefined;
     return {
-      success: true,
-      requested: passageIds.length,
-      deleted: result.count,
+      success: !(error && deleted === 0),
+      requested,
+      deleted,
+      blocked: r.blocked.length,
+      deletedIds: r.outcomes.map((o) => o.passageId),
+      ...(error ? { error } : {}),
     };
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "지문 삭제 중 오류가 발생했습니다.";
     return {
       success: false,
-      requested: passageIds.length,
+      requested,
       deleted: 0,
-      error: message,
+      error: describePassageDeleteError(error),
     };
   }
 }
@@ -771,11 +845,12 @@ export async function bulkUpdatePassageTags(
   passageIds: string[],
   tags: string[]
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
     const tagsJson = JSON.stringify(tags);
+    // 학원 범위 — 남의 학원 지문 id 는 조용히 제외된다(IDOR 수리 26-09-29).
     await prisma.passage.updateMany({
-      where: { id: { in: passageIds } },
+      where: { id: { in: passageIds }, academyId: staff.academyId },
       data: { tags: tagsJson },
     });
     revalidatePath("/director/workbench/passages");

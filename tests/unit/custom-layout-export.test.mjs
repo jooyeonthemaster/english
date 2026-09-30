@@ -138,7 +138,8 @@ async function main() {
   });
   const hwpxBuffer = await packageHwpx(hwpxDoc);
   const hwpxZip = await JSZip.loadAsync(hwpxBuffer);
-  const sectionFile = hwpxZip.file("Contents/section0.xml");
+  // E36 부터 section0 = 표지, section1 = 본문. 문항은 본문 구역에 있다(COH-14).
+  const sectionFile = hwpxZip.file("Contents/section1.xml");
   const sectionXml = sectionFile ? await sectionFile.async("string") : "";
 
   // ── 시험지 미리보기(makePaperItem) — 답란 줄 수 + 지문 흐름 ──

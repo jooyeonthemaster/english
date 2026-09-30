@@ -29,6 +29,7 @@ import {
   updatePassageAnalysis,
   renamePassage,
 } from "@/actions/workbench";
+import { confirmPassageDeletion } from "./passage-delete-confirm";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
   AnalysisToneSelector,
@@ -358,9 +359,13 @@ export function PassageAnalysisModal({
 
   // ─── Delete passage ──────────────────────────────────
   const handleDelete = async () => {
-    if (!confirm("이 지문을 삭제하시겠습니까? 관련 문제도 모두 삭제됩니다."))
-      return;
+    if (deleting) return;
+    // 영향 조회 동안에도 버튼을 잠근다(연타 방지). 확인창 문구는 실제 동작 그대로.
     setDeleting(true);
+    if (!(await confirmPassageDeletion([passage.id]))) {
+      setDeleting(false);
+      return;
+    }
     const result = await deleteWorkbenchPassage(passage.id);
     if (result.success) {
       toast.success("지문이 삭제되었습니다.");

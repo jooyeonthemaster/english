@@ -11,6 +11,7 @@ import { COLOR, KR_FONT, FONT, LABEL_SIZE, SUBTITLE_SIZE, TITLE_SIZE } from "./s
 import { hrule } from "./borders";
 import { buildQuestionElements } from "./build-question";
 import { buildAnswerKeyTable } from "./build-answer-key";
+import { LEGACY_PAGE_SIZE, legacyDocGeometry } from "./table-geometry";
 import type { DocChild, ExamQuestionData } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -28,6 +29,8 @@ export function buildExamDocument(
   },
 ): Document {
   const allChildren: DocChild[] = [];
+  // 쪽·단 설정의 단일 원천 — 본문 표(선지·답란·정답표)의 폭도 같은 단 폭에서 계산한다.
+  const geometry = legacyDocGeometry(options);
 
   allChildren.push(
     new Paragraph({
@@ -74,29 +77,30 @@ export function buildExamDocument(
   allChildren.push(hrule(COLOR.black, 12, 80, 200));
 
   for (const eq of questions) {
-    allChildren.push(...buildQuestionElements(eq, includeAnswers));
+    allChildren.push(...buildQuestionElements(eq, includeAnswers, geometry.columnWidthDxa));
   }
 
   if (!includeAnswers) {
     // 정답표는 항상 새 페이지에서 시작.
-    allChildren.push(...buildAnswerKeyTable(questions, { pageBreakBefore: true }));
+    allChildren.push(
+      ...buildAnswerKeyTable(questions, {
+        pageBreakBefore: true,
+        containerWidthDxa: geometry.columnWidthDxa,
+      }),
+    );
   }
 
-  const compact = options?.density === "compact";
-  const margin = compact
-    ? { top: 560, bottom: 560, left: 560, right: 560 }
-    : { top: 720, bottom: 720, left: 720, right: 720 };
-  const columnCount = options?.columns ?? 2;
+  const { margin, columnCount, columnSpaceDxa } = geometry;
 
   return new Document({
     sections: [
       {
         properties: {
           page: {
-            size: { width: 11906, height: 16838 },
+            size: { width: LEGACY_PAGE_SIZE.width, height: LEGACY_PAGE_SIZE.height },
             margin,
           },
-          column: { space: columnCount === 2 ? 480 : 0, count: columnCount },
+          column: { space: columnSpaceDxa, count: columnCount },
         },
         headers: {
           default: new Header({

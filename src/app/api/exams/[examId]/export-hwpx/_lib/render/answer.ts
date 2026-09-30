@@ -11,6 +11,11 @@ import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
 import { parseFormattedToRuns } from "../format";
 import { circleGrammarLabelMentions, grammarMarkerDisplayLabel, shouldRenderWrongAnalysisForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  explanationContentLines,
+  hasVisibleExplanationText,
+  parseExplanationInline,
+} from "@/components/exams/paper-builder/explanation-markdown";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const THIN_BORDER: BorderSpec = {
@@ -48,9 +53,10 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
   const answerText = (correctAnswer || "").trim();
   const answerLabel = hasOptions ? "정답" : "정답:";
 
-  // 정답 배지
+  // 정답 배지 — 단/쪽 끝에 홀로 남지 않게(뒤 해설과 한 단, 앞 선지 묶음과도 한 단 — keep-policy.ts)
   result.push({
     kind: "tbl",
+    keepRole: "caption",
     colWidthsHpu: [contentWidthHpu],
     borders: {
       left: THIN_BORDER,
@@ -103,11 +109,12 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
 
   if (!explanation) return result;
 
-  // 해설
+  // 해설 — 줄머리 「- 」 는 글머리(•) 줄, `**` 는 굵게(웹 PDF 해설과 같은 explanation-markdown 규칙)
   const content = (explanation.content || "").trim();
   if (content) {
     result.push({
       kind: "p",
+      keepRole: "caption", // 해설 라벨 → 첫 줄 (keep-policy.ts)
       style: { spaceBefore: 40, spaceAfter: 40, leftMargin: 80 },
       runs: [
         txt("해설", {
@@ -117,25 +124,30 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
         }),
       ],
     });
-    for (const line of content.split("\n")) {
-      const t = line.trim();
-      if (!t) continue;
-      result.push({
-        kind: "p",
-        style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 158 },
-        runs: parseFormattedToRuns(prose(t), {
-          size: SIZE.explainBody,
-          color: COLORS.darkGray,
-        }),
-      });
+    for (const line of explanationContentLines(content)) {
+      const runs = explanationRuns(prose(line.text), COLORS.darkGray);
+      if (!runs) continue;
+      result.push(
+        line.bullet
+          ? bulletParagraph(runs)
+          : {
+              kind: "p",
+              style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 158 },
+              runs,
+            },
+      );
     }
   }
 
-  // 핵심 포인트
-  const keyPoints = safeJSONParse<string[]>(explanation.keyPoints, []);
+  // 핵심 포인트 — 문자열 항목만(웹 explanation-content 와 같은 거르기). 라벨은 그릴 항목이 있을 때만.
+  const keyPointsRaw = safeJSONParse<unknown>(explanation.keyPoints, []);
+  const keyPoints = (Array.isArray(keyPointsRaw) ? keyPointsRaw : []).filter(
+    (kp): kp is string => typeof kp === "string" && kp.trim().length > 0,
+  );
   if (keyPoints.length > 0) {
     result.push({
       kind: "p",
+      keepRole: "caption",
       style: { spaceBefore: 60, spaceAfter: 40, leftMargin: 80 },
       runs: [
         txt("핵심 포인트", {
@@ -146,25 +158,8 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
       ],
     });
     for (const kp of keyPoints) {
-      const t = (kp || "").trim();
-      if (!t) continue;
-      const runs: RunNode[] = [
-        txt("• ", { size: SIZE.explainBody, color: COLORS.gray }),
-        ...parseFormattedToRuns(prose(t), {
-          size: SIZE.explainBody,
-          color: COLORS.darkGray,
-        }),
-      ];
-      result.push({
-        kind: "p",
-        style: {
-          leftMargin: 280,
-          indentFirst: -160,
-          spaceAfter: 40,
-          lineSpacingPct: 158,
-        },
-        runs,
-      });
+      const runs = explanationRuns(prose(kp.trim()), COLORS.darkGray);
+      if (runs) result.push(bulletParagraph(runs));
     }
   }
 
@@ -194,6 +189,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
   ) {
     result.push({
       kind: "p",
+      keepRole: "caption",
       style: { spaceBefore: 60, spaceAfter: 40, leftMargin: 80 },
       runs: [
         txt("오답 분석", {
@@ -218,10 +214,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
             bold: true,
             color: COLORS.darkGray,
           }),
-          ...parseFormattedToRuns(prose(exp.trim()), {
-            size: SIZE.explainBody,
-            color: COLORS.gray,
-          }),
+          ...(explanationRuns(prose(exp.trim()), COLORS.gray) ?? []),
         ],
       });
     }
@@ -229,4 +222,32 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
 
   result.push({ kind: "p", style: { spaceAfter: 120 }, runs: [] });
   return result;
+}
+
+/**
+ * 해설 한 줄 → 런. 마크다운(`**굵게**` · 백틱 · 보이지 않는 끊김 문자)은 웹과 같은 explanation-markdown
+ * 규칙으로 먼저 풀고, 조각마다 기존 서식(parseFormattedToRuns — 원문자 · (A) 마커 · 밑줄 · 빈칸)을 입힌다.
+ * 굵은 조각은 웹 <strong>(text-slate-700)처럼 진회색 굵게. 보이는 글자가 없으면 null(그 줄은 그리지 않는다).
+ */
+function explanationRuns(text: string, color: string): RunNode[] | null {
+  const segments = parseExplanationInline(text);
+  if (!hasVisibleExplanationText(segments)) return null;
+  const base = { size: SIZE.explainBody, color };
+  return segments.flatMap((segment) =>
+    parseFormattedToRuns(segment.text, segment.bold ? { ...base, bold: true, color: COLORS.darkGray } : base),
+  );
+}
+
+/** 글머리(•) 줄 — 핵심 포인트와 해설 본문의 「- 」 줄이 같은 모양(웹 bullet 행). */
+function bulletParagraph(runs: RunNode[]): BlockNode {
+  return {
+    kind: "p",
+    style: {
+      leftMargin: 280,
+      indentFirst: -160,
+      spaceAfter: 40,
+      lineSpacingPct: 158,
+    },
+    runs: [txt("• ", { size: SIZE.explainBody, color: COLORS.gray }), ...runs],
+  };
 }

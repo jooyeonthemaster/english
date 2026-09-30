@@ -142,13 +142,19 @@ function marginAndLineSpacing(p: ParaShapeSpec): string {
   ].join("");
 }
 
+// breakSetting 플래그 → "0"/"1". HWP 5.0 문단 모양 속성1 bit16(외톨이줄)·17(다음 문단과 함께)·
+// 18(문단 보호)와 1:1. pageBreakBefore(bit19)는 쓰지 않는다 — 강제 쪽 나눔은 hp:p pageBreak.
+// 한컴 실측(26-09-29 프로브): keepWithNext 는 네이티브 2단의 **단 경계**에도 적용되고, 사슬
+// (머리→①…⑤)이 통째로 다음 단으로 옮겨진다. 자세한 계약은 keep-policy.ts.
+const flag = (v: boolean) => (v ? "1" : "0");
+
 function paraShapeXml(p: ParaShapeSpec, id: number): string {
   const ml = marginAndLineSpacing(p);
   return [
     `<hh:paraPr id="${id}" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0">`,
     `<hh:align horizontal="${p.align}" vertical="BASELINE"/>`,
     `<hh:heading type="NONE" idRef="0" level="0"/>`,
-    `<hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/>`,
+    `<hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="${flag(p.widowOrphan)}" keepWithNext="${flag(p.keepWithNext)}" keepLines="${flag(p.keepLines)}" pageBreakBefore="0" lineWrap="BREAK"/>`,
     `<hp:switch>`,
     `<hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar">${ml}</hp:case>`,
     `<hp:default>${ml}</hp:default>`,

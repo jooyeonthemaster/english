@@ -1,416 +1,40 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, useTransition } from "react";
 import { cn } from "@/lib/utils";
 
-import { incrementExamPrintCount } from "@/actions/exams";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
 import { PreviewToolbar } from "./exam-paper-builder-client-parts/preview-toolbar";
 import { PreviewZoomControls } from "./exam-paper-builder-client-parts/preview-zoom-controls";
 import { usePreviewZoom } from "./exam-paper-builder-client-parts/use-preview-zoom";
-import {
-  DEFAULT_INSTRUCTIONS,
-  DEFAULT_SHOW_PASSAGE_TITLE,
-  PAPER_SIZE_SPECS,
-  PREVIEW_PAGE_WIDTH,
-} from "./paper-builder/constants";
+import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "./paper-builder/constants";
 import { PrintStyles } from "./paper-builder/components/print-styles";
 import { usePrintPortal } from "./paper-builder/hooks/use-print-portal";
-import { paginateGroups } from "./paper-builder/pagination";
+import { useOverflowGuardedPagination } from "./paper-builder/hooks/use-overflow-guarded-pagination";
+import { PrintStatusBar } from "./paper-builder/print/print-status-bar";
+import { useExamPrintController, type ExamPrintFinish } from "./paper-builder/print/use-exam-print-controller";
 import { buildAnswerKeyLayout, EMPTY_ANSWER_KEY_LAYOUT } from "./paper-builder/answer-key-layout";
-import {
-  buildGroups,
-  formatDateInput,
-  makeCustomPaperBlock,
-  makePaperItem,
-  parseOptions,
-} from "./paper-builder/paper-item-utils";
-import { shouldIncludeSourcePassageByDefault } from "./paper-builder/passage-policy";
-import {
-  normalizeInlineText,
-  normalizePassageText,
-  normalizeQuestionText,
-} from "./paper-builder/text-normalization";
-import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
-import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
-import type {
-  BuilderQuestion,
-  BreakBefore,
-  Density,
-  InsertablePaperBlockType,
-  PaperCover,
-  PaperItem,
-  PaperSize,
-  PaperTemplate,
-  PaginationSettings,
-  PassageStyle,
-} from "./paper-builder/types";
-import { normalizePaperCover } from "./paper-builder/saved-template-settings";
-import type { ExamDetail, ExamQuestion } from "./exam-detail-client-parts/types";
+import { buildGroups, formatDateInput } from "./paper-builder/paper-item-utils";
+import { resolvePaperLayout } from "./paper-builder/paper-layout-defaults";
+import { buildPaperItemsFromExam, parseSavedPaperSettings, type SavedPaperSettings } from "./paper-builder/saved-paper-items";
+import type { PaginationSettings, PaperItem } from "./paper-builder/types";
+import type { ExamDetail } from "./exam-detail-client-parts/types";
+import { MissingPassageBanner, useMissingSourcePassage } from "./exam-paper-builder-client-parts/missing-passage-warning";
 
 const PREVIEW_PAGE_GAP = 20;
 
-type SavedBuilderItem = {
-  localId?: string;
-  blockType?: "question";
-  questionId?: string;
-  orderNum?: number;
-  points?: number;
-  groupId?: string | null;
-  includePassage?: boolean;
-  passageTitle?: string;
-  passageContent?: string;
-  questionText?: string;
-  options?: Array<{ label: string; text: string }>;
-  correctAnswer?: string;
-  answerSpaceLines?: number;
-  objectiveAnswerSlots?: number;
-  objectiveAnswerTexts?: string[];
-  sectionTitle?: string;
-  teacherNote?: string;
-  breakBefore?: BreakBefore;
-  keepWithPrev?: boolean;
-};
+// 「무엇을 찍을지」(저장 설정 → PaperItem[]) 는 웹 빌더·재오픈·HWPX·DOCX 와 같은 공용 정본
+// paper-builder/saved-paper-items 가 정한다(26-09-30 CORE-MODEL, docs/EXAM-PAPER-MODEL.md §2·§3 — 저장된 지문 끄기 존중,
+// 빈 스냅숏 → DB 지문 → 떼어 낸 원문 보관본). 아래 두 이름은 컴포넌트 본문이 그대로 쓴다.
+const parseBuilderSettings = (raw: string | null): SavedPaperSettings | null => parseSavedPaperSettings(raw);
 
-type SavedBuilderBlock = Omit<SavedBuilderItem, "blockType"> & {
-  localId?: string;
-  blockType?: PaperItem["blockType"];
-  locked?: boolean;
-  blockTitle?: string;
-  blockText?: string;
-  blockAlign?: PaperItem["blockAlign"];
-  blockFontSize?: PaperItem["blockFontSize"];
-  blockBold?: boolean;
-  blockItalic?: boolean;
-  blockFontPt?: number | null;
-  blockAccentColor?: string;
-  dividerStyle?: PaperItem["dividerStyle"];
-  dividerThickness?: number;
-  spacerHeight?: number;
-  imageDataUrl?: string | null;
-  imageAlt?: string;
-  imageWidth?: number;
-};
-
-type SavedBuilderSettings = {
-  source?: string;
-  version?: number;
-  template?: string;
-  layout?: {
-    columns?: 1 | 2;
-    paperSize?: PaperSize;
-    density?: Density;
-    showAnswerSpace?: boolean;
-    showPassageTitle?: boolean;
-    showQuestionMeta?: boolean;
-    passageStyle?: PassageStyle;
-  };
-  header?: {
-    subtitle?: string;
-    studentNameLabel?: string;
-    instructions?: string;
-    academyLogoDataUrl?: string | null;
-  };
-  cover?: Partial<PaperCover>;
-  items?: SavedBuilderItem[];
-  blocks?: SavedBuilderBlock[];
-};
-
-function parseBuilderSettings(raw: string | null): SavedBuilderSettings | null {
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? (parsed as SavedBuilderSettings) : null;
-  } catch {
-    return null;
-  }
+function buildPaperItems(exam: ExamDetail, settings: SavedPaperSettings | null): PaperItem[] {
+  return buildPaperItemsFromExam(exam.questions, settings);
 }
 
-function asPaperTemplate(value: unknown): PaperTemplate {
-  const templates: PaperTemplate[] = ["clean", "mock", "worksheet", "minimal", "academy", "modern", "classic", "colorband"];
-  return templates.includes(value as PaperTemplate) ? (value as PaperTemplate) : "clean";
-}
-
-function asPaperSize(value: unknown): PaperSize {
-  return value === "B4" ? "B4" : "A4";
-}
-
-function asDensity(value: unknown): Density {
-  return value === "compact" ? "compact" : "comfortable";
-}
-
-function asPassageStyle(value: unknown): PassageStyle {
-  void value;
-  return "plain";
-}
-
-function asBreakBefore(value: unknown): BreakBefore {
-  return value === "column" || value === "page" ? value : "auto";
-}
-
-function asObjectiveAnswerTexts(value: unknown, slots: number): string[] {
-  if (!Array.isArray(value) || slots <= 0) return [];
-  return value.slice(0, slots).map((text) => String(text ?? ""));
-}
-
-function resolveSavedPassageTitle(savedTitle: string | undefined, sourceTitle: string | undefined): string {
-  const saved = normalizeInlineText(savedTitle || "");
-  return saved || normalizeInlineText(sourceTitle || "");
-}
-
-function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderItem): BuilderQuestion {
-  const q = eq.question;
-  const questionText = normalizeQuestionText(
-    repairGrammarCorrectionQuestionText({
-      subType: q.subType,
-      questionText: saved?.questionText ?? q.questionText,
-      structuredData: q.structuredData,
-    }),
-  );
-  const passageContent = normalizePassageText(saved?.passageContent ?? q.passage?.content ?? "");
-  const passageTitle = normalizeInlineText(saved?.passageTitle ?? q.passage?.title ?? "");
-  const passage =
-    q.passage || passageContent
-      ? {
-          id: q.passage?.id ?? `saved:${q.id}`,
-          title: passageTitle,
-          content: passageContent,
-          grade: q.passage?.grade ?? null,
-          semester: q.passage?.semester ?? null,
-          publisher: q.passage?.publisher ?? null,
-          school: q.passage?.school ?? null,
-        }
-      : null;
-
-  return {
-    id: q.id,
-    type: q.type,
-    subType: q.subType,
-    questionText,
-    structuredData: q.structuredData,
-    options: q.options,
-    correctAnswer: saved?.correctAnswer ?? q.correctAnswer,
-    points: saved?.points ?? eq.points ?? q.points ?? 1,
-    difficulty: q.difficulty,
-    tags: q.tags,
-    aiGenerated: q.aiGenerated,
-    approved: q.approved,
-    starred: q.starred,
-    createdAt: q.createdAt,
-    setId: q.setId ?? null,
-    passage,
-    explanation: q.explanation
-      ? {
-          id: q.explanation.id || "",
-          content: q.explanation.content,
-          keyPoints: q.explanation.keyPoints ?? null,
-          wrongOptionExplanations: q.explanation.wrongOptionExplanations ?? null,
-        }
-      : null,
-    collectionItems: q.collectionItems || [],
-    examLinks: [],
-    _count: q._count || { examLinks: 0 },
-  };
-}
-
-function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: number): PaperItem {
-  // settings.blocks 의 문항 블록이 그대로 넘어오므로 블록 서식 필드를 함께 읽는다.
-  const questionFmt = saved as {
-    blockFontPt?: number | null;
-    blockBold?: boolean;
-    blockItalic?: boolean;
-    blockAlign?: string;
-  };
-  const sourceQuestion = examQuestionToBuilderQuestion(eq, saved);
-  const localId = saved.localId || `${sourceQuestion.id}-saved-${index}`;
-  const passageContent = normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? "");
-  const defaultIncludePassage = shouldIncludeSourcePassageByDefault({
-    ...sourceQuestion,
-    passage: sourceQuestion.passage
-      ? { ...sourceQuestion.passage, content: passageContent }
-      : sourceQuestion.passage,
-  });
-  const rawOptions = Array.isArray(saved.options)
-    ? saved.options.map((option, optionIndex) => ({
-        label: normalizeInlineText(option.label || String(optionIndex + 1)),
-        text: normalizeQuestionText(option.text || ""),
-      }))
-    : parseOptions(sourceQuestion.options);
-  const options =
-    sourceQuestion.subType === "SENTENCE_INSERT"
-      ? buildCanonicalSentenceInsertOptionsFrom(rawOptions)
-      : rawOptions;
-  const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || 0));
-  const answerSpaceLines =
-    sourceQuestion.subType === "GRAMMAR_CORRECTION"
-      ? 0
-      : Math.max(0, Math.min(12, Number(saved.answerSpaceLines) || (options.length === 0 ? 4 : 0)));
-
-  return {
-    localId,
-    questionId: sourceQuestion.id,
-    sourceQuestion,
-    orderNum: saved.orderNum || index + 1,
-    points: saved.points || eq.points || sourceQuestion.points || 1,
-    groupId: saved.groupId ?? `single:${localId}`,
-    includePassage: defaultIncludePassage || (saved.includePassage === true),
-    passageTitle: resolveSavedPassageTitle(saved.passageTitle, eq.question.passage?.title),
-    passageContent,
-    questionText: sourceQuestion.questionText,
-    options,
-    correctAnswer: saved.correctAnswer ?? sourceQuestion.correctAnswer ?? "",
-    answerSpaceLines,
-    objectiveAnswerSlots,
-    objectiveAnswerTexts: asObjectiveAnswerTexts(saved.objectiveAnswerTexts, objectiveAnswerSlots),
-    sectionTitle: saved.sectionTitle || "",
-    teacherNote: saved.teacherNote || "",
-    breakBefore: asBreakBefore(saved.breakBefore),
-    keepWithPrev: Boolean(saved.keepWithPrev),
-    blockType: "question",
-    locked: false,
-    blockTitle: "",
-    blockText: "",
-    // 문항 단위 서식(블록 서식 툴바)은 settings.blocks 의 문항 블록에 저장된다.
-    // 재오픈·상세 미리보기에서도 동일하게 반영되도록 saved 에서 읽는다.
-    blockAlign:
-      questionFmt.blockAlign === "center" || questionFmt.blockAlign === "right"
-        ? questionFmt.blockAlign
-        : "left",
-    blockFontSize: "md",
-    blockBold: typeof questionFmt.blockBold === "boolean" ? questionFmt.blockBold : false,
-    blockItalic: typeof questionFmt.blockItalic === "boolean" ? questionFmt.blockItalic : false,
-    blockFontPt:
-      typeof questionFmt.blockFontPt === "number" && Number.isFinite(questionFmt.blockFontPt)
-        ? Math.min(60, Math.max(5, Math.round(questionFmt.blockFontPt)))
-        : null,
-    blockAccentColor: "#2563EB",
-    dividerStyle: "solid",
-    dividerThickness: 1,
-    spacerHeight: 32,
-    imageDataUrl: null,
-    imageAlt: "",
-    imageWidth: 70,
-  };
-}
-
-function savedBlockToPaperItem(saved: SavedBuilderBlock, index: number): PaperItem | null {
-  const blockType = saved.blockType;
-  if (
-    blockType !== "text" &&
-    blockType !== "section" &&
-    blockType !== "divider" &&
-    blockType !== "spacer" &&
-    blockType !== "image"
-  ) {
-    return null;
-  }
-
-  const base = makeCustomPaperBlock(blockType as InsertablePaperBlockType, index + 1);
-  const localId = saved.localId || base.localId;
-  const blockText = saved.blockText ?? saved.questionText ?? base.blockText;
-  const blockTitle = saved.blockTitle ?? saved.sectionTitle ?? base.blockTitle;
-
-  const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || base.objectiveAnswerSlots));
-
-  return {
-    ...base,
-    localId,
-    questionId: `custom:${localId}`,
-    sourceQuestion: {
-      ...base.sourceQuestion,
-      id: localId,
-      questionText: blockText || blockTitle || base.sourceQuestion.questionText,
-    },
-    groupId: saved.groupId ?? `block:${localId}`,
-    questionText: blockText || blockTitle || base.questionText,
-    breakBefore: asBreakBefore(saved.breakBefore),
-    keepWithPrev: Boolean(saved.keepWithPrev),
-    locked: Boolean(saved.locked),
-    blockTitle,
-    blockText,
-    blockAlign:
-      saved.blockAlign === "center" || saved.blockAlign === "right"
-        ? saved.blockAlign
-        : "left",
-    blockFontSize:
-      saved.blockFontSize === "sm" || saved.blockFontSize === "lg"
-        ? saved.blockFontSize
-        : base.blockFontSize,
-    blockBold:
-      typeof saved.blockBold === "boolean" ? saved.blockBold : base.blockBold,
-    blockItalic:
-      typeof saved.blockItalic === "boolean" ? saved.blockItalic : base.blockItalic,
-    blockFontPt:
-      typeof saved.blockFontPt === "number" && Number.isFinite(saved.blockFontPt)
-        ? Math.min(60, Math.max(5, Math.round(saved.blockFontPt)))
-        : null,
-    blockAccentColor: saved.blockAccentColor || base.blockAccentColor,
-    dividerStyle:
-      saved.dividerStyle === "dashed" || saved.dividerStyle === "dotted"
-        ? saved.dividerStyle
-        : "solid",
-    dividerThickness: Math.max(1, Math.min(8, Number(saved.dividerThickness) || base.dividerThickness)),
-    spacerHeight: Math.max(8, Math.min(160, Number(saved.spacerHeight) || base.spacerHeight)),
-    imageDataUrl: saved.imageDataUrl ?? null,
-    imageAlt: saved.imageAlt || "",
-    imageWidth: Math.max(20, Math.min(100, Number(saved.imageWidth) || base.imageWidth)),
-    objectiveAnswerSlots,
-    objectiveAnswerTexts: asObjectiveAnswerTexts(saved.objectiveAnswerTexts, objectiveAnswerSlots),
-  };
-}
-
-function buildPaperItems(exam: ExamDetail, settings: SavedBuilderSettings | null): PaperItem[] {
-  const byQuestionId = new Map(exam.questions.map((eq) => [eq.question.id, eq]));
-  const savedBlocks =
-    settings?.source === "exam-paper-builder-v2" && Array.isArray(settings.blocks)
-      ? settings.blocks
-      : [];
-  const savedItems =
-    (settings?.source === "exam-paper-builder-v1" || settings?.source === "exam-paper-builder-v2") &&
-    Array.isArray(settings.items)
-      ? settings.items
-      : [];
-
-  if (savedBlocks.length > 0) {
-    const blocks = savedBlocks
-      .map((saved, index) => {
-        if (saved.blockType === "question") {
-          if (!saved.questionId) return null;
-          const eq = byQuestionId.get(saved.questionId);
-          return eq ? savedItemToPaperItem({ ...saved, blockType: "question" }, eq, index) : null;
-        }
-        return savedBlockToPaperItem(saved, index);
-      })
-      .filter((item): item is PaperItem => Boolean(item));
-    let questionOrder = 0;
-    return blocks.map((item) =>
-      item.blockType === "question"
-        ? { ...item, orderNum: (questionOrder += 1) }
-        : { ...item, orderNum: 0 },
-    );
-  }
-
-  if (savedItems.length > 0) {
-    return savedItems
-      .map((saved, index) => {
-        if (!saved.questionId) return null;
-        const eq = byQuestionId.get(saved.questionId);
-        return eq ? savedItemToPaperItem(saved, eq, index) : null;
-      })
-      .filter((item): item is PaperItem => Boolean(item))
-      .sort((a, b) => a.orderNum - b.orderNum)
-      .map((item, index) => ({ ...item, orderNum: index + 1 }));
-  }
-
-  return exam.questions.map((eq, index) => {
-    const sourceQuestion = examQuestionToBuilderQuestion(eq);
-    return {
-      ...makePaperItem(sourceQuestion, index + 1, []),
-      points: eq.points || sourceQuestion.points || 1,
-    };
-  });
-}
+// 레이아웃·머리글 값(기본값 포함)도 HWPX·DOCX 와 같은 정본 paper-layout-defaults.resolvePaperLayout 이 정한다
+// (COH-8 — 예전에는 `?? true`·`?? DEFAULT_SHOW_PASSAGE_TITLE`·`|| DEFAULT_INSTRUCTIONS` 를 여기 두 컴포넌트에
+// 복제했다). 운영 519개 시험지 전수 대조에서 인라인 판정과 차이 0(저장값이 모두 boolean·string 이었다).
 
 function formatExamDate(value: string | Date | null): string {
   if (!value) return "";
@@ -418,16 +42,43 @@ function formatExamDate(value: string | Date | null): string {
   return Number.isNaN(date.getTime()) ? "" : formatDateInput(date);
 }
 
+// ?print=1 딥링크(유사 시험지 카드의 새 탭 [인쇄]) — 상세 화면 인스턴스만 반응한다. 서버 스냅숏 false →
+// 하이드레이션 뒤 location 을 읽는다(SSR 안전). 구독 없음 — 파라미터는 자동 인쇄 시작 순간 우리가 지운다.
+const DEEP_LINK_PRINT_PARAM = "print";
+const subscribeNothing = () => () => undefined;
+const readDeepLinkPrint = () => new URLSearchParams(window.location.search).get(DEEP_LINK_PRINT_PARAM) === "1";
+const readDeepLinkPrintOnServer = () => false;
+
+/** 자동 인쇄를 시작하며 ?print=1 을 지운다 — 새로고침 · 뒤로가기로 다시 인쇄되지 않게. */
+function stripDeepLinkPrintParam() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has(DEEP_LINK_PRINT_PARAM)) return;
+  url.searchParams.delete(DEEP_LINK_PRINT_PARAM);
+  // Next App Router 는 replaceState(null, …) 를 가로채 라우터 URL 과 동기화한다.
+  window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
+export type ExamDetailPrintEntry = "detail" | "quick-view" | "card-dialog";
+
 export function ExamDetailPaperPreview({
   exam,
   className,
   forceMountAllPages = false,
+  autoPrint = false,
+  printEntry,
+  onPrintFinished,
 }: {
   exam: ExamDetail;
   /** 컨테이너 높이 제어 — 미지정 시 상세 페이지용 기본 높이를 사용한다. */
   className?: string;
   /** 모든 페이지를 즉시 마운트(지연 마운트 끔) — 렌더 전수 검증 하네스 전용(additive). */
   forceMountAllPages?: boolean;
+  /** 마운트 뒤 자동 인쇄 1회(카드 인쇄 대화상자 · StrictMode 안전). exam 이 확정된 뒤에 마운트할 것. */
+  autoPrint?: boolean;
+  /** 원격 측정 진입점. 미지정 = 상세 화면('detail') — 이때만 ?print=1 딥링크에 반응한다. */
+  printEntry?: ExamDetailPrintEntry;
+  /** 인쇄 잡 종료(printed = afterprint · blocked · cancelled · empty) — 카드 대화상자가 닫기에 쓴다. */
+  onPrintFinished?: (finish: ExamPrintFinish) => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
@@ -437,15 +88,9 @@ export function ExamDetailPaperPreview({
   const [dragPlacement, setDragPlacement] = useState<"before" | "after">("before");
 
   const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
-  const template = asPaperTemplate(settings?.template);
-  const paperSize = asPaperSize(settings?.layout?.paperSize);
-  const columns: 1 | 2 = settings?.layout?.columns === 1 ? 1 : 2;
-  const density = asDensity(settings?.layout?.density);
-  const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
-  const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
-  const showPassageTitle = settings?.layout?.showPassageTitle ?? DEFAULT_SHOW_PASSAGE_TITLE;
-  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? false;
-  const cover = normalizePaperCover(settings?.cover);
+  const paperLayout = useMemo(() => resolvePaperLayout(settings), [settings]);
+  const { template, paperSize, columns, density, passageStyle, cover, header: paperHeader } = paperLayout;
+  const { showAnswerSpace, showPassageTitle, showQuestionMeta } = paperLayout;
 
   const {
     scrollerRef,
@@ -459,12 +104,39 @@ export function ExamDetailPaperPreview({
     handleControlsDragStart,
   } = usePreviewZoom(paperSize);
 
-  usePrintPortal(paperSize);
+  // Ctrl+P · printToPDF(기다릴 수 없는 경로)의 동기 안전망 — 포털을 실제로 태운 beforeprint 에서만 true.
+  // rootRef 는 #exam-paper-print-root 요소 그 자체의 ref 여야 한다(래퍼면 포털이 서지 않는다).
+  const portalMountAll = usePrintPortal(paperSize, { rootRef: scrollerRef });
 
-  // 해설 포함 PDF 인쇄 중에만 true — 각 문항 뒤 인라인 정답·해설을 포함하고 정답표는 뺀다.
-  const [explanationPrint, setExplanationPrint] = useState(false);
   const paperItems = useMemo(() => buildPaperItems(exam, settings), [exam, settings]);
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
+  const missingPassage = useMissingSourcePassage(paperItems); // 「원문 지문 없음」 배너·칩·내보내기 경고
+
+  // 인쇄 · PDF · PDF 해설 · 자동 인쇄는 전부 이 컨트롤러로만 부른다 — 준비 완료 신호가 모두 참일 때만
+  // 인쇄(시간 추측 타이머 금지 · docs/EXAM-PRINT-PIPELINE.md). printCtl.explanation = 해설 포함 인쇄 중.
+  // 컨트롤러는 가드의 isSettled 를, 가드는 printCtl.explanation 을 쓰는 순환이라 가드 신호는 레이아웃
+  // 이펙트가 채우는 ref 로 넘긴다(인쇄 잡은 커밋 뒤에만 읽는다).
+  const guardSignalsRef = useRef<{ isSettled: () => boolean; requestMeasure: () => void } | null>(null);
+  const isGuardSettled = useCallback(() => guardSignalsRef.current?.isSettled() ?? false, []);
+  const requestGuardMeasure = useCallback(() => guardSignalsRef.current?.requestMeasure(), []);
+  const entry = printEntry ?? "detail";
+  const deepLinkParam = useSyncExternalStore(subscribeNothing, readDeepLinkPrint, readDeepLinkPrintOnServer);
+  const deepLink = !autoPrint && entry === "detail" && deepLinkParam;
+  const printCtl = useExamPrintController({
+    rootRef: scrollerRef,
+    isGuardSettled,
+    requestMeasure: requestGuardMeasure,
+    hasItems: paperItems.length > 0,
+    emptyMessage: "인쇄할 문제가 없습니다.",
+    examId: exam.id,
+    entry,
+    autoStart: autoPrint || deepLink,
+    autoStartEntry: deepLink ? "deep-link" : entry,
+    // rAF 콜백 안 — 자동 인쇄가 실제로 시작되는 순간에만 지운다(StrictMode 가짜 언마운트에 안전).
+    onAutoStart: deepLink ? stripDeepLinkPrintParam : undefined,
+    onFinished: missingPassage.withPrintWarning(onPrintFinished), // afterprint 뒤 「원문 지문 없음」 토스트(막지 않음)
+  });
+
   const paginationSettings = useMemo<PaginationSettings>(
     () => ({
       paperSize,
@@ -475,23 +147,29 @@ export function ExamDetailPaperPreview({
       showPassageTitle,
       showQuestionMeta,
       template,
-      includeAnswers: explanationPrint,
+      includeAnswers: printCtl.explanation,
+      textMetrics: "exam-font",
     }),
-    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template, explanationPrint],
+    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template, printCtl.explanation],
   );
-  const paginationResult = useMemo(
-    () => paginateGroups(paperGroups, paginationSettings),
-    [paperGroups, paginationSettings],
+  // 추정 분할 + 실측 넘침 보정(편집 빌더와 같은 가드 — 그려진 칸이 넘치면 다시 나눈다).
+  const { paginationResult, requestMeasure, isSettled } = useOverflowGuardedPagination(
+    paperGroups,
+    paginationSettings,
+    scrollerRef,
   );
+  useLayoutEffect(() => {
+    guardSignalsRef.current = { isSettled, requestMeasure };
+  }, [isSettled, requestMeasure]);
   const paperPages = paginationResult.pages;
   // 시험지 맨 뒤 정답표 페이지(들) — PDF 인쇄에 정답지가 포함되도록 미리보기에 렌더.
   // (해설 포함 PDF 는 인라인 해설을 쓰므로 정답표를 빼서 DOCX 해설과 동일하게 맞춘다.)
   const answerKey = useMemo(
     () =>
-      explanationPrint
+      printCtl.explanation
         ? EMPTY_ANSWER_KEY_LAYOUT
         : buildAnswerKeyLayout(paperItems, { paperSize, density }),
-    [paperItems, paperSize, density, explanationPrint],
+    [paperItems, paperSize, density, printCtl.explanation],
   );
   // 표지가 켜져 있으면 본문 앞에 한 장 더 렌더되므로 zoom-spacer 높이에 반영한다.
   const renderedPageCount =
@@ -501,57 +179,6 @@ export function ExamDetailPaperPreview({
       ? renderedPageCount * baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
         (renderedPageCount - 1) * PREVIEW_PAGE_GAP
       : 0;
-
-  function handlePrint() {
-    if (paperItems.length === 0) {
-      toast.error("인쇄할 문제가 없습니다.");
-      return;
-    }
-    // PDF 인쇄 1회 → 인쇄 횟수 집계
-    void incrementExamPrintCount(exam.id);
-    window.setTimeout(() => window.print(), 50);
-  }
-
-  // 해설 포함 PDF: 인라인 정답·해설을 켜고 재레이아웃이 반영된 뒤 인쇄한다.
-  function handlePrintWithAnswers() {
-    if (paperItems.length === 0) {
-      toast.error("인쇄할 문제가 없습니다.");
-      return;
-    }
-    void incrementExamPrintCount(exam.id);
-    setExplanationPrint(true);
-  }
-
-  useEffect(() => {
-    if (!explanationPrint) return;
-    let timer = 0;
-    const raf = window.requestAnimationFrame(() => {
-      timer = window.setTimeout(() => window.print(), 120);
-    });
-    const handleAfterPrint = () => setExplanationPrint(false);
-    window.addEventListener("afterprint", handleAfterPrint, { once: true });
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
-      window.removeEventListener("afterprint", handleAfterPrint);
-    };
-  }, [explanationPrint]);
-
-  // ?print=1 로 열렸을 때(시험지 카드의 '인쇄' 버튼 → 새 탭) 미리보기가
-  // 준비되면 자동으로 브라우저 인쇄 대화상자를 띄운다.
-  const autoPrintedRef = useRef(false);
-  useEffect(() => {
-    if (autoPrintedRef.current) return;
-    if (typeof window === "undefined") return;
-    const shouldPrint =
-      new URLSearchParams(window.location.search).get("print") === "1";
-    if (!shouldPrint || paperItems.length === 0) return;
-    autoPrintedRef.current = true;
-    // 페이지 레이아웃/폰트가 안정된 뒤 인쇄가 뜨도록 약간의 지연을 둔다.
-    const timer = window.setTimeout(() => handlePrint(), 600);
-    return () => window.clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paperItems.length]);
 
   function handleDownloadDocx() {
     startTransition(() => {
@@ -613,14 +240,19 @@ export function ExamDetailPaperPreview({
         dirty={false}
         isPending={isPending}
         paperItemsCount={paperItems.length}
-        onPrint={handlePrint}
-        onDownloadPdf={handlePrint}
-        onDownloadPdfWithAnswers={handlePrintWithAnswers}
-        onDownloadDocx={handleDownloadDocx}
-        onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
-        onDownloadHwpx={handleDownloadHwpx}
-        onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
+        // click 안에서 동기로 부르고(빠른 경로 · Safari 제스처) 누름에서 무장한다(click 전 「준비 중」 페인트). PDF = onPrint.
+        onPrint={() => printCtl.print("plain")}
+        printArming={printCtl.arming}
+        onDownloadPdfWithAnswers={() => printCtl.print("explanation")}
+        printBusy={printCtl.busy}
+        onDownloadDocx={missingPassage.wrapExport("DOCX", handleDownloadDocx)}
+        onDownloadDocxWithAnswers={missingPassage.wrapExport("DOCX", handleDownloadDocxWithAnswers)}
+        onDownloadHwpx={missingPassage.wrapExport("HWPX", handleDownloadHwpx)}
+        onDownloadHwpxWithAnswers={missingPassage.wrapExport("HWPX", handleDownloadHwpxWithAnswers)}
       />
+      {/* 인쇄 진행 · 제스처 폴백 · 실패 사유 — 모든 폭에서 보인다(툴바 인쇄 버튼은 lg 미만에서 숨음). */}
+      <PrintStatusBar controller={printCtl} />
+      <MissingPassageBanner state={missingPassage} pages={paperPages} scrollRootRef={scrollerRef} />
 
       <div className="relative min-h-0 flex-1 overflow-hidden bg-slate-100/70">
         {paperItems.length > 0 && (
@@ -651,13 +283,14 @@ export function ExamDetailPaperPreview({
               PAPER_SIZE_SPECS[paperSize].heightRatio
             }
             answerKey={answerKey}
-            forceMountAll={explanationPrint || forceMountAllPages}
+            forceMountAll={forceMountAllPages || printCtl.forceMountAll || portalMountAll}
+            onPageMounted={requestMeasure}
             title={exam.title}
             paperSize={paperSize}
-            subtitle={settings?.header?.subtitle || ""}
-            instructions={settings?.header?.instructions || DEFAULT_INSTRUCTIONS}
-            studentNameLabel={settings?.header?.studentNameLabel || "이름"}
-            academyLogoDataUrl={settings?.header?.academyLogoDataUrl || null}
+            subtitle={paperHeader.subtitle}
+            instructions={paperHeader.instructions}
+            studentNameLabel={paperHeader.studentNameLabel}
+            academyLogoDataUrl={paperHeader.academyLogoDataUrl}
             template={template}
             columns={columns}
             density={density}
@@ -727,15 +360,9 @@ export function ExamFirstPagePreview({
   maxPages?: number;
 }) {
   const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
-  const template = asPaperTemplate(settings?.template);
-  const paperSize = asPaperSize(settings?.layout?.paperSize);
-  const columns: 1 | 2 = settings?.layout?.columns === 1 ? 1 : 2;
-  const density = asDensity(settings?.layout?.density);
-  const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
-  const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
-  const showPassageTitle = settings?.layout?.showPassageTitle ?? DEFAULT_SHOW_PASSAGE_TITLE;
-  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? false;
-  const cover = normalizePaperCover(settings?.cover);
+  const paperLayout = useMemo(() => resolvePaperLayout(settings), [settings]);
+  const { template, paperSize, columns, density, passageStyle, cover, header: paperHeader } = paperLayout;
+  const { showAnswerSpace, showPassageTitle, showQuestionMeta } = paperLayout;
 
   const paperItems = useMemo(() => buildPaperItems(exam, settings), [exam, settings]);
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
@@ -749,12 +376,16 @@ export function ExamFirstPagePreview({
       showPassageTitle,
       showQuestionMeta,
       template,
+      textMetrics: "exam-font",
     }),
     [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
   );
-  const paginationResult = useMemo(
-    () => paginateGroups(paperGroups, paginationSettings),
-    [paperGroups, paginationSettings],
+  // 첫 장 미리보기도 실측 넘침 보정을 건다 — 카드의 첫 장이 실제 시험지 첫 장과 같게.
+  const previewRootRef = useRef<HTMLDivElement>(null);
+  const { paginationResult, requestMeasure } = useOverflowGuardedPagination(
+    paperGroups,
+    paginationSettings,
+    previewRootRef,
   );
 
   const baseWidth = PREVIEW_PAGE_WIDTH;
@@ -791,6 +422,7 @@ export function ExamFirstPagePreview({
 
   return (
     <div
+      ref={previewRootRef}
       className="overflow-hidden bg-white"
       style={{ width, height: contentHeight * zoom }}
       aria-hidden
@@ -804,12 +436,13 @@ export function ExamFirstPagePreview({
         previewContentHeight={contentHeight}
         singlePageHeight={baseWidth * heightRatio}
         answerKey={EMPTY_ANSWER_KEY_LAYOUT}
+        onPageMounted={requestMeasure}
         title={exam.title}
         paperSize={paperSize}
-        subtitle={settings?.header?.subtitle || ""}
-        instructions={settings?.header?.instructions || DEFAULT_INSTRUCTIONS}
-        studentNameLabel={settings?.header?.studentNameLabel || "이름"}
-        academyLogoDataUrl={settings?.header?.academyLogoDataUrl || null}
+        subtitle={paperHeader.subtitle}
+        instructions={paperHeader.instructions}
+        studentNameLabel={paperHeader.studentNameLabel}
+        academyLogoDataUrl={paperHeader.academyLogoDataUrl}
         template={template}
         columns={columns}
         density={density}

@@ -37,6 +37,7 @@ import {
   type BuilderItemResolved,
 } from "./question";
 import { multiBlankOptionsHeaderBlock } from "./options";
+import { renderSetPrompt } from "./passage";
 import {
   LINE_GAP_MARKER,
   type PassageStyle,
@@ -176,6 +177,8 @@ export function renderPassageFragment(
   );
 
   const inner: ParagraphNode[] = [];
+  // 세트 안내문(웹과 같이 지문 시작 칸에만, 제목보다 위) — pagination 이 이 줄 높이를 이미 예약한다.
+  if (isPassageStart) inner.push(...renderSetPrompt(fragment.setPrompt || "", opts.compact));
   if (opts.showPassageTitle && fragment.passageTitle && isPassageStart) {
     inner.push({
       kind: "p",
@@ -345,6 +348,8 @@ function renderStructRows(
 export function renderQuestionPart(
   part: RenderItemPart,
   opts: FragmentRenderOptions,
+  /** 이 조각의 그룹이 지문 박스를 켰는가(fragment.includePassage) — 웹 showBodyPassageTitle 의 `!fragment.includePassage`. */
+  groupPassageShown = false,
 ): BlockNode[] {
   const item = part.source;
   if (item.blockType !== "question") {
@@ -356,7 +361,8 @@ export function renderQuestionPart(
   const qNumSize = compact ? SIZE.qNumCompact : SIZE.qNum;
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
   const subType = item.sourceQuestion.subType || "";
-  const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || subType : "";
+  // 라벨이 없는 유형(UNKNOWN 등)은 유형 부분을 빼고 「[n점]」만 — 웹 a4-paper-page 배지와 같다(HW-4). 원시 코드 금지.
+  const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || "" : "";
 
   // 구조화 원자 유형(요약완성·순서·주제/요지/제목/내용일치)은 칸 경계에서 쪼개지
   // 않고 한 덩어리로 배치된다. fragment 렌더러는 지문/요약/순서 박스를 그리지
@@ -379,6 +385,7 @@ export function renderQuestionPart(
       },
       includeAnswers: false,
       contentWidthHpu: opts.columnWidthHpu,
+      groupPassageShown,
     });
     blocks.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
     return applyQuestionBlockFormat(blocks, item, compact);
@@ -390,6 +397,7 @@ export function renderQuestionPart(
   const bodyPassageTitle = printablePassageTitle(item);
   const showBodyPassageTitle =
     part.showHeader &&
+    !groupPassageShown &&
     opts.showPassageTitle &&
     Boolean(bodyPassageTitle) &&
     part.structRows.length === 0 &&

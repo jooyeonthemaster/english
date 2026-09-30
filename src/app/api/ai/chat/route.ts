@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
 
     // 2. Parse and validate request body
     const body = await request.json();
-    const { questionId, message, conversationId } = body;
+    // body.conversationId 는 읽지 않는다 — 대화는 아래에서 (세션 학생, 문항)으로만 찾는다(IDOR 수리 26-09-30).
+    const { questionId, message } = body;
 
     if (!questionId || !message) {
       return NextResponse.json(
@@ -47,8 +48,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Fetch question with explanation and passage
+    // 학원 범위(IDOR 수리 26-09-30) — 학생의 학원 문항만(해설·지문 본문을 AI 문맥으로 쓴다).
     const question = await prisma.question.findFirst({
-      where: { id: questionId, deletedAt: null },
+      where: { id: questionId, academyId: session.academyId, deletedAt: null },
       include: {
         explanation: true,
         passage: true,
@@ -76,36 +78,24 @@ export async function POST(request: NextRequest) {
     });
 
     // 5. Load existing conversation
+    // 세션 학생의 이 문항 대화만(IDOR 수리 26-09-30). 예전에는 클라이언트가 보낸 conversationId 를
+    // 범위 없이 id 로 읽어, 남의 학생(다른 학원 포함) 대화가 AI 문맥에 실리고 아래 upsert 로 공격자
+    // 본인 행에 복사됐다(GET /api/ai/conversation/[questionId] 로 되읽힘). 대화는 (studentId, questionId)
+    // 유니크라 아래 저장 대상과 같은 행을 읽는 것이 곧 올바른 이어 쓰기다.
     let conversationHistory: { role: string; content: string }[] = [];
-    let existingConversationId: string | null = conversationId || null;
-
-    if (existingConversationId) {
-      const existingConversation = await prisma.aIConversation.findUnique({
-        where: { id: existingConversationId },
-      });
-      if (existingConversation) {
-        try {
-          conversationHistory = JSON.parse(existingConversation.messages);
-        } catch {
-          conversationHistory = [];
-        }
-      }
-    } else {
-      const existingConversation = await prisma.aIConversation.findUnique({
-        where: {
-          studentId_questionId: {
-            studentId: session.studentId,
-            questionId,
-          },
+    const existingConversation = await prisma.aIConversation.findUnique({
+      where: {
+        studentId_questionId: {
+          studentId: session.studentId,
+          questionId,
         },
-      });
-      if (existingConversation) {
-        existingConversationId = existingConversation.id;
-        try {
-          conversationHistory = JSON.parse(existingConversation.messages);
-        } catch {
-          conversationHistory = [];
-        }
+      },
+    });
+    if (existingConversation) {
+      try {
+        conversationHistory = JSON.parse(existingConversation.messages);
+      } catch {
+        conversationHistory = [];
       }
     }
 

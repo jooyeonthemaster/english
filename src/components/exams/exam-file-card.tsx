@@ -70,6 +70,7 @@ export function ExamFileCard({
   onDelete,
   onShowAnalysis,
   onAssign,
+  onPrint,
   assignLocked,
   deploymentSummary,
 }: {
@@ -84,6 +85,11 @@ export function ExamFileCard({
   onShowAnalysis?: (id: string) => void;
   /** 과제 배포 — AssignmentComposer(EXAM 프리셋) 진입. 미지정 시 버튼 숨김. */
   onAssign?: (id: string) => void;
+  /**
+   * 인쇄 — 목록이 같은 문서 안의 인쇄 대화상자(ExamPrintDialog)를 연다. 미지정 시 버튼 disabled.
+   * (숨김 iframe 인쇄는 26-09-29 폐기: 0×0 창이라 쪽이 안 그려져 2쪽 뒤가 백지로 나갔다.)
+   */
+  onPrint?: (exam: ExamItem) => void;
   /** 국어 시험지 목록 — 과제 배포 비활성(툴팁 안내, 서버 가드 대칭). */
   assignLocked?: boolean;
   /** 배포(태블릿/OMR) 현황 요약 — 로드 전·할당 0이면 배지 미표시. */
@@ -156,7 +162,7 @@ export function ExamFileCard({
         >
           <FileText className="h-6 w-6 -translate-y-5 text-slate-300" />
         </div>
-        <ExamCardPaperPreview examId={exam.id} className="bg-transparent" />
+        <ExamCardPaperPreview examId={exam.id} version={exam.updatedAt} className="bg-transparent" />
       </div>
 
       {/* 우측: 기존 카드 본문 */}
@@ -299,37 +305,19 @@ export function ExamFileCard({
             </span>
           </button>
 
-          {/* 인쇄: 페이지를 벗어나지 않고 숨김 iframe 으로 인쇄 대화상자를 띄운다.
-              ?print=1 라우트가 로드되면 스스로 window.print() 를 호출한다. */}
+          {/* 인쇄: 같은 문서 안의 인쇄 대화상자(목록의 ExamPrintDialog)를 연다 — 미리보기가 보이는
+              상태로 준비 완료 신호를 기다려 인쇄한다(paper-builder/print). */}
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              const frameId = `exam-print-frame-${exam.id}`;
-              document.getElementById(frameId)?.remove();
-              const iframe = document.createElement("iframe");
-              iframe.id = frameId;
-              iframe.setAttribute("aria-hidden", "true");
-              iframe.style.position = "fixed";
-              iframe.style.right = "0";
-              iframe.style.bottom = "0";
-              iframe.style.width = "0";
-              iframe.style.height = "0";
-              iframe.style.border = "0";
-              iframe.style.visibility = "hidden";
-              iframe.src = `/director/exams/${exam.id}?print=1`;
-              iframe.onload = () => {
-                const cleanup = () => iframe.remove();
-                iframe.contentWindow?.addEventListener("afterprint", cleanup);
-                // 대화상자를 닫지 않는 등 afterprint 가 안 와도 결국 정리되도록.
-                window.setTimeout(cleanup, 120000);
-              };
-              document.body.appendChild(iframe);
+              onPrint?.(exam);
             }}
+            disabled={!onPrint}
             title="바로 인쇄 (지금까지 인쇄한 횟수)"
             aria-label="시험지 인쇄"
-            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Printer className="h-3 w-3 shrink-0" />
             <span className="truncate">

@@ -16,6 +16,9 @@
  *  - 열 폭 합이 표 폭(hp:sz width = colWidthsHpu 합)과 어긋나면 한컴이 열 폭을
  *    제멋대로 재분배한다. → 마지막 문항 열이 나머지를 흡수해 합을 contentWidthHpu 에
  *    정확히 맞춘다.
+ *
+ * 정답 표기는 웹 정답표와 같은 정본(answer-key-entries.answerKeyEntryForItem — 편집 정답 우선,
+ * 객관식 숫자 → ①~ 통일)을 쓴다. 라우트는 문항마다 공용 PaperItem 을 싣는다(AnswerKeyQuestion.paperItem).
  */
 
 import type { BlockNode, BorderSpec, TableNode, TableCellNode, TableRowNode } from "../types";
@@ -24,6 +27,14 @@ import { COLORS, SIZE } from "../tokens";
 import { mm } from "../units";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
+import {
+  answerKeyEntryForItem,
+  circledObjectiveAnswer,
+} from "@/components/exams/paper-builder/answer-key-entries";
+import type { PaperItem } from "@/components/exams/paper-builder/types";
+
+/** 정답표 입력 — 공용 PaperItem 이 있으면 그것으로 표기한다(웹 정답표와 같은 결과). */
+export type AnswerKeyQuestion = ExamQuestionData & { paperItem?: PaperItem };
 
 // 표 전체가 쓰는 단 하나의 보더. 부분 보더(윗변만/아랫변만)는 금지(§7-1).
 const THIN: BorderSpec = {
@@ -52,7 +63,7 @@ const CELL_MARGINS: { left: number; right: number; top: number; bottom: number }
 const LONG_ANSWER_CHARS = 20;
 
 export function renderAnswerKey(
-  questions: ExamQuestionData[],
+  questions: AnswerKeyQuestion[],
   contentWidthHpu: number,
   opts?: { pageBreak?: boolean },
 ): BlockNode[] {
@@ -168,7 +179,7 @@ function bandColumnWidths(contentWidthHpu: number, count: number): number[] {
 }
 
 /** 밴드 표(2행: 문항 번호 / 정답). */
-function buildBandTable(band: ExamQuestionData[], contentWidthHpu: number): TableNode {
+function buildBandTable(band: AnswerKeyQuestion[], contentWidthHpu: number): TableNode {
   const widths = bandColumnWidths(contentWidthHpu, band.length);
   const numberRow = buildBandRow(
     "문항",
@@ -246,6 +257,22 @@ function bandCell(
   };
 }
 
-function answerTextForQuestion(eq: ExamQuestionData): string {
-  return formatStoredQuestionCorrectAnswer(eq.question);
+function parsedOptionCount(raw: string | null): number {
+  if (!raw) return 0;
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.length : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function answerTextForQuestion(eq: AnswerKeyQuestion): string {
+  if (eq.paperItem) return answerKeyEntryForItem(eq.paperItem)?.answer ?? "";
+  // 손입력(PaperItem 없음) — 같은 표기 규칙을 원 문항 선지 수로 적용한다.
+  const options = Array.from({ length: parsedOptionCount(eq.question.options) }, () => ({ label: "", text: "" }));
+  return circledObjectiveAnswer(
+    { options, objectiveAnswerSlots: 0 },
+    formatStoredQuestionCorrectAnswer(eq.question),
+  );
 }

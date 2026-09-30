@@ -1,14 +1,12 @@
 import {
   Paragraph,
-  Table,
   TableCell,
-  TableLayoutType,
   TableRow,
   TextRun,
-  WidthType,
 } from "docx";
 import { COLOR, KR_FONT, PASSAGE_SIZE } from "./styles";
 import { thinBox } from "./borders";
+import { LEGACY_DEFAULT_COLUMN_WIDTH_DXA, gridCellWidth, gridTable, tableGrid } from "./table-geometry";
 import type { DocChild } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -27,20 +25,22 @@ export function safeParseJSON<T>(str: unknown, fallback: T): T {
   }
 }
 
-export function renderWritingSpace(isLong: boolean): DocChild[] {
+export function renderWritingSpace(
+  isLong: boolean,
+  contentWidthDxa: number = LEGACY_DEFAULT_COLUMN_WIDTH_DXA,
+): DocChild[] {
   const result: DocChild[] = [];
   if (isLong) {
+    const grid = tableGrid(contentWidthDxa, [1]);
     result.push(
-      new Table({
-        width: { size: 100, type: WidthType.PERCENTAGE },
-        layout: TableLayoutType.FIXED,
+      gridTable(grid, {
         rows: [
           new TableRow({
             children: [
               new TableCell({
                 borders: thinBox(COLOR.separator, 8), // slightly thicker soft border for writing
                 margins: { top: 800, bottom: 800, left: 160, right: 160 }, // Huge padding for writing
-                width: { size: 100, type: WidthType.PERCENTAGE },
+                width: gridCellWidth(grid, 0),
                 children: [new Paragraph({ children: [new TextRun({ text: " " })] })],
               }),
             ],

@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { deleteWorkbenchPassage } from "@/actions/workbench";
-import { confirmNative } from "@/lib/browser-confirm";
+import { confirmPassageDeletion } from "@/components/workbench/passage-delete-confirm";
 import { formatDate } from "@/lib/utils";
 
 import { KoreanStudyMaterials } from "./korean-study-materials";
@@ -58,11 +58,13 @@ export function KoreanPassageDetailClient({
   const tags = parseDisplayTags(passage.tags);
 
   async function handleDelete() {
-    const ok = confirmNative(
-      "이 지문을 삭제하시겠습니까? 관련 문제도 모두 삭제됩니다.",
-    );
-    if (!ok) return;
+    if (deleting) return;
+    // 영향 조회 동안에도 버튼을 잠근다. 확인창 문구는 실제 동작 그대로.
     setDeleting(true);
+    if (!(await confirmPassageDeletion([passage.id]))) {
+      setDeleting(false);
+      return;
+    }
     const result = await deleteWorkbenchPassage(passage.id);
     if (result.success) {
       toast.success("지문이 삭제되었습니다.");

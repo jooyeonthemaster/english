@@ -31,8 +31,9 @@ export async function GET(
       return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
     }
 
-    const data = await loadSingleQuestionExport(questionId);
-    // 존재하지 않거나(휴지통 포함) 다른 학원 문항이면 존재 여부를 숨기고 404.
+    // 학원 범위를 where 에 건다(COH-12 방어 심화) — 남의 학원 문항은 본문·해설을 아예 읽지 않는다.
+    // 존재하지 않거나(휴지통 포함) 다른 학원 문항이면 존재 여부를 숨기고 404. 뒤 비교는 이중 방어로 남긴다.
+    const data = await loadSingleQuestionExport(questionId, staff.academyId);
     if (!data || data.academyId !== staff.academyId) {
       return NextResponse.json(
         { error: "문제를 찾을 수 없습니다." },

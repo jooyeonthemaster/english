@@ -3,7 +3,7 @@
 //
 // 유저 행동의 결과가 이미 남는 도메인 테이블들을 직접 유니온해 타임라인을
 // 만든다. 따라서 별도 백필 없이 과거 이력까지 전부 보이고, app_events에는
-// 도메인 테이블에 없는 것(페이지 이동·로그인·내보내기)만 들어온다.
+// 도메인 테이블에 없는 것(페이지 이동·로그인·내보내기·지문 삭제)만 들어온다.
 //
 // 페이지네이션: createdAt < before 커서(ms 정밀도). 소스별 limit씩 떠서
 // 병합 정렬 후 limit으로 자른다. 관리자 1~2명이 쓰는 화면이라 소스당
@@ -20,11 +20,10 @@ import {
 } from "@/lib/admin-activity-types";
 import {
   examTypeLabel,
-  loginProviderLabel,
-  pagePathLabel,
   statusLabel,
   workbenchModeLabel,
 } from "@/lib/admin-activity-labels";
+import { appEventTypeWhere, describeAppEvent } from "./_app-event-activity";
 
 export type { ActivityCategory, ActivityFilter, ActivityItem };
 
@@ -64,52 +63,28 @@ function timeWhere(p: FetchActivityParams) {
 // ─── 소스별 fetcher ──────────────────────────────────────────────────────────
 
 async function fromAppEvents(p: FetchActivityParams): Promise<RawItem[]> {
-  const eventTypeFilter =
-    p.category === "PAGE_VIEW"
-      ? { eventType: "PAGE_VIEW" }
-      : p.category === "AUTH"
-        ? { eventType: "LOGIN" }
-        : p.category === "EXPORT"
-          ? { eventType: "EXAM_EXPORT" }
-          : {};
+  // 분류·제목·상태·metadata 정리는 _app-event-activity.ts(순수 모듈)가 정한다 — 지문 삭제는
+  // 「지문 삭제」(콘텐츠), 준비 실패로 막힌 인쇄는 「시험지 인쇄 실패」(FAILED), metadata 의
+  // 지문 원문은 서버에서 글자 수로 바꿔 클라이언트로 보내지 않는다(26-09-30).
+  const eventTypeFilter = appEventTypeWhere(p.category);
+  if (!eventTypeFilter) return [];
   const rows = await prisma.appEvent.findMany({
     where: { ...scopeWhere(p), ...timeWhere(p), ...eventTypeFilter },
     orderBy: { createdAt: "desc" },
     take: p.limit,
   });
   return rows.map((e) => {
-    const meta = (e.metadata ?? null) as Record<string, unknown> | null;
-    const category: ActivityCategory =
-      e.eventType === "PAGE_VIEW"
-        ? "PAGE_VIEW"
-        : e.eventType === "LOGIN"
-          ? "AUTH"
-          : "EXPORT";
-    const path = typeof meta?.path === "string" ? meta.path : null;
-    const title =
-      e.eventType === "PAGE_VIEW"
-        ? pagePathLabel(path)
-        : e.eventType === "LOGIN"
-          ? "로그인"
-          : `시험지 내보내기 (${String(meta?.format ?? "?").toUpperCase()})`;
-    const detail =
-      e.eventType === "PAGE_VIEW"
-        ? path
-        : e.eventType === "LOGIN"
-          ? `방식: ${loginProviderLabel(String(meta?.provider ?? ""))}`
-          : e.eventType === "EXAM_EXPORT"
-            ? String(meta?.title ?? "")
-            : null;
+    const view = describeAppEvent(e.eventType, e.metadata);
     return {
       id: `event:${e.id}`,
       source: "app_events",
-      category,
-      title,
-      detail,
-      status: "INFO" as const,
+      category: view.category,
+      title: view.title,
+      detail: view.detail,
+      status: view.status,
       academyId: e.academyId,
       actorId: e.actorId,
-      metadata: meta,
+      metadata: view.metadata,
       createdAt: e.createdAt,
     };
   });
@@ -360,7 +335,8 @@ const SOURCES_BY_CATEGORY: Record<
     fromSimilarQuestionJobs,
     fromCustomQuestionJobs,
   ],
-  CONTENT: [fromPassages, fromExams, fromPassageReports],
+  // app_events 의 지문 삭제(PASSAGE_DELETE)도 콘텐츠 분류로 본다(fromAppEvents 가 그 이벤트형만 거른다).
+  CONTENT: [fromPassages, fromExams, fromPassageReports, fromAppEvents],
 };
 
 const ALL_SOURCES = [

@@ -1,14 +1,13 @@
 import type { BlockNode } from "./types";
-import { renderPassage } from "./render/passage";
+import { renderPassage, renderSetPrompt } from "./render/passage";
 import { type BuilderItemResolved, applyQuestionBlockFormat, renderQuestionBlock } from "./render/question";
-import { shouldForceSourcePassage, shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
-import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
-import { resolveKoSetSharedPassageContent } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
-import type { PaperPage, RenderFragment } from "@/components/exams/paper-builder/types";
+import { buildGroups } from "@/components/exams/paper-builder/paper-item-groups";
+import type { PaperGroup, RenderFragment } from "@/components/exams/paper-builder/types";
 import type { BuilderBlock, BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import { type BreakPlan, passageBreakKey, questionBreakKey } from "./break-plan";
 import { type FragmentRenderOptions, renderPassageFragment, renderQuestionPart } from "./render/fragment";
 import type { ColumnUnit } from "./builder-types";
+import { type HwpxFlowEntry, hwpxFlowEntries } from "./export-model";
 import {
   type BreakFlowState,
   applyBreak,
@@ -16,64 +15,56 @@ import {
   decideGroupBreak,
   explicitBreak,
   itemBreakFields,
-  printablePassageTitle,
   renderCustomBlock,
 } from "./builder-blocks";
-export function groupItems(
-  items: BuilderItemResolved[],
-): Array<{ groupKey: string; items: BuilderItemResolved[] }> {
-  const groups: Array<{ groupKey: string; items: BuilderItemResolved[] }> = [];
-  for (const item of items) {
-    const key = item.groupId || `single:${item.questionId}-${item.orderNum}`;
-    const last = groups[groups.length - 1];
-    if (last && last.groupKey === key) {
-      last.items.push(item);
-    } else {
-      groups.push({ groupKey: key, items: [item] });
-    }
-  }
-  return groups;
+
+// =============================================================================
+// 그룹·지문 박스 = 공용 정본(paper-item-groups.buildGroups — 웹 조판과 같은 함수).
+//   그룹 안 아무 문항이든 지문을 원하면 켠다 · 비문항 블록으로 쪼개진 묶음은 지문 1회 · 영어 세트 병합
+//   지문 + 「[n~m] 다음 글을 읽고, 물음에 답하시오.」 · KO 세트 공유지문 1박스. HWPX 는 이 결과만 그린다
+//   (예전의 「첫 문항 includePassage !== false → 지문」 판정은 settings NULL 에서 undefined 를 켬으로 읽어
+//   번호 없는 원문을 문항 앞에 찍었다 — 고객 107문항 54건).
+// =============================================================================
+
+type GroupRenderOpts = {
+  passageStyle: "boxed" | "underlined" | "plain";
+  showPassageTitle: boolean;
+  compact: boolean;
+  contentWidthHpu: number;
+};
+
+/** 그룹 지문 박스(세트 안내문 → [제목] → 지문). 웹이 그리지 않는 그룹이면 []. */
+function renderGroupPassage(group: PaperGroup, opts: GroupRenderOpts): BlockNode[] {
+  const passageContent = (group.passageContent || "").trim();
+  if (!group.includePassage || !passageContent) return [];
+  const passageBlocks = renderPassage({
+    passageTitle: group.passageTitle,
+    passageContent,
+    passageStyle: opts.passageStyle,
+    showPassageTitle: opts.showPassageTitle,
+    compact: opts.compact,
+    usesSentenceInsertMarkers: group.items.some(
+      (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
+    ),
+    contentWidthHpu: opts.contentWidthHpu,
+  });
+  if (passageBlocks.length === 0) return [];
+  return [...renderSetPrompt(group.setPrompt, opts.compact), ...passageBlocks];
 }
 
-// Passage-inclusion resolution for one question group. Shared verbatim by
-// appendQuestionGroups (flat) and renderGroupsToUnits (units) so the
-// includePassage/source-passage policy lives in exactly one place.
-export function resolveGroupPassage(
-  first: BuilderItemResolved,
-  items: BuilderItemResolved[],
-): { passageContent: string; includePassage: boolean } {
-  // KO 세트 그룹(`set:<setId>`): 병합 마커 공유지문 1박스 + 세트 지시문 —
-  // 웹 미리보기(applyKoSetSharedPassages)·DOCX(assemble)와 동일 모델.
-  // 영어/일반 그룹은 null 이 반환되어 아래 기존 로직이 그대로 실행된다.
-  const koSetPassageContent = resolveKoSetSharedPassageContent(
-    first.groupId,
-    items,
-  );
-  if (koSetPassageContent !== null) {
-    return { passageContent: koSetPassageContent, includePassage: true };
-  }
-  const rawPassageContent = (
-    first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
-  ).trim();
-  const passageContent = formatSourcePassageForQuestionItems(
-    rawPassageContent,
-    items,
-  ).trim();
-  const includePassage =
-    !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
-    (first.includePassage !== false ||
-      shouldForceSourcePassage({
-        subType: first.sourceQuestion.subType,
-        questionText: first.questionText || first.sourceQuestion.questionText,
-        structuredData: (first.sourceQuestion as { structuredData?: unknown })
-          .structuredData,
-        passage: { content: rawPassageContent },
-      }));
-  return { passageContent, includePassage };
+/** 공용 그룹 → 조판 항목(문항 그룹이면 문항 순서 그대로). 짝이 없으면 null. */
+function groupEntries(
+  group: PaperGroup,
+  entryOf: Map<object, HwpxFlowEntry>,
+): HwpxFlowEntry[] {
+  return group.items
+    .map((paper) => entryOf.get(paper))
+    .filter((entry): entry is HwpxFlowEntry => Boolean(entry));
 }
 
-export function appendQuestionGroups(opts: {
+function appendQuestionGroup(opts: {
   target: BlockNode[];
+  group: PaperGroup;
   items: BuilderItemResolved[];
   layout: BuilderLayout;
   includeAnswers: boolean;
@@ -84,100 +75,80 @@ export function appendQuestionGroups(opts: {
   breakPlan: BreakPlan;
   /** 쪽당 N문제 강제 배치(SPEC §3.1). columns = 단 수(= 쪽당 문제 예산). 미지정 = 강제 없음. */
   forcePerPage?: { columns: 1 | 2 };
-  /** 이 구역의 실제 단 수. 1단이면 breakBefore="column" 을 page 로 승격한다(§3.2). 기본 2. */
-  sectionColumns?: 1 | 2;
-  /**
-   * 호출 사이에 유지되는 가변 상태. 커스텀 블록이 끼어들어 이 함수가 여러 번 불려도
-   * 쪽 문항 카운터가 리셋되면 안 되므로 appendBlocksInOrder 가 소유해 넘긴다.
-   * 미지정이면(단발 호출) 지역 상태를 만들어 쓴다.
-   */
-  breakState?: BreakFlowState;
+  /** 이 구역의 실제 단 수. 1단이면 breakBefore="column" 을 page 로 승격한다(§3.2). */
+  sectionColumns: 1 | 2;
+  /** appendBlocksInOrder 가 소유하는 강제 나눔 상태(커스텀 블록 사이에서도 쪽 문항 카운터 유지). */
+  breakState: BreakFlowState;
 }) {
-  const groups = groupItems(opts.items);
-  const sectionColumns = opts.sectionColumns ?? 2;
-  const state = opts.breakState ?? createBreakFlowState();
-  for (const group of groups) {
-    const first = group.items[0];
-    const firstLocalId = first.localId;
-    const { passageContent, includePassage } =
-      resolveGroupPassage(first, group.items);
+  const { group, items, sectionColumns, breakState } = opts;
+  const first = items[0];
+  if (!first) return;
+  const firstLocalId = first.localId;
 
-    // 그룹 앞 강제 나눔(§3.1 쪽당 N문제 + §3.2 항목별 breakBefore). 상태 갱신도 여기서.
-    // 실제 부착은 그룹이 낸 첫 블록(지문 또는 첫 문항)에 — 아래 groupHead.
-    const firstBreak = itemBreakFields(first);
-    const forced = decideGroupBreak({
-      state,
-      budget: opts.forcePerPage?.columns,
-      sectionColumns,
-      questionCount: group.items.length,
-      breakBefore: firstBreak.breakBefore,
-      keepWithPrev: Boolean(firstBreak.keepWithPrev),
-    });
-    let groupHead: BlockNode[] | null = null;
+  // 그룹 앞 강제 나눔(§3.1 쪽당 N문제 + §3.2 항목별 breakBefore). 상태 갱신도 여기서.
+  // 실제 부착은 그룹이 낸 첫 블록(지문 또는 첫 문항)에 — 아래 groupHead.
+  const firstBreak = itemBreakFields(first);
+  const forced = decideGroupBreak({
+    state: breakState,
+    budget: opts.forcePerPage?.columns,
+    sectionColumns,
+    questionCount: items.length,
+    breakBefore: firstBreak.breakBefore,
+    keepWithPrev: Boolean(firstBreak.keepWithPrev),
+  });
+  let groupHead: BlockNode[] | null = null;
 
-    const passageRenderedSeparately = includePassage && Boolean(passageContent);
-    if (passageRenderedSeparately) {
-      const passageBlocks = renderPassage({
-        passageTitle: printablePassageTitle(first),
-        passageContent,
-        passageStyle: opts.passageStyle,
-        showPassageTitle: opts.showPassageTitle,
-        compact: opts.compact,
-        usesSentenceInsertMarkers: group.items.some(
-          (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
-        ),
-        contentWidthHpu: opts.contentWidthHpu,
-      });
-      if (firstLocalId) {
-        applyBreak(passageBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
-      }
-      groupHead = passageBlocks;
-      opts.target.push(...passageBlocks);
+  const passageBlocks = renderGroupPassage(group, opts);
+  const passageRenderedSeparately = passageBlocks.length > 0;
+  if (passageRenderedSeparately) {
+    if (firstLocalId) {
+      applyBreak(passageBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
     }
-    group.items.forEach((item, idx) => {
-      const questionBlocks = applyQuestionBlockFormat(
-        renderQuestionBlock({
-          item,
-          layout: opts.layout,
-          includeAnswers: opts.includeAnswers,
-          contentWidthHpu: opts.contentWidthHpu,
-        }),
-        item,
-        opts.compact,
-      );
-      if (item.localId) {
-        applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
-      }
-      // 지문이 별도 블록으로 렌더되지 않는 유형(문항 내부 인라인 지문)에서는
-      // 지문 기준 단/페이지 나눔이 유실되므로, 그룹 첫 문항 블록에 대신 적용해
-      // break plan 이 미리보기와 동일하게 단 시작에 반영되도록 한다.
-      if (idx === 0 && !passageRenderedSeparately && firstLocalId) {
-        applyBreak(questionBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
-      }
-      // 그룹 **2번째 이후** 문항에 걸린 명시 나눔(§3.2). 첫 문항 것은 decideGroupBreak 가
-      // 이미 groupHead 에 반영하지만, 여기서 안 해주면 지문 묶음 안쪽 문항(예: 43~45 세트의
-      // 44번)에 사용자가 건 「쪽 나눔」이 통째로 사라진다 — 네이티브 경로는 breakPlan 이
-      // 비어 있어(builder.ts) 위 questionBreakKey 조회가 언제나 undefined 이기 때문이다.
-      // §3.1 쪽 문항 카운터는 건드리지 않는다(미리보기도 강제 배치는 그룹 단위로만 센다).
-      if (idx > 0) {
-        const fields = itemBreakFields(item);
-        if (!fields.keepWithPrev) {
-          applyBreak(
-            questionBlocks,
-            explicitBreak(fields.breakBefore, sectionColumns),
-          );
-        }
-      }
-      if (idx === 0 && !groupHead) groupHead = questionBlocks;
-      opts.target.push(...questionBlocks);
-    });
-    // applyBreak 는 강한 쪽이 이기므로 breakPlan 나눔 뒤에 부착해도 안전하다.
-    if (groupHead) applyBreak(groupHead, forced);
+    groupHead = passageBlocks;
+    opts.target.push(...passageBlocks);
   }
+  items.forEach((item, idx) => {
+    const questionBlocks = applyQuestionBlockFormat(
+      renderQuestionBlock({
+        item,
+        layout: opts.layout,
+        includeAnswers: opts.includeAnswers,
+        contentWidthHpu: opts.contentWidthHpu,
+        groupPassageShown: group.includePassage,
+      }),
+      item,
+      opts.compact,
+    );
+    if (item.localId) {
+      applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
+    }
+    // 지문이 별도 블록으로 렌더되지 않는 유형(문항 내부 인라인 지문)에서는
+    // 지문 기준 단/페이지 나눔이 유실되므로, 그룹 첫 문항 블록에 대신 적용해
+    // break plan 이 미리보기와 동일하게 단 시작에 반영되도록 한다.
+    if (idx === 0 && !passageRenderedSeparately && firstLocalId) {
+      applyBreak(questionBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
+    }
+    // 그룹 **2번째 이후** 문항에 걸린 명시 나눔(§3.2). 첫 문항 것은 decideGroupBreak 가
+    // 이미 groupHead 에 반영하지만, 여기서 안 해주면 지문 묶음 안쪽 문항(예: 43~45 세트의
+    // 44번)에 사용자가 건 「쪽 나눔」이 통째로 사라진다 — 네이티브 경로는 breakPlan 이
+    // 비어 있어(builder.ts) 위 questionBreakKey 조회가 언제나 undefined 이기 때문이다.
+    // §3.1 쪽 문항 카운터는 건드리지 않는다(미리보기도 강제 배치는 그룹 단위로만 센다).
+    if (idx > 0) {
+      const fields = itemBreakFields(item);
+      if (!fields.keepWithPrev) {
+        applyBreak(questionBlocks, explicitBreak(fields.breakBefore, sectionColumns));
+      }
+    }
+    if (idx === 0 && !groupHead) groupHead = questionBlocks;
+    opts.target.push(...questionBlocks);
+  });
+  // applyBreak 는 강한 쪽이 이기므로 breakPlan 나눔 뒤에 부착해도 안전하다.
+  if (groupHead) applyBreak(groupHead, forced);
 }
 
 // 문항과 커스텀 블록(텍스트·섹션·구분선·여백·이미지)을 settings.blocks 순서대로 흘려보낸다.
-// 문항은 연속분을 모아 appendQuestionGroups 로(지문 묶음 유지), 커스텀 블록은 사이에 끼운다.
+// 순서 전체를 공용 buildGroups 에 한 번에 넣고(지문 묶음·세트·비문항 블록 분할 규칙이 웹과 같게),
+// 문항 그룹은 appendQuestionGroup 으로, 커스텀 블록은 그 자리에 끼운다.
 // contentWidthHpu = 본문/문항 폭(단 폭 또는 전체폭), imageColWidthHpu = 이미지 박스 폭 기준.
 // 네이티브 2단(colCount=2) 경로에서도 이 함수를 써 이미지·섹션이 칸 안에 함께 흐르게 한다.
 export function appendBlocksInOrder(opts: {
@@ -199,85 +170,63 @@ export function appendBlocksInOrder(opts: {
   sectionColumns?: 1 | 2;
 }) {
   const sectionColumns = opts.sectionColumns ?? 2;
-  // 강제 나눔 상태는 이 함수가 소유한다 — 커스텀 블록이 문항 사이에 끼면 appendQ 가
-  // 여러 번 호출되는데, 그때마다 쪽 문항 카운터가 0 으로 돌아가면 §3.1 이 무너진다.
+  // 강제 나눔 상태는 이 함수가 소유한다 — 커스텀 블록이 문항 사이에 끼어도 쪽 문항 카운터가
+  // 0 으로 돌아가면 안 된다(§3.1).
   const breakState = createBreakFlowState();
-  const appendQ = (items: BuilderItemResolved[]) => {
-    if (items.length === 0) return;
-    appendQuestionGroups({
-      target: opts.target,
-      items,
-      layout: opts.layout,
-      includeAnswers: opts.includeAnswers,
-      compact: opts.compact,
-      passageStyle: opts.passageStyle,
-      showPassageTitle: opts.showPassageTitle,
-      contentWidthHpu: opts.contentWidthHpu,
-      breakPlan: opts.breakPlan,
-      forcePerPage: opts.forcePerPage,
+  const entries = hwpxFlowEntries(opts.blocks, opts.resolvedItems);
+  const entryOf = new Map<object, HwpxFlowEntry>(entries.map((entry) => [entry.paper, entry]));
+
+  for (const group of buildGroups(entries.map((entry) => entry.paper))) {
+    const members = groupEntries(group, entryOf);
+    const head = members[0];
+    if (!head) continue;
+    if (!head.resolved) {
+      if (head.block) appendCustomBlock(head.block, opts, sectionColumns, breakState);
+      continue;
+    }
+    appendQuestionGroup({
+      ...opts,
+      group,
+      items: members.flatMap((entry) => (entry.resolved ? [entry.resolved] : [])),
       sectionColumns,
       breakState,
     });
-  };
-
-  if (!opts.blocks?.length) {
-    appendQ(opts.resolvedItems);
-    return;
   }
+}
 
-  const byLocalId = new Map(
-    opts.resolvedItems
-      .filter((item) => item.localId)
-      .map((item) => [item.localId as string, item]),
+function appendCustomBlock(
+  block: BuilderBlock,
+  opts: {
+    target: BlockNode[];
+    compact: boolean;
+    contentWidthHpu: number;
+    imageColWidthHpu: number;
+    imageMaxHeightHpu: number;
+    breakPlan: BreakPlan;
+  },
+  sectionColumns: 1 | 2,
+  breakState: BreakFlowState,
+) {
+  const customBlocks = renderCustomBlock(
+    block,
+    opts.compact,
+    opts.contentWidthHpu,
+    opts.imageColWidthHpu,
+    opts.imageMaxHeightHpu,
   );
-  const used = new Set<BuilderItemResolved>();
-  const takeQuestion = (block: BuilderBlock) => {
-    const byId = block.localId ? byLocalId.get(block.localId) : undefined;
-    if (byId && !used.has(byId)) {
-      used.add(byId);
-      return byId;
-    }
-    const fallback = opts.resolvedItems.find(
-      (item) => !used.has(item) && item.questionId === block.questionId,
-    );
-    if (fallback) used.add(fallback);
-    return fallback;
-  };
-
-  let pending: BuilderItemResolved[] = [];
-  const flush = () => {
-    appendQ(pending);
-    pending = [];
-  };
-  for (const block of opts.blocks) {
-    if (block.blockType === "question") {
-      const q = takeQuestion(block);
-      if (q) pending.push(q);
-      continue;
-    }
-    flush();
-    const customBlocks = renderCustomBlock(
-      block,
-      opts.compact,
-      opts.contentWidthHpu,
-      opts.imageColWidthHpu,
-      opts.imageMaxHeightHpu,
-    );
-    if (block.localId) {
-      applyBreak(customBlocks, opts.breakPlan.get(questionBreakKey(block.localId)));
-    }
-    // §3.2 — 커스텀 블록(텍스트·섹션·구분선·여백·이미지)도 breakBefore 를 존중한다.
-    // 문항이 아니므로 쪽 문항 카운터(§3.1)는 건드리지 않지만(미리보기와 동일),
-    // 쪽을 넘겼으면 그 쪽의 문항 수는 0 에서 다시 센다.
-    if (breakState.started && !block.keepWithPrev) {
-      const forced = explicitBreak(block.breakBefore, sectionColumns);
-      if (forced === "page") breakState.pageQuestionCount = 0;
-      applyBreak(customBlocks, forced);
-    }
-    if (customBlocks.length > 0) breakState.started = true;
-    opts.target.push(...customBlocks);
+  if (block.localId) {
+    applyBreak(customBlocks, opts.breakPlan.get(questionBreakKey(block.localId)));
   }
-  flush();
+  // §3.2 — 커스텀 블록(텍스트·섹션·구분선·여백·이미지)도 breakBefore 를 존중한다.
+  // 문항이 아니므로 쪽 문항 카운터(§3.1)는 건드리지 않지만(미리보기와 동일),
+  // 쪽을 넘겼으면 그 쪽의 문항 수는 0 에서 다시 센다.
+  if (breakState.started && !block.keepWithPrev) {
+    const forced = explicitBreak(block.breakBefore, sectionColumns);
+    if (forced === "page") breakState.pageQuestionCount = 0;
+    applyBreak(customBlocks, forced);
+  }
+  if (customBlocks.length > 0) breakState.started = true;
+  opts.target.push(...customBlocks);
 }
 
 // 한 단(column)의 fragment 들을 BlockNode[] 로.
@@ -289,101 +238,13 @@ export function renderColumn(
   for (const fragment of column) {
     blocks.push(...renderPassageFragment(fragment, fopts));
     for (const part of fragment.parts) {
-      blocks.push(...renderQuestionPart(part, fopts));
+      blocks.push(...renderQuestionPart(part, fopts, fragment.includePassage));
     }
   }
   if (blocks.length === 0) {
     blocks.push({ kind: "p", style: { spaceAfter: 0 }, runs: [] });
   }
   return blocks;
-}
-
-// 한 페이지를 단별 명시 표(2단: 좌 | 간격 | 우, 또는 1단)로.
-export function buildPageTable(opts: {
-  page: PaperPage;
-  columns: 1 | 2;
-  columnWidthHpu: number;
-  columnGapHpu: number;
-  contentWidthHpu: number;
-  pageBreak: boolean;
-  fopts: FragmentRenderOptions;
-}): BlockNode {
-  const NO_BORDERS = {
-    left: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
-    right: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
-    top: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
-    bottom: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
-  };
-  const noMargin = { left: 0, right: 0, top: 0, bottom: 0 };
-
-  if (opts.columns === 1) {
-    const colBlocks = renderColumn(opts.page[0] ?? [], opts.fopts);
-    return {
-      kind: "tbl",
-      colWidthsHpu: [opts.contentWidthHpu],
-      borders: NO_BORDERS,
-      cellMargins: noMargin,
-      pageBreak: opts.pageBreak,
-      rows: [
-        {
-          heightHpu: 1,
-          cells: [
-            {
-              widthHpu: opts.contentWidthHpu,
-              heightHpu: 1,
-              vAlign: "TOP",
-              borders: NO_BORDERS,
-              margins: noMargin,
-              blocks: colBlocks,
-            },
-          ],
-        },
-      ],
-    };
-  }
-
-  const leftBlocks = renderColumn(opts.page[0] ?? [], opts.fopts);
-  const rightBlocks = renderColumn(opts.page[1] ?? [], opts.fopts);
-  const colW = opts.columnWidthHpu;
-  const gap = opts.columnGapHpu;
-  return {
-    kind: "tbl",
-    colWidthsHpu: [colW, gap, colW],
-    borders: NO_BORDERS,
-    cellMargins: noMargin,
-    pageBreak: opts.pageBreak,
-    rows: [
-      {
-        heightHpu: 1,
-        cells: [
-          {
-            widthHpu: colW,
-            heightHpu: 1,
-            vAlign: "TOP",
-            borders: NO_BORDERS,
-            margins: noMargin,
-            blocks: leftBlocks,
-          },
-          {
-            widthHpu: gap,
-            heightHpu: 1,
-            vAlign: "TOP",
-            borders: NO_BORDERS,
-            margins: noMargin,
-            blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
-          },
-          {
-            widthHpu: colW,
-            heightHpu: 1,
-            vAlign: "TOP",
-            borders: NO_BORDERS,
-            margins: noMargin,
-            blocks: rightBlocks,
-          },
-        ],
-      },
-    ],
-  };
 }
 
 // =============================================================================
@@ -400,8 +261,9 @@ export const TBL_NO_BORDERS = {
 
 export const TBL_NO_MARGIN = { left: 0, right: 0, top: 0, bottom: 0 };
 
-// 각 그룹(지문 + 문항들)을 "배치 단위(unit)"로 렌더한다. appendQuestionGroups 와
-// 동일한 렌더링이되, 평탄 배열 대신 placeKey 가 달린 unit 으로 내보낸다.
+
+// 각 그룹(지문 + 문항들)을 "배치 단위(unit)"로 렌더한다. appendBlocksInOrder 와
+// 같은 공용 그룹(buildGroups)·지문 박스를 쓰되, 평탄 배열 대신 placeKey 가 달린 unit 으로 내보낸다.
 export function renderGroupsToUnits(opts: {
   items: BuilderItemResolved[];
   layout: BuilderLayout;
@@ -412,37 +274,34 @@ export function renderGroupsToUnits(opts: {
   columnWidthHpu: number;
 }): ColumnUnit[] {
   const units: ColumnUnit[] = [];
-  const groups = groupItems(opts.items);
-  for (const group of groups) {
-    const first = group.items[0];
-    const firstLocalId = first.localId;
-    const { passageContent, includePassage } =
-      resolveGroupPassage(first, group.items);
-    const passageRenderedSeparately = includePassage && Boolean(passageContent);
-    if (passageRenderedSeparately) {
-      const passageBlocks = renderPassage({
-        passageTitle: printablePassageTitle(first),
-        passageContent,
-        passageStyle: opts.passageStyle,
-        showPassageTitle: opts.showPassageTitle,
-        compact: opts.compact,
-        usesSentenceInsertMarkers: group.items.some(
-          (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
-        ),
-        contentWidthHpu: opts.columnWidthHpu,
-      });
+  const entries = hwpxFlowEntries(undefined, opts.items);
+  const entryOf = new Map<object, HwpxFlowEntry>(entries.map((entry) => [entry.paper, entry]));
+  for (const group of buildGroups(entries.map((entry) => entry.paper))) {
+    const items = groupEntries(group, entryOf).flatMap((entry) =>
+      entry.resolved ? [entry.resolved] : [],
+    );
+    const first = items[0];
+    if (!first) continue;
+    const passageBlocks = renderGroupPassage(group, {
+      passageStyle: opts.passageStyle,
+      showPassageTitle: opts.showPassageTitle,
+      compact: opts.compact,
+      contentWidthHpu: opts.columnWidthHpu,
+    });
+    if (passageBlocks.length > 0) {
       units.push({
-        placeKey: firstLocalId ? passageBreakKey(firstLocalId) : null,
+        placeKey: first.localId ? passageBreakKey(first.localId) : null,
         blocks: passageBlocks,
       });
     }
-    group.items.forEach((item) => {
+    items.forEach((item) => {
       const questionBlocks = applyQuestionBlockFormat(
         renderQuestionBlock({
           item,
           layout: opts.layout,
           includeAnswers: opts.includeAnswers,
           contentWidthHpu: opts.columnWidthHpu,
+          groupPassageShown: group.includePassage,
         }),
         item,
         opts.compact,

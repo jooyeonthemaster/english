@@ -12,6 +12,8 @@ import type { ParsedSection } from "@/app/api/exams/[examId]/export-docx/_lib/ty
 function labelPara(label: string): ParagraphNode {
   return {
     kind: "p",
+    // <보기>·<요약문> 등 라벨은 뒤 내용과 한 단에(keep-policy.ts).
+    keepRole: "caption",
     style: { spaceBefore: 40, spaceAfter: 40, lineSpacingPct: 130 },
     runs: [
       txt(`<${label}>`, {
@@ -317,6 +319,7 @@ export function renderDirection(
   return [
     {
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
       runs: headerRuns,
     },

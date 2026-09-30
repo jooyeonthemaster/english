@@ -5,19 +5,16 @@
 // 선택한 문제(또는 기존 시험지)를 깔끔한 A4 시험지 레이아웃으로 보여주고,
 // 브라우저 인쇄(또는 PDF 저장)로 바로 뽑는다. 풀 빌더의 블록편집·셔플 등
 // 짜잘한 기능은 빼고 "직관적으로 보고 프린트" 에 집중.
+//
+// 무엇을 찍을지(지문 박스·문항 안 지문·번호·발문·선지·정답)는 서버가 공용 정본으로 만든 groups
+// (exam-print-model.buildAdminPrintModel — 학원 화면·HWPX·DOCX 와 같은 규칙)를 그대로 그린다(26-09-30 COH-2 b).
+// 인쇄는 window.print() 를 직접 부른다: 이 화면은 지연 마운트 쪽·조판 넘침 가드·시험지 전용 글꼴이 없는 단순
+// 흐름 문서라, 시험지 영역의 인쇄 컨트롤러(paper-builder/print — 준비 완료 신호)가 기다릴 신호가 없다.
 // ============================================================================
 
 import { useState } from "react";
 import { Printer, FileText, ArrowLeft } from "lucide-react";
-
-export interface PrintQuestion {
-  id: string;
-  number: number | null;
-  questionText: string;
-  options: Array<{ label: string; text: string }> | null;
-  correctAnswer: string;
-  passage: { title: string; content: string } | null;
-}
+import type { PrintGroup } from "./exam-print-model";
 
 // 단독(사이드바 없는) 페이지라 화면 요소는 툴바뿐 — 인쇄 시 그것만 숨기고
 // 본문은 정상 흐름으로 두어 여러 페이지로 자연스럽게 나뉜다.
@@ -32,12 +29,15 @@ const PRINT_CSS = `
 export function ExamPrintView({
   title,
   initialAnswers,
-  questions,
+  groups,
+  questionCount,
   docxUrl,
 }: {
   title: string;
   initialAnswers: boolean;
-  questions: PrintQuestion[];
+  /** 공용 정본으로 만든 인쇄 모델(그룹 지문 1회 · 문항 안 지문 · 커스텀 글 블록). */
+  groups: PrintGroup[];
+  questionCount: number;
   /** DOCX 다운로드(어드민 라우트) POST 페이로드용 */
   docxUrl: { examId?: string; questionIds?: string[] };
 }) {
@@ -69,8 +69,7 @@ export function ExamPrintView({
     }
   }
 
-  // 같은 지문이 연속될 때 한 번만 출력하기 위한 추적
-  let lastPassageKey: string | null = null;
+  const questions = groups.flatMap((g) => (g.kind === "questions" ? g.questions : []));
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -87,7 +86,7 @@ export function ExamPrintView({
           닫기
         </button>
         <span className="text-[13px] font-medium text-gray-700">
-          시험지 미리보기 · {questions.length}문항
+          시험지 미리보기 · {questionCount}문항
         </span>
         <label className="ml-3 inline-flex cursor-pointer select-none items-center gap-1.5 text-[13px] text-gray-600">
           <input
@@ -145,63 +144,77 @@ export function ExamPrintView({
             </table>
           </div>
 
-          {questions.length === 0 ? (
+          {questionCount === 0 ? (
             <p className="py-10 text-center text-[13px] text-gray-400">
               표시할 문항이 없습니다.
             </p>
           ) : (
-            <ol className="space-y-5">
-              {questions.map((q, i) => {
-                const passageKey = q.passage
-                  ? `${q.passage.title}::${q.passage.content.slice(0, 40)}`
-                  : null;
-                const showPassage = passageKey !== null && passageKey !== lastPassageKey;
-                lastPassageKey = passageKey;
-                return (
-                  <li key={q.id} className="break-inside-avoid">
-                    {showPassage && q.passage && (
-                      <div className="mb-2 rounded border border-gray-300 bg-gray-50/60 px-3 py-2 text-[12.5px] leading-relaxed whitespace-pre-wrap">
-                        {q.passage.content}
+            <div className="space-y-5">
+              {groups.map((group) =>
+                group.kind === "text" ? (
+                  <p key={group.key} className="whitespace-pre-wrap text-[13px] font-semibold">
+                    {group.text}
+                  </p>
+                ) : (
+                  <section key={group.key} className="space-y-4">
+                    {group.passage && (
+                      <div className="break-inside-avoid rounded border border-gray-300 bg-gray-50/60 px-3 py-2 text-[12.5px] leading-relaxed">
+                        {group.passage.setPrompt && (
+                          <p className="mb-1 font-bold">{group.passage.setPrompt}</p>
+                        )}
+                        {group.passage.title && (
+                          <p className="mb-1 text-[11.5px] font-bold text-gray-600">{group.passage.title}</p>
+                        )}
+                        <p className="whitespace-pre-wrap">{group.passage.content}</p>
                       </div>
                     )}
-                    <div className="flex gap-1.5">
-                      <span className="font-bold">{q.number ?? i + 1}.</span>
-                      <div className="min-w-0 flex-1">
-                        <p className="whitespace-pre-wrap font-medium">
-                          {q.questionText}
-                        </p>
-                        {q.options && q.options.length > 0 && (
-                          <ul className="mt-1.5 space-y-1">
-                            {q.options.map((o, oi) => (
-                              <li key={oi} className="flex gap-1.5">
-                                <span>{o.label}</span>
-                                <span className="whitespace-pre-wrap">{o.text}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        {showAnswers && (
-                          <p className="mt-1 text-[12px] font-semibold text-blue-700">
-                            정답: {q.correctAnswer}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                    <ol className="space-y-5">
+                      {group.questions.map((q) => (
+                        <li key={q.id} className="break-inside-avoid">
+                          <div className="flex gap-1.5">
+                            <span className="font-bold">{q.number}.</span>
+                            <div className="min-w-0 flex-1">
+                              <p className="whitespace-pre-wrap font-medium">{q.questionText}</p>
+                              {q.inlinePassage && (
+                                <div className="mt-1.5 rounded border border-gray-300 bg-gray-50/60 px-3 py-2 text-[12.5px] leading-relaxed whitespace-pre-wrap">
+                                  {q.inlinePassage}
+                                </div>
+                              )}
+                              {q.options.length > 0 && (
+                                <ul className="mt-1.5 space-y-1">
+                                  {q.options.map((o, oi) => (
+                                    <li key={oi} className="flex gap-1.5">
+                                      <span>{o.label}</span>
+                                      <span className="whitespace-pre-wrap">{o.text}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                              {showAnswers && (
+                                <p className="mt-1 text-[12px] font-semibold text-blue-700">
+                                  정답: {q.answer}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                ),
+              )}
+            </div>
           )}
 
           {/* 정답표 */}
-          {showAnswers && questions.length > 0 && (
+          {showAnswers && questionCount > 0 && (
             <div className="mt-8 border-t-2 border-gray-900 pt-3">
               <h2 className="mb-2 text-[14px] font-bold">정답</h2>
               <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12.5px]">
-                {questions.map((q, i) => (
+                {questions.map((q) => (
                   <span key={q.id}>
-                    <span className="font-semibold">{q.number ?? i + 1}.</span>{" "}
-                    {q.correctAnswer}
+                    <span className="font-semibold">{q.number}.</span>{" "}
+                    {q.answer}
                   </span>
                 ))}
               </div>

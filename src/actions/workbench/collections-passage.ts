@@ -8,10 +8,26 @@ import {
   buildCollectionSubjectScopeWhere,
   isMissingColumnError,
 } from "./_collection-where";
+import { pickFolderPatch, sanitizeIdList } from "./_lib/folder-scope";
 
 // ---------------------------------------------------------------------------
 // Passage Collections — Folder-like organization for passages
+//
+// 학원 범위(IDOR 수리 26-09-30): 모든 액션이 세션 academyId 로 폴더·지문을 거른다.
+// 인자 academyId 는 호환용이고 쓰지 않는다. 남의 학원 폴더 id 는 「폴더를 찾을 수
+// 없습니다」, 남의 학원 지문 id 는 조용히 빠진다(존재 여부를 드러내지 않는다).
 // ---------------------------------------------------------------------------
+
+const FOLDER_NOT_FOUND = "폴더를 찾을 수 없습니다.";
+
+async function isOwnedPassageFolder(collectionId: unknown, academyId: string) {
+  if (typeof collectionId !== "string" || collectionId.length === 0) return false;
+  const row = await prisma.passageCollection.findFirst({
+    where: { id: collectionId, academyId },
+    select: { id: true },
+  });
+  return row !== null;
+}
 
 export async function getPassageCollections(
   academyId: string,
@@ -21,7 +37,11 @@ export async function getPassageCollections(
     subject?: "KOREAN";
   },
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다 — 모든 서버 호출부가 staff.academyId 를 넘기고, 클라이언트
+  // 훅(use-collections-state)은 "" 를 넘겨 빈 목록을 받던 상태였다.
+  const staff = await requireAuth();
+  void academyId;
+  const scopedAcademyId = staff.academyId;
   const countSelect = {
     _count: {
       select: {
@@ -39,7 +59,7 @@ export async function getPassageCollections(
     return await prisma.passageCollection.findMany({
       // 과목 스코프(항상 적용) — 국어/영어 폴더 완전 분리. 기존(subject null)
       // 폴더는 전부 영어로 간주돼 영어 목록에 그대로 남는다(무회귀).
-      where: { academyId, ...buildCollectionSubjectScopeWhere(opts?.subject) },
+      where: { academyId: scopedAcademyId, ...buildCollectionSubjectScopeWhere(opts?.subject) },
       include: countSelect,
       orderBy: { name: "asc" },
     });
@@ -49,7 +69,7 @@ export async function getPassageCollections(
     // 않도록 명시 select 로 재조회하고, 반환 형태는 subject:null 로 맞춘다.
     if (!isMissingColumnError(error)) throw error;
     const rows = await prisma.passageCollection.findMany({
-      where: { academyId },
+      where: { academyId: scopedAcademyId },
       select: {
         id: true,
         academyId: true,
@@ -84,6 +104,10 @@ export async function createPassageCollection(data: {
     parentId: data.parentId || null,
   };
   try {
+    // 상위 폴더도 이 학원 것이어야 한다 — 남의 학원 폴더 아래로 붙이지 못하게.
+    if (baseData.parentId && !(await isOwnedPassageFolder(baseData.parentId, staff.academyId))) {
+      return { success: false as const, error: FOLDER_NOT_FOUND };
+    }
     const collection = await prisma.passageCollection.create({
       data: {
         ...baseData,
@@ -126,14 +150,15 @@ export async function updatePassageCollection(
   collectionId: string,
   data: { name?: string; description?: string; color?: string }
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.passageCollection.update({
-      where: { id: collectionId },
-      data,
-      // RETURNING 최소화 — subject 컬럼 미반영 DB에서도 이름변경이 깨지지 않게.
-      select: { id: true },
+    // 학원 범위 + 허용 필드만(academyId·parentId·subject 를 실어 보내도 무시).
+    // updateMany 는 RETURNING 이 없어 subject 컬럼 미반영 DB 에서도 깨지지 않는다.
+    const result = await prisma.passageCollection.updateMany({
+      where: { id: collectionId, academyId: staff.academyId },
+      data: pickFolderPatch(data),
     });
+    if (result.count === 0) return { success: false as const, error: FOLDER_NOT_FOUND };
     revalidatePath("/director/workbench/passages");
     return { success: true as const };
   } catch (error) {
@@ -144,13 +169,13 @@ export async function updatePassageCollection(
 }
 
 export async function deletePassageCollection(collectionId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.passageCollection.delete({
-      where: { id: collectionId },
-      // RETURNING 최소화 — subject 컬럼 미반영 DB에서도 삭제가 깨지지 않게.
-      select: { id: true },
+    // 학원 범위 — 남의 학원 폴더 id 는 count 0(RETURNING 없음 → subject 컬럼 미반영 DB 안전).
+    const result = await prisma.passageCollection.deleteMany({
+      where: { id: collectionId, academyId: staff.academyId },
     });
+    if (result.count === 0) return { success: false as const, error: FOLDER_NOT_FOUND };
     revalidatePath("/director/workbench/passages");
     return { success: true as const };
   } catch (error) {
@@ -164,19 +189,32 @@ export async function addPassagesToCollection(
   collectionId: string,
   passageIds: string[]
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
+    // 학원 범위 — 폴더도 지문도 이 학원 것만. 남의 학원 지문을 내 폴더에 담아
+    // getPassageCollectionItems 로 본문을 읽어 가는 경로를 막는다(IDOR 수리 26-09-30).
+    if (!(await isOwnedPassageFolder(collectionId, staff.academyId))) {
+      return { success: false as const, error: FOLDER_NOT_FOUND };
+    }
+    const requestedIds = sanitizeIdList(passageIds);
+    const owned = requestedIds.length
+      ? await prisma.passage.findMany({
+          where: { id: { in: requestedIds }, academyId: staff.academyId },
+          select: { id: true },
+        })
+      : [];
+    const ownedSet = new Set(owned.map((p) => p.id));
+    const ownedIds = requestedIds.filter((id) => ownedSet.has(id));
+
     // Only the not-already-present items are actually inserted; return them so
     // the client can keep its folder counts in sync with the DB (createMany +
     // skipDuplicates silently drops the rest).
     const existing = await prisma.passageCollectionItem.findMany({
-      where: { collectionId, passageId: { in: passageIds } },
+      where: { collectionId, passageId: { in: ownedIds } },
       select: { passageId: true },
     });
     const existingSet = new Set(existing.map((e) => e.passageId));
-    const addedIds = [...new Set(passageIds)].filter(
-      (id) => !existingSet.has(id),
-    );
+    const addedIds = ownedIds.filter((id) => !existingSet.has(id));
     if (addedIds.length === 0) {
       return { success: true as const, addedIds: [] as string[] };
     }
@@ -210,10 +248,14 @@ export async function removePassagesFromCollection(
   collectionId: string,
   passageIds: string[]
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
+    // 학원 범위 — 남의 학원 폴더에서는 아무것도 빼지 않는다.
+    if (!(await isOwnedPassageFolder(collectionId, staff.academyId))) {
+      return { success: false as const, error: FOLDER_NOT_FOUND };
+    }
     const existing = await prisma.passageCollectionItem.findMany({
-      where: { collectionId, passageId: { in: passageIds } },
+      where: { collectionId, passageId: { in: sanitizeIdList(passageIds) } },
       select: { passageId: true },
     });
     const removedIds = existing.map((e) => e.passageId);
@@ -237,9 +279,14 @@ export async function removePassagesFromCollection(
 }
 
 export async function getPassageCollectionItems(collectionId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
+  // 학원 범위 — 폴더와 지문 둘 다 이 학원 것만(남의 학원 폴더 id 는 빈 목록).
   const items = await prisma.passageCollectionItem.findMany({
-    where: { collectionId },
+    where: {
+      collectionId,
+      collection: { academyId: staff.academyId },
+      passage: { academyId: staff.academyId },
+    },
     include: {
       passage: {
         include: {

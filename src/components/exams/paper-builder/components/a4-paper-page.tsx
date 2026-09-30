@@ -1042,6 +1042,9 @@ export function A4PaperPage({
                           data-paper-item-id={item.localId}
                           data-question-id={item.blockType === "question" ? item.questionId : undefined}
                           data-paper-part-key={part.partKey}
+                          data-est-h={
+                            process.env.NODE_ENV === "production" ? undefined : part.estHeight
+                          }
                           onClick={() => {
                             if (!readOnly && !isLineGapSpacer)
                               setActiveItemId(item.localId);
@@ -1237,7 +1240,8 @@ export function A4PaperPage({
                               part.questionRenderedLines.length > 0 ||
                               part.options.length > 0 ||
                               part.showObjectiveAnswer ||
-                              part.showAnswer) && (
+                              part.showAnswer ||
+                              part.showExplanation) && (
                             <p
                               className={cn(
                                 "continuation-hint mb-1 text-[9px] font-semibold italic",
@@ -1636,7 +1640,7 @@ export function A4PaperPage({
                               </p>
                             )}
                           {part.showExplanation && (
-                            <ExamExplanationBlock item={item} compact={compact} />
+                            <ExamExplanationBlock item={item} compact={compact} slice={part.explanation} />
                           )}
                             </>
                           )}

@@ -9,6 +9,7 @@ import {
   removePassagesFromCollection,
 } from "@/actions/workbench";
 import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
+import { confirmPassageDeletion } from "@/components/workbench/passage-delete-confirm";
 import type {
   PassageItem,
   PassageCollectionItem,
@@ -624,9 +625,11 @@ export function usePassageLibrary({
   const handleDeleteSelectedPassages = useCallback(async () => {
     const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     if (ids.length === 0 || passageBulkAction) return;
-    if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
+    // 영향 조회 동안에도 일괄 작업을 잠근다(finally 가 푼다). 확인창 문구는 실제
+    // 동작(동일 지문으로 옮김 / 원문 보관 후 삭제) 그대로다.
     setPassageBulkAction("delete");
     try {
+      if (!(await confirmPassageDeletion(ids))) return;
       const result = await bulkDeleteWorkbenchPassages(ids);
       if (!result.success) {
         toast.error(result.error || "삭제에 실패했습니다.");
@@ -641,7 +644,9 @@ export function usePassageLibrary({
           `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
         );
       }
-      setPassages((prev) => prev.filter((p) => !ids.includes(p.id)));
+      // 가드가 지우지 않은 지문(튜터 수업 연결 등)은 목록에 남긴다.
+      const removed = result.deletedIds ?? ids;
+      setPassages((prev) => prev.filter((p) => !removed.includes(p.id)));
       setSelectedIds(new Set());
       await loadPassages();
     } catch (err) {

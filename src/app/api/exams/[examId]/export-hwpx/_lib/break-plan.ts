@@ -10,6 +10,12 @@
  *    시작하는 단위"를 찾아낸다. 빌더는 그 단위의 첫 블록에
  *    columnBreak/pageBreak 를 부여해 미리보기와 같은 위치에서 넘어가게 한다.
  *
+ * 입력 PaperItem·그룹은 웹과 같은 공용 정본이다(26-09-30 HWPX-CONSUMER):
+ *   hwpxFlowEntries(blocks, resolvedItems) → PaperItem[] → buildGroups(paper-item-groups) → paginateGroups.
+ * 예전의 서버 복제본(reconstructPaperItems·buildGroups·applyKoSetSharedPassages·
+ * `includePassage ?? Boolean(source.passage)` 폴백)은 없앴다 — 네 번째 includePassage 규칙이자
+ * 세 번째 buildGroups 였다(P3·P7).
+ *
  * 분할 단위(unit)는 두 종류다.
  *  - passage:<firstItemLocalId>  지문 묶음(그룹)의 지문 블록이 단/페이지를 시작
  *  - question:<localId>          문항(또는 커스텀 블록)이 단/페이지를 시작
@@ -21,19 +27,10 @@
  */
 
 import { paginateGroups } from "@/components/exams/paper-builder/pagination";
-import {
-  shouldForceSourcePassage,
-  shouldRenderSourcePassageInsideQuestion,
-} from "@/components/exams/paper-builder/passage-policy";
-import {
-  normalizeInlineText,
-  normalizePassageText,
-  normalizeQuestionText,
-} from "@/components/exams/paper-builder/text-normalization";
+import { buildGroups } from "@/components/exams/paper-builder/paper-item-groups";
+import { resolvePaperLayout } from "@/components/exams/paper-builder/paper-layout-defaults";
 import type {
-  OptionItem,
   PaginationSettings,
-  PaperGroup,
   PaperItem,
   PaperPage,
   RenderFragment,
@@ -43,9 +40,7 @@ import type {
   BuilderBlock,
   BuilderLayout,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
-import { isKoQuestionType } from "@/lib/korean/registry";
-import { isKoSetGroupId } from "@/lib/korean/sets/paper";
-import { resolveKoSetSharedPassageContent } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
+import { hwpxFlowEntries } from "./export-model";
 
 export type BreakType = "page" | "column";
 export type BreakPlan = Map<string, BreakType>;
@@ -69,71 +64,28 @@ export const EMPTY_BREAK_PLAN: BreakPlanResult = {
   pageCount: 0,
 };
 
-function shouldRenderSeparateSourcePassage(item: PaperItem): boolean {
-  if (item.blockType !== "question") return false;
-  if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) {
-    return false;
-  }
-  const passageContent =
-    item.passageContent || item.sourceQuestion.passage?.content || "";
-  return (
-    Boolean(passageContent.trim()) &&
-    (item.includePassage ||
-      shouldForceSourcePassage({
-        subType: item.sourceQuestion.subType,
-        questionText: item.questionText || item.sourceQuestion.questionText,
-        structuredData: item.sourceQuestion.structuredData,
-        passage: { content: passageContent },
-      }))
-  );
-}
-
-function resolvePaperItemPassageTitle(item: PaperItem): string {
-  return normalizeInlineText(
-    item.passageTitle || item.sourceQuestion.passage?.title || "",
-  );
-}
-
-function parseOptionsLoose(raw: unknown): OptionItem[] {
-  if (Array.isArray(raw)) {
-    return raw
-      .map((o, idx) => ({
-        label: String((o as OptionItem)?.label ?? idx + 1),
-        text: String((o as OptionItem)?.text ?? ""),
-      }))
-      .filter((o) => o.text.length > 0 || o.label.length > 0);
-  }
-  if (typeof raw !== "string" || !raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .map((o, idx) => ({
-        label: String(o?.label ?? idx + 1),
-        text: String(o?.text ?? ""),
-      }))
-      .filter((o) => o.text.length > 0 || o.label.length > 0);
-  } catch {
-    return [];
-  }
-}
-
 function paginationSettingsFrom(
   layout: BuilderLayout,
   template: string | undefined,
   firstPageHeaderPx?: number,
   contentSafetyPx?: number,
 ): PaginationSettings {
+  // 기본값은 웹 상세와 같은 정본(resolvePaperLayout). 라우트는 이미 판정된 boolean 을 넘기므로
+  // 여기서 달라지는 것은 손입력(테스트) 뿐이다.
+  const resolved = resolvePaperLayout({ layout, template });
   return {
-    paperSize: layout.paperSize === "B4" ? "B4" : "A4",
-    columns: layout.columns === 1 ? 1 : 2,
-    density: layout.density === "compact" ? "compact" : "comfortable",
+    paperSize: resolved.paperSize,
+    columns: resolved.columns,
+    density: resolved.density,
     // 정답 미포함 다운로드와 동일: 답란을 그대로 표시 (분할에 영향).
-    showAnswerSpace: layout.showAnswerSpace !== false,
-    showPassageTitle: layout.showPassageTitle === true,
-    showQuestionMeta: layout.showQuestionMeta !== false,
+    showAnswerSpace: resolved.showAnswerSpace,
+    showPassageTitle: resolved.showPassageTitle,
+    showQuestionMeta: resolved.showQuestionMeta,
     passageStyle: "plain",
-    template: (template ?? "clean") as PaginationSettings["template"],
+    template: resolved.template,
+    // HWPX 는 다중 빈칸 조합 선지를 「값1 …… 값2」 한 문단으로 쓴다(render/options.ts) —
+    // 미리보기 컬럼 그리드(좁은 열 접힘) 추정을 쓰면 표 높이를 과대 예약한다.
+    multiBlankOptionLayout: "inline",
     // HWPX 는 1쪽 머리말 높이를 page-0 용량에서 뺀다.
     //   **`!== undefined` 로 검사해야 한다.** truthy 검사(`firstPageHeaderPx ? …`)를 쓰면
     //   **0 이 falsy 라 키가 통째로 빠지고** pagination 이 자기 기본 머리말 높이를 예약한다.
@@ -145,275 +97,12 @@ function paginationSettingsFrom(
   };
 }
 
-/**
- * 영구 저장된 블록(또는 resolvedItems)을 pagination 이 소비할 수 있는
- * PaperItem[] 로 재구성한다. pagination 이 실제로 읽는 필드만 채우고
- * sourceQuestion 은 subType 만 필요하므로 최소 구성으로 캐스팅한다.
- *
- * 주의: 빌더 설정이 없는 시험지(route 의 fallback 경로)에서는 resolvedItems 에
- * localId / options / passage 필드가 없을 수 있다. 모든 접근을 방어적으로 한다.
- */
-function reconstructPaperItems(opts: {
-  blocks: BuilderBlock[] | undefined;
-  resolvedItems: BuilderItemResolved[];
-}): PaperItem[] {
-  const { blocks, resolvedItems } = opts;
-
-  const resolvedByLocalId = new Map<string, BuilderItemResolved>();
-  const resolvedByQuestionId = new Map<string, BuilderItemResolved>();
-  for (const item of resolvedItems) {
-    if (item.localId) resolvedByLocalId.set(item.localId, item);
-    if (item.questionId && !resolvedByQuestionId.has(item.questionId)) {
-      resolvedByQuestionId.set(item.questionId, item);
-    }
-  }
-
-  const makeQuestionItem = (
-    block: Partial<BuilderBlock> & { localId?: string; questionId?: string },
-    resolved: BuilderItemResolved | undefined,
-  ): PaperItem => {
-    const source = resolved?.sourceQuestion;
-    const subType = source?.subType ?? null;
-    const questionId =
-      block.questionId ?? resolved?.questionId ?? resolved?.localId ?? "q";
-    const localId =
-      block.localId ?? resolved?.localId ?? `q-${questionId}`;
-    const questionText = normalizeQuestionText(
-      block.questionText ?? resolved?.questionText ?? source?.questionText ?? "",
-    );
-    const options =
-      block.options !== undefined
-        ? parseOptionsLoose(block.options)
-        : resolved?.options ?? parseOptionsLoose(source?.options);
-    const includePassage =
-      block.includePassage ??
-      resolved?.includePassage ??
-      Boolean(source?.passage);
-    const groupId = block.groupId ?? resolved?.groupId ?? `single:${localId}`;
-    // [KOSET-2] KO 세트 멤버(`set:<setId>` 그룹 + KO 유형)는 normalizePassageText 의
-    // 단락 접힘(개행→공백)을 우회해 원문 개행(운문 행 구분)을 보존한다 — 웹
-    // makePaperItem 의 KO 분기(paper-item-utils.tsx)와 동일 게이트. 정규화는
-    // applyKoSetSharedPassages → buildKoSetSharedPassage 내부 normalizeKo 에 위임해
-    // 마커 앵커 좌표계까지 웹 미리보기/DOCX 와 일치시킨다. KO 솔로 문항·영어 전
-    // 유형은 게이트 밖이라 기존 normalizePassageText 유지(무회귀 게이트).
-    const rawPassageContent =
-      block.passageContent ??
-      resolved?.passageContent ??
-      source?.passage?.content ??
-      "";
-    const passageContent =
-      isKoSetGroupId(groupId) && isKoQuestionType(subType)
-        ? rawPassageContent
-        : normalizePassageText(rawPassageContent);
-    const passageTitle = normalizeInlineText(
-      block.passageTitle ||
-        resolved?.passageTitle ||
-        source?.passage?.title ||
-        "",
-    );
-
-    return {
-      localId,
-      questionId,
-      // pagination 은 sourceQuestion.subType 만 읽는다. structuredData 는 KO 세트
-      // 공유지문(멤버 마커 병합 — applyKoSetSharedPassages)에서만 소비되므로
-      // KO_* 유형에만 싣는다 — 영어 문항에 실으면 shouldForceSourcePassage 의
-      // 내장지문 감지 결과가 기존(미보유)과 달라져 영어 분할 계획이 변한다(무회귀 게이트).
-      sourceQuestion: {
-        subType,
-        structuredData: isKoQuestionType(subType)
-          ? source?.structuredData
-          : undefined,
-      } as unknown as PaperItem["sourceQuestion"],
-      orderNum: block.orderNum ?? resolved?.orderNum ?? 0,
-      points: block.points ?? resolved?.points ?? 1,
-      groupId,
-      includePassage,
-      passageTitle,
-      passageContent,
-      questionText,
-      options,
-      correctAnswer: "",
-      answerSpaceLines:
-        block.answerSpaceLines ?? resolved?.answerSpaceLines ?? 0,
-      objectiveAnswerSlots:
-        block.objectiveAnswerSlots ?? resolved?.objectiveAnswerSlots ?? 0,
-      objectiveAnswerTexts:
-        block.objectiveAnswerTexts ?? resolved?.objectiveAnswerTexts ?? [],
-      sectionTitle: block.sectionTitle ?? "",
-      teacherNote: block.teacherNote ?? resolved?.teacherNote ?? "",
-      breakBefore: (block.breakBefore as PaperItem["breakBefore"]) ?? "auto",
-      keepWithPrev: Boolean(block.keepWithPrev),
-      blockType: "question",
-      locked: false,
-      blockTitle: "",
-      blockText: "",
-      blockAlign: (block.blockAlign as PaperItem["blockAlign"]) ?? "left",
-      blockFontSize: "md",
-      blockBold: block.blockBold ?? false,
-      blockItalic: block.blockItalic ?? false,
-      blockFontPt:
-        typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
-          ? block.blockFontPt
-          : null,
-      blockAccentColor: "#2563EB",
-      dividerStyle: "solid",
-      dividerThickness: 1,
-      spacerHeight: 32,
-      imageDataUrl: null,
-      imageAlt: "",
-      imageWidth: 70,
-    };
-  };
-
-  const makeCustomItem = (block: BuilderBlock): PaperItem => {
-    const localId = block.localId;
-    return {
-      localId,
-      questionId: block.questionId ?? `custom:${localId}`,
-      sourceQuestion: { subType: null } as unknown as PaperItem["sourceQuestion"],
-      orderNum: 0,
-      points: 0,
-      groupId: block.groupId ?? `block:${localId}`,
-      includePassage: false,
-      passageTitle: "",
-      passageContent: "",
-      questionText: block.questionText ?? block.blockText ?? "",
-      options: [],
-      correctAnswer: "",
-      answerSpaceLines: 0,
-      objectiveAnswerSlots: 0,
-      objectiveAnswerTexts: [],
-      sectionTitle: block.sectionTitle ?? "",
-      teacherNote: "",
-      breakBefore: (block.breakBefore as PaperItem["breakBefore"]) ?? "auto",
-      keepWithPrev: Boolean(block.keepWithPrev),
-      blockType: (block.blockType as PaperItem["blockType"]) ?? "text",
-      locked: Boolean(block.locked),
-      blockTitle: block.blockTitle ?? "",
-      blockText: block.blockText ?? "",
-      blockAlign: (block.blockAlign as PaperItem["blockAlign"]) ?? "left",
-      blockFontSize: (block.blockFontSize as PaperItem["blockFontSize"]) ?? "md",
-      blockBold: block.blockBold ?? (block.blockType === "section"),
-      blockItalic: block.blockItalic ?? false,
-      blockFontPt:
-        typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
-          ? block.blockFontPt
-          : null,
-      blockAccentColor: block.blockAccentColor ?? "#2563EB",
-      dividerStyle:
-        (block.dividerStyle as PaperItem["dividerStyle"]) ?? "solid",
-      dividerThickness: block.dividerThickness ?? 1,
-      spacerHeight: block.spacerHeight ?? 32,
-      imageDataUrl: block.imageDataUrl ?? null,
-      imageAlt: block.imageAlt ?? "",
-      imageWidth: block.imageWidth ?? 70,
-    };
-  };
-
-  if (blocks?.length) {
-    const used = new Set<BuilderItemResolved>();
-    return blocks.map((block) => {
-      if (block.blockType !== "question") return makeCustomItem(block);
-      let resolved = block.localId
-        ? resolvedByLocalId.get(block.localId)
-        : undefined;
-      if (resolved && used.has(resolved)) resolved = undefined;
-      if (!resolved && block.questionId) {
-        const candidate = resolvedByQuestionId.get(block.questionId);
-        if (candidate && !used.has(candidate)) resolved = candidate;
-      }
-      if (resolved) used.add(resolved);
-      return makeQuestionItem(block, resolved);
-    });
-  }
-
-  // v1: settings.blocks 가 없으면 resolvedItems(문항)만으로 구성.
-  return resolvedItems.map((item) =>
-    makeQuestionItem(
-      {
-        localId: item.localId,
-        questionId: item.questionId,
-        orderNum: item.orderNum,
-        points: item.points,
-        groupId: item.groupId ?? undefined,
-        includePassage: item.includePassage,
-        passageTitle: item.passageTitle,
-        passageContent: item.passageContent,
-        questionText: item.questionText,
-        options: item.options,
-        answerSpaceLines: item.answerSpaceLines,
-        objectiveAnswerSlots: item.objectiveAnswerSlots,
-        objectiveAnswerTexts: item.objectiveAnswerTexts,
-      },
-      item,
-    ),
-  );
-}
-
-// buildGroups (paper-item-utils.tsx) 와 동일한 그룹화 로직을 서버에서 재현한다.
-// (원본은 .tsx 라 서버 번들에 끌어오지 않으려고 여기 순수 함수로 복제.)
-function buildGroups(items: PaperItem[]): PaperGroup[] {
-  const groups: PaperGroup[] = [];
-  for (const item of items) {
-    if (item.blockType !== "question") {
-      groups.push({
-        id: item.groupId || item.localId,
-        items: [item],
-        includePassage: false,
-        passageTitle: "",
-        passageContent: "",
-        setPrompt: "",
-      });
-      continue;
-    }
-
-    const last = groups[groups.length - 1];
-    if (last && item.groupId && last.id === item.groupId) {
-      last.items.push(item);
-      if (shouldRenderSeparateSourcePassage(item) && item.passageContent) {
-        last.includePassage = true;
-        last.passageTitle = resolvePaperItemPassageTitle(item);
-        last.passageContent = item.passageContent;
-      }
-    } else {
-      groups.push({
-        id: item.groupId || item.localId,
-        items: [item],
-        includePassage: shouldRenderSeparateSourcePassage(item),
-        passageTitle: resolvePaperItemPassageTitle(item),
-        passageContent: item.passageContent,
-        setPrompt: "",
-      });
-    }
-  }
-  applyKoSetSharedPassages(groups);
-  return groups;
-}
-
-// KO 세트 그룹(`set:<setId>`) 선두에 공유지문 1박스를 채운다 — 미리보기
-// (paper-item-utils.applyKoSetSharedPassages)와 동일한 후처리를 서버 복제본에도
-// 적용해, pagination(분할 계획·fragment 배치)이 미리보기와 같은 지문을 측정하게
-// 한다. 영어 세트("single:")·지문("passage:") 그룹은 helper 가 null 을 반환해
-// 절대 걸리지 않는다(무회귀 게이트).
-function applyKoSetSharedPassages(groups: PaperGroup[]) {
-  const renderedSetIds = new Set<string>();
-  for (const group of groups) {
-    const questionItems = group.items.filter(
-      (it) => it.blockType === "question",
-    );
-    const shared = resolveKoSetSharedPassageContent(group.id, questionItems);
-    if (shared === null) continue;
-    // 같은 세트가 비문항 블록으로 쪼개져 그룹이 여러 개면 지문 박스는 첫 그룹만.
-    if (renderedSetIds.has(group.id)) {
-      group.includePassage = false;
-      continue;
-    }
-    renderedSetIds.add(group.id);
-    group.passageTitle = resolvePaperItemPassageTitle(questionItems[0]);
-    group.passageContent = shared;
-    group.includePassage = true;
-  }
+/** 조판 순서의 공용 PaperItem[](문항 + 커스텀 블록) — builder-tables 와 같은 hwpxFlowEntries. */
+function paperItemsForPlan(
+  blocks: BuilderBlock[] | undefined,
+  resolvedItems: BuilderItemResolved[],
+): PaperItem[] {
+  return hwpxFlowEntries(blocks, resolvedItems).map((entry) => entry.paper);
 }
 
 /**
@@ -445,10 +134,7 @@ export function computePaginatedLayout(opts: {
   contentSafetyPx?: number;
 }): PaginatedLayout | null {
   try {
-    const paperItems = reconstructPaperItems({
-      blocks: opts.blocks,
-      resolvedItems: opts.resolvedItems,
-    });
+    const paperItems = paperItemsForPlan(opts.blocks, opts.resolvedItems);
     if (paperItems.length === 0) return null;
     const settings = paginationSettingsFrom(
       opts.layout,
@@ -456,8 +142,7 @@ export function computePaginatedLayout(opts: {
       opts.firstPageHeaderPx,
       opts.contentSafetyPx,
     );
-    const groups = buildGroups(paperItems);
-    const { pages } = paginateGroups(groups, settings);
+    const { pages } = paginateGroups(buildGroups(paperItems), settings);
     if (!pages.length) return null;
     return { pages, settings };
   } catch {
@@ -472,10 +157,7 @@ export function computeBreakPlan(opts: {
   template: string | undefined;
 }): BreakPlanResult {
   try {
-    const paperItems = reconstructPaperItems({
-      blocks: opts.blocks,
-      resolvedItems: opts.resolvedItems,
-    });
+    const paperItems = paperItemsForPlan(opts.blocks, opts.resolvedItems);
     if (paperItems.length === 0) return EMPTY_BREAK_PLAN;
 
     const settings = paginationSettingsFrom(opts.layout, opts.template);

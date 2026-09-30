@@ -5,6 +5,7 @@ import {
   shouldRenderWrongAnalysisForSubtype,
 } from "./option-display";
 import type { PaperItem } from "./types";
+import { explanationContentLines } from "./explanation-markdown";
 
 // ---------------------------------------------------------------------------
 // 인라인 정답·해설(해설 포함 PDF) 콘텐츠.
@@ -61,9 +62,11 @@ export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
   const content = (explanation.content || "").trim();
   if (content) {
     rows.push({ type: "label", text: "해설" });
-    for (const line of content.split("\n")) {
-      const trimmed = line.trim();
-      if (trimmed) rows.push({ type: "text", text: prose(trimmed) });
+    // 마크다운 글머리(「- 」「* 」「• 」 줄머리)는 핵심 포인트와 같은 글머리(•) 행으로 그린다 — 원문 기호를
+    // 종이에 찍지 않는다(26-09-30 PRINT-R9, 해설 66건). 「**굵게**」 는 줄 안 서식이라 여기서 건드리지
+    // 않는다(parseExplanationInline). 규칙은 explanation-markdown.ts 한 곳 — DOCX · HWPX 해설도 같은 함수다.
+    for (const line of explanationContentLines(content)) {
+      rows.push({ type: line.bullet ? "bullet" : "text", text: prose(line.text) });
     }
   }
 

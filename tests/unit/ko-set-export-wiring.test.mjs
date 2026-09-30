@@ -11,19 +11,24 @@ const repoRoot = path.resolve(__dirname, "..", "..");
 // 국어 지문 세트 — export(DOCX/HWPX) 공유지문 배선 결정론 스위트 (B1b, 실LLM 0):
 //   (1) resolveKoSetSharedPassageContent: KO 세트 그룹에만 "지시문\n병합마커지문"
 //       — set: 프리픽스가 아니거나 멤버에 비-KO 유형이 섞이면 null(영어 무회귀 게이트)
-//   (2) HWPX resolveGroupPassage: KO 세트 그룹 → 공유지문 1박스 강제(includePassage),
-//       영어 그룹은 기존 로직 그대로
+//   (2) HWPX 조립 결과(buildExamHwpxDocument — 라우트 진입점): KO 세트 그룹 → 공유지문 1박스
+//       (지시문 + 병합 마커, 멤버 인라인 사본 없음), 영어 그룹 지문도 1회·지시문 없음
+//       (26-09-30 COH-6: 테스트만 붙잡던 구 헬퍼 resolveGroupPassage 를 지우고 실제 조립 경로를 잰다)
 //   (3) HWPX break-plan(computePaginatedLayout): KO 세트 그룹 선두 fragment 가
 //       지시문을 포함한 공유지문을 미리보기와 동일하게 싣는다
 // TS + "@/..." 앨리어스 → tsx 하니스(ko-question-set 미러).
 const harnessSource = `
 import koSetPassage from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
-import builderTables from "@/app/api/exams/[examId]/export-hwpx/_lib/builder-tables";
 import breakPlan from "@/app/api/exams/[examId]/export-hwpx/_lib/break-plan";
+import examDocument from "@/app/api/exams/[examId]/export-hwpx/_lib/exam-document";
+import shapesMod from "@/app/api/exams/[examId]/export-hwpx/_lib/shapes";
+import sectionXmlMod from "@/app/api/exams/[examId]/export-hwpx/_lib/section-xml";
 
 const { resolveKoSetSharedPassageContent, suppressKoSetMemberInlinePassages } = koSetPassage;
-const { resolveGroupPassage } = builderTables;
 const { computePaginatedLayout } = breakPlan;
+const { buildExamHwpxDocument } = examDocument;
+const { ShapeRegistry } = shapesMod;
+const { buildSectionXml } = sectionXmlMod;
 
 const failures: string[] = [];
 let passed = 0;
@@ -137,42 +142,84 @@ const memberB = {
   );
 }
 
-// ── (2) HWPX resolveGroupPassage ────────────────────────────────────────────
+// ── (2) HWPX 조립 결과 — 라우트 진입점 buildExamHwpxDocument(공용 정본) ─────────
 {
-  const koItems = [
-    { ...memberA, questionId: "q1", groupId: "set:s1", includePassage: false, questionText: "윗글의 내용과 일치하는 것은?" },
-    { ...memberB, questionId: "q2", groupId: "set:s1", includePassage: false, questionText: "㉠에 대한 설명으로 적절한 것은?" },
-  ] as any[];
-  const r = resolveGroupPassage(koItems[0], koItems);
-  check("HWPX KO set group forces includePassage", r.includePassage === true);
-  check(
-    "HWPX KO set passage = directive + merged markers",
-    r.passageContent.startsWith("[3~4] ") && r.passageContent.includes("㉠__계약 자유의 원칙__"),
-    r.passageContent.slice(0, 60),
+  const mcOptions = JSON.stringify(
+    ["가", "나", "다", "라", "마"].map((text, i) => ({ label: String(i + 1), text })),
   );
-
-  // 영어 그룹 무회귀 — set: 이 아닌 그룹은 기존 로직(지시문 미부착) 그대로.
-  const enItem = {
-    questionId: "q3",
-    groupId: "single:q3",
-    includePassage: true,
-    orderNum: 1,
-    passageContent: "The quick brown fox jumps over the lazy dog.",
-    questionText: "다음 빈칸에 들어갈 말로 가장 적절한 것은?",
-    sourceQuestion: {
-      // 인라인 지문 유형(CONTENT_MATCH 등)이 아닌, 별도 지문 박스 유형으로 검증.
-      subType: "BLANK_INFERENCE",
-      structuredData: {},
-      passage: { content: "The quick brown fox jumps over the lazy dog." },
-      questionText: "다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+  const koQuestion = (id: string, member: typeof memberA, questionText: string) => ({
+    orderNum: 0,
+    points: 2,
+    question: {
+      id,
+      type: "MULTIPLE_CHOICE",
+      subType: member.sourceQuestion.subType,
+      questionText,
+      structuredData: member.sourceQuestion.structuredData,
+      options: mcOptions,
+      correctAnswer: "1",
+      difficulty: "INTERMEDIATE",
+      setId: "s1",
+      passage: { title: "사회적 기본권", content: passage },
+      explanation: null,
     },
-  } as any;
-  const en = resolveGroupPassage(enItem, [enItem]);
-  check("EN group keeps legacy include", en.includePassage === true);
+  });
+  const enPassage = "The quick brown fox jumps over the lazy dog.";
+  const questions = [
+    koQuestion("q1", memberA, "윗글의 내용과 일치하는 것은?"),
+    koQuestion("q2", memberB, "㉠에 대한 설명으로 적절한 것은?"),
+    {
+      orderNum: 0,
+      points: 2,
+      question: {
+        id: "q3",
+        type: "MULTIPLE_CHOICE",
+        // 인라인 지문 유형(CONTENT_MATCH 등)이 아닌, 별도 지문 박스 유형으로 검증.
+        subType: "BLANK_INFERENCE",
+        questionText: "다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        structuredData: null,
+        options: mcOptions,
+        correctAnswer: "1",
+        difficulty: "INTERMEDIATE",
+        setId: null,
+        passage: { title: "Fox", content: enPassage },
+        explanation: null,
+      },
+    },
+  ];
+  const settings = JSON.stringify({
+    source: "exam-paper-builder-v1",
+    layout: { columns: 2 },
+    items: [
+      { questionId: "q1", orderNum: 1, groupId: "set:s1", includePassage: false },
+      { questionId: "q2", orderNum: 2, groupId: "set:s1", includePassage: false },
+      { questionId: "q3", orderNum: 3, groupId: "single:q3", includePassage: true },
+    ],
+  });
+  const { doc } = await buildExamHwpxDocument({
+    title: "KO set wiring",
+    settings,
+    questions,
+    includeAnswers: false,
+    examDateLabel: "",
+  });
+  const registry = new ShapeRegistry(doc.defaultFontKr, doc.defaultFontLatin);
+  const sections = doc.sections.map((sec: unknown) => buildSectionXml(sec, registry));
+  // E36: section0 = 표지, section1 = 본문, section2 = 정답표.
+  const body = String(sections[1] ?? "").replace(/<\\/hp:p>/g, "\\n").replace(/<[^>]+>/g, "");
+  const count = (needle: string) => body.split(needle).length - 1;
+  check("HWPX KO set: shared passage box emitted once", count("[1~2] 다음 글을 읽고 물음에 답하시오.") === 1, body.slice(0, 120));
   check(
-    "EN group content has no KO set directive",
-    !en.passageContent.includes("다음 글을 읽고 물음에 답하시오"),
-    en.passageContent.slice(0, 60),
+    "HWPX KO set passage carries merged markers",
+    body.includes("㉠계약 자유의 원칙") && body.includes("ⓐ노동법"),
+    body.slice(0, 200),
+  );
+  check("HWPX KO set members add no inline passage copy", count("근대 헌법의 토대") === 1, String(count("근대 헌법의 토대")));
+  check("HWPX EN group passage printed once", count(enPassage) === 1, String(count(enPassage)));
+  check(
+    "HWPX EN group carries no KO set directive",
+    count("다음 글을 읽고 물음에 답하시오") === 1,
+    String(count("다음 글을 읽고 물음에 답하시오")),
   );
 }
 

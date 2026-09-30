@@ -5,6 +5,7 @@
 // 지문의 문제 풀(NaeshinQuestion)을 카테고리별 세션으로 분배
 // ============================================================================
 
+import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   SESSIONS_PER_CATEGORY,
@@ -201,9 +202,22 @@ function extractSentenceIndexFromText(questionText: string): number {
 
 // ---------------------------------------------------------------------------
 // 메인: 지문의 세션 사전 생성
+//
+// 인증·학원 범위(IDOR 수리 26-09-30): 두 액션 모두 예전에는 인증 없이 아무 지문의 세션을
+// 지우고 다시 만들 수 있었다. 이제 스태프 세션의 학원 지문만 다룬다(저장소 안 호출부 0).
 // ---------------------------------------------------------------------------
 
 export async function buildPrebuiltSessions(passageId: string) {
+  const staff = await requireStaffAuth();
+  const passage = await prisma.passage.findFirst({
+    where: { id: passageId, academyId: staff.academyId },
+    select: { id: true },
+  });
+  if (!passage) throw new Error("지문을 찾을 수 없습니다.");
+  return buildPrebuiltSessionsForPassage(passage.id);
+}
+
+async function buildPrebuiltSessionsForPassage(passageId: string) {
   // 1. 해당 지문의 전체 문제 로드
   const allQuestions = await prisma.naeshinQuestion.findMany({
     where: { passageId },
@@ -294,8 +308,10 @@ export async function buildPrebuiltSessions(passageId: string) {
 // ---------------------------------------------------------------------------
 
 export async function buildAllPrebuiltSessions(academyId: string) {
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) throw new Error("학원 정보가 일치하지 않습니다.");
   const passages = await prisma.passage.findMany({
-    where: { academyId },
+    where: { academyId: staff.academyId },
     select: { id: true, title: true },
   });
 
@@ -307,7 +323,7 @@ export async function buildAllPrebuiltSessions(academyId: string) {
     });
     if (count === 0) continue;
 
-    const result = await buildPrebuiltSessions(passage.id);
+    const result = await buildPrebuiltSessionsForPassage(passage.id);
     results.push({ passageTitle: passage.title, ...result });
   }
 

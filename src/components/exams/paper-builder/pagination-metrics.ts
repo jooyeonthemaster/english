@@ -1,13 +1,14 @@
-import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH, TWO_COLUMN_GAP } from "./constants";
+import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH, SUBTYPE_LABELS, TWO_COLUMN_GAP } from "./constants";
 import { formatInlineMarkersForSubtype, multiBlankOptionMatrix, optionDisplayTextForSubtype, splitSentenceInsertGivenBlock } from "./option-display";
 import { isSummaryCompleteMc, isSummaryCompleteSubtype, splitSummaryCompleteMcQuestionText, summaryCompleteMcPassageForItem, summaryCompleteMcSummaryForItem } from "./summary-complete-mc-layout";
 import { isFlowStructuredSubtype, isInlineSourcePassageSubtype, isStructuredAtomicSubtype, questionStemAndBody, structuredSegments } from "./question-body-layout";
 import { questionHasEmbeddedPassage } from "./passage-policy";
-import { normalizeInlineText, normalizePassageText, normalizeQuestionText } from "./text-normalization";
+import { collapseBodyParagraphsForDisplay, normalizeInlineText, normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { OptionItem, PaginationSettings, PaperGroup, PaperItem, StructRowStyle } from "./types";
 import { BLOCK_PX_PER_PT } from "./types";
 import { buildExplanationRows } from "./explanation-content";
 import type { FlowBlock } from "./pagination-types";
+import { countParagraphLinesExact, countStemLinesExact, wrapParagraphExact } from "./exam-text-wrap";
 // 줄당 문자 폭 보정 계수. 본문 글꼴을 맑은 고딕으로 통일한 뒤, 미리보기 추정 줄 수가
 // 실제 브라우저 맑은 고딕 렌더보다 1줄씩 많게 나와(문항 높이 과대추정 → 1단이 일찍 차서
 // 다음 칸으로 일찍 넘어감) 칸이 덜 채워졌다. 실측상 1.05 에서 추정 줄 수 == 브라우저
@@ -83,6 +84,14 @@ export function glyphUnits(char: string): number {
   if (/[a-z]/.test(char)) return 0.53;
   if (/[,.;:!?'"()[\]{}<>/\\|`~_-]/.test(char)) return 0.34;
   return 0.72;
+}
+
+// 줄바꿈 추정 모델. "legacy" = 글자 부류 평균 폭 근사(HWPX 분할·기본값), "exam-font" = 시험지 임베드
+// 글꼴 실측 폭 + 브라우저 줄바꿈 규칙(exam-text-wrap.ts — 미리보기/인쇄가 쓴다).
+export type TextMetricsMode = "legacy" | "exam-font";
+
+export function textMetricsOf(settings: PaginationSettings | null | undefined): TextMetricsMode {
+  return settings?.textMetrics === "exam-font" ? "exam-font" : "legacy";
 }
 
 export function maxUnitsPerLine(columnWidth: number, fontSize: number): number {
@@ -184,6 +193,7 @@ export function textToLinesWithMeta(
   text: string,
   columnWidth: number,
   fontSize: number,
+  mode: TextMetricsMode = "legacy",
 ): WrappedLine[] {
   if (!text.trim()) return [];
   const maxUnits = maxUnitsPerLine(columnWidth, fontSize);
@@ -194,7 +204,11 @@ export function textToLinesWithMeta(
       lines.push({ line: "", isSourceLineStart: true });
       continue;
     }
-    wrapParagraph(paragraph.trim(), maxUnits).forEach((line, lineIndex) => {
+    const wrapped =
+      mode === "exam-font"
+        ? wrapParagraphExact(paragraph.trim(), columnWidth, fontSize)
+        : wrapParagraph(paragraph.trim(), maxUnits);
+    wrapped.forEach((line, lineIndex) => {
       lines.push({ line, isSourceLineStart: lineIndex === 0 });
     });
   }
@@ -202,13 +216,31 @@ export function textToLinesWithMeta(
   return lines;
 }
 
-export function textToLines(text: string, columnWidth: number, fontSize: number): string[] {
+export function textToLines(
+  text: string,
+  columnWidth: number,
+  fontSize: number,
+  mode: TextMetricsMode = "legacy",
+): string[] {
   // textToLinesWithMeta 와 동일 로직(위임) — 행 문자열 출력은 종전과 byte 동일.
-  return textToLinesWithMeta(text, columnWidth, fontSize).map((w) => w.line);
+  return textToLinesWithMeta(text, columnWidth, fontSize, mode).map((w) => w.line);
 }
 
-export function estimateTextLines(text: string, columnWidth: number, fontSize: number): number {
-  return Math.max(1, textToLines(text, columnWidth, fontSize).length);
+// 줄 수만 필요한 곳(원자 블록 높이). exam-font 모드는 브라우저처럼 한글 음절 사이·하이픈 뒤에서도
+// 끊어 센다(흐름 분할용 줄 문자열은 단어가 온전해야 해서 textToLines 는 공백에서만 끊는다).
+export function estimateTextLines(
+  text: string,
+  columnWidth: number,
+  fontSize: number,
+  mode: TextMetricsMode = "legacy",
+): number {
+  if (mode !== "exam-font") return Math.max(1, textToLines(text, columnWidth, fontSize).length);
+  if (!text.trim()) return 1;
+  let total = 0;
+  for (const paragraph of text.replace(/\r/g, "").split("\n")) {
+    total += paragraph.trim() ? countParagraphLinesExact(paragraph.trim(), columnWidth, fontSize) : 1;
+  }
+  return Math.max(1, total);
 }
 
 export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
@@ -270,8 +302,30 @@ export function questionLineHeight(
   return fontSize * densityLineMult(settings);
 }
 
+// 문항 헤더의 「배지 자리」 — 실제 렌더에서 [N점 · 유형] 배지는 발문 줄 안 인라인이라 따로 높이를
+// 먹지 않는다. exam-font 모드는 0 으로 두고 실제 여백(itemRenderOverhead)만 잡는다.
+// legacy(HWPX 분할)는 한컴 렌더에 맞춰 보정된 종전 값을 그대로 쓴다.
 export function questionMetaHeight(settings: PaginationSettings): number {
+  if (textMetricsOf(settings) === "exam-font") return 0;
   return settings.showQuestionMeta ? 18 : 16;
+}
+
+/** 본문(평문 p.mt-1 / 구조화 div.mt-1)이 헤더 아래 붙을 때의 여백. */
+export const QUESTION_BODY_TOP_GAP = 4;
+
+/**
+ * 칸을 넘어 이어지는 조각 머리의 「(N번 계속)」 라벨 높이 — 9px 글자 + 라벨 아래 여백(mb-1) +
+ * 조각 패딩(py-0.5). 종전 추정은 이 자리를 안 잡아 **쪼개진 문항마다 칸이 20px 씩 넘쳤다**
+ * (26-09-19 실측: 쪼개진 문항 60개 전부 −20.4px). legacy(HWPX)는 이어짐 라벨을 안 그리므로 0.
+ */
+export function continuationPartChrome(settings: PaginationSettings): number {
+  if (textMetricsOf(settings) !== "exam-font") return 0;
+  return 8 + 9 * densityLineMult(settings);
+}
+
+// 문항 1개의 실제 렌더 여백: 블록 패딩(py-0.5 = 4) + 헤더 아래 여백(mb-1 = 4).
+export function itemRenderOverhead(settings: PaginationSettings): number {
+  return textMetricsOf(settings) === "exam-font" ? 8 : ITEM_RENDER_OVERHEAD;
 }
 
 // --- 구조화 본문(지문 박스/요약 박스/순서 단락 등) 높이 추정 ------------------
@@ -331,7 +385,12 @@ export function structuredBoxTextHeight(
 ): number {
   if (!text.trim()) return 0;
   const fontSize = fontPx ?? densityFontPx(settings);
-  const lines = estimateTextLines(text, structuredBoxTextWidth(style, settings), fontSize);
+  const lines = estimateTextLines(
+    text,
+    structuredBoxTextWidth(style, settings),
+    fontSize,
+    textMetricsOf(settings),
+  );
   return structuredBoxChrome(style, settings) + lines * boxLineHeight(settings, fontPx);
 }
 
@@ -383,7 +442,8 @@ export function estimateStructuredBodyHeight(
     if (bodyAfterStem) {
       const { columnWidth } = pageMetrics(settings, 0);
       height +=
-        estimateTextLines(bodyAfterStem, columnWidth, fontPx) * questionLineHeight(settings, fontPx) +
+        estimateTextLines(bodyAfterStem, columnWidth, fontPx, textMetricsOf(settings)) *
+          questionLineHeight(settings, fontPx) +
         STRUCTURE_GAP;
     }
     if (passage) {
@@ -398,7 +458,9 @@ export function estimateStructuredBodyHeight(
   const bodyText = questionBodyAfterStem(item);
   const { columnWidth } = pageMetrics(settings, 0);
   let height =
-    HEADER_BODY_GAP + estimateTextLines(bodyText, columnWidth, fontPx) * questionLineHeight(settings, fontPx);
+    HEADER_BODY_GAP +
+    estimateTextLines(bodyText, columnWidth, fontPx, textMetricsOf(settings)) *
+      questionLineHeight(settings, fontPx);
   if (/\[(?:주어진\s*문장|given)\]/i.test(bodyText)) {
     height += GIVEN_BOX_CHROME;
   }
@@ -413,7 +475,7 @@ export function boxTextToLines(
   fontPx?: number,
 ): string[] {
   const fontSize = fontPx ?? densityFontPx(settings);
-  const lines = textToLines(text, structuredBoxTextWidth(style, settings), fontSize);
+  const lines = textToLines(text, structuredBoxTextWidth(style, settings), fontSize, textMetricsOf(settings));
   return lines.length > 0 ? lines : [""];
 }
 
@@ -424,7 +486,12 @@ export function boxTextToLinesWithMeta(
   fontPx?: number,
 ): WrappedLine[] {
   const fontSize = fontPx ?? densityFontPx(settings);
-  const lines = textToLinesWithMeta(text, structuredBoxTextWidth(style, settings), fontSize);
+  const lines = textToLinesWithMeta(
+    text,
+    structuredBoxTextWidth(style, settings),
+    fontSize,
+    textMetricsOf(settings),
+  );
   return lines.length > 0 ? lines : [{ line: "", isSourceLineStart: true }];
 }
 
@@ -445,7 +512,12 @@ export function columnTextToLinesWithMeta(
   if (!text) return [{ line: "", isSourceLineStart: true }];
   const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = fontPx ?? densityFontPx(settings);
-  const lines = textToLinesWithMeta(normalizeQuestionText(text), columnWidth, fontSize);
+  const lines = textToLinesWithMeta(
+    normalizeQuestionText(text),
+    columnWidth,
+    fontSize,
+    textMetricsOf(settings),
+  );
   return lines.length > 0 ? lines : [{ line: "", isSourceLineStart: true }];
 }
 
@@ -572,7 +644,12 @@ export function passageToLines(content: string, settings: PaginationSettings): s
   if (!content) return [];
   const compact = settings.density === "compact";
   const fontSize = compact ? 10.5 : 11.5;
-  return textToLines(normalizePassageText(content), passageContentWidth(settings), fontSize);
+  return textToLines(
+    normalizePassageText(content),
+    passageContentWidth(settings),
+    fontSize,
+    textMetricsOf(settings),
+  );
 }
 
 export function questionToLines(
@@ -583,7 +660,7 @@ export function questionToLines(
   if (!content) return [];
   const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = fontPx ?? densityFontPx(settings);
-  return textToLines(normalizeQuestionText(content), columnWidth, fontSize);
+  return textToLines(normalizeQuestionText(content), columnWidth, fontSize, textMetricsOf(settings));
 }
 
 // 지문이 문항 본문에 내장된 유형(무관한 문장·문장 삽입·어법 등)인지.
@@ -611,7 +688,13 @@ export function questionBodyToLines(
     settings.passageStyle === "boxed" && hasEmbeddedPassageBody(item)
       ? Math.max(80, columnWidth - BOXED_PASSAGE_HORIZONTAL_INSET)
       : columnWidth;
-  return textToLines(normalizeQuestionText(content), width, fontSize);
+  const mode = textMetricsOf(settings);
+  // 렌더(renderQuestionTextInline)가 문단 사이 빈 줄을 접어 한 흐름으로 그린다 — 추정도 같게 본다.
+  const normalized =
+    mode === "exam-font"
+      ? collapseBodyParagraphsForDisplay(normalizeQuestionText(content))
+      : normalizeQuestionText(content);
+  return textToLines(normalized, width, fontSize, mode);
 }
 
 // 내장 지문 본문 박스의 상하 테두리+패딩 높이(평문=0).
@@ -676,6 +759,29 @@ export function questionStemPointsSuffix(
   return " [3점]";
 }
 
+// 발문 줄 수. 헤더는 「N.」 번호(굵게)·문항 메타 배지가 첫 줄을 먹고 발문 본체가 semibold 로 그려진다
+// — exam-font 모드는 그 모양 그대로 잰다(legacy 는 종전 평문 추정 유지).
+export function stemLineCount(
+  item: PaperItem,
+  stemRendered: string,
+  settings: PaginationSettings,
+  fontPx: number,
+): number {
+  if (textMetricsOf(settings) !== "exam-font") {
+    return Math.max(1, questionToLines(stemRendered, settings, fontPx).length);
+  }
+  const subType = item.sourceQuestion.subType;
+  const label = subType ? SUBTYPE_LABELS[subType] : "";
+  return countStemLinesExact({
+    stem: normalizeQuestionText(stemRendered),
+    widthPx: pageMetrics(settings, 0).columnWidth,
+    fontPx,
+    compact: settings.density === "compact",
+    orderNum: item.orderNum,
+    metaBadge: settings.showQuestionMeta ? `[${item.points}점${label ? ` · ${label}` : ""}]` : null,
+  });
+}
+
 // 헤더(번호 + 지시문) 높이. 지시문은 항상 통째로 헤더에 렌더되므로
 // stem 의 줄 수만큼 높이를 잡는다(본문/구조화 박스는 별도 계산).
 export function estimateStemHeight(item: PaperItem, settings: PaginationSettings): number {
@@ -684,10 +790,9 @@ export function estimateStemHeight(item: PaperItem, settings: PaginationSettings
   const stemRendered =
     formatInlineMarkersForSubtype(stem, item.sourceQuestion.subType) +
     questionStemPointsSuffix(item, stem, settings.showQuestionMeta);
-  const stemLines = questionToLines(stemRendered, settings, fontPx);
   return (
     questionMetaHeight(settings) +
-    Math.max(1, stemLines.length) * questionLineHeight(settings, fontPx)
+    stemLineCount(item, stemRendered, settings, fontPx) * questionLineHeight(settings, fontPx)
   );
 }
 
@@ -727,8 +832,19 @@ export function estimateOptionBlockHeight(
   // 선택지는 화면에서 문항 컨테이너 글꼴을 상속한다. 문항 pt 가 지정되면 선택지 줄 폭·
   // 줄높이도 같은 크기로 스케일해 미리보기와 분할이 어긋나지 않게 한다(미지정 시 기존 10/11).
   const optionFontPx = fontPx ?? (compact ? 10 : 11);
-  const optionLines = estimateTextLines(displayText, Math.max(80, columnWidth - 22), optionFontPx);
-  return Math.max(16, optionLines * optionFontPx * 1.45);
+  // 선지 행 = [번호 min-w-18px][gap-1.5 6px][본문] → 본문 폭은 칸 − 24px(legacy 는 HWPX 매달림 폭 22 유지).
+  const optionTextWidth =
+    textMetricsOf(settings) === "exam-font" ? columnWidth - 24 : columnWidth - 22;
+  const optionLines = estimateTextLines(
+    displayText,
+    Math.max(80, optionTextWidth),
+    optionFontPx,
+    textMetricsOf(settings),
+  );
+  // 줄높이 = 글꼴 × 행간 배수. 선지 목록은 페이지(main) 의 leading(1.58 / compact 1.46)을 상속한다
+  // (HWPX 선지 문단도 lineSpacing 158% / 146%). 종전 1.45 고정은 comfortable 에서 줄마다 1.4px 씩
+  // 모자라 선지 많은 칸이 페이지 아래로 넘쳤다(26-09-19 전수 스윕 — 칸 7% 넘침의 주원인).
+  return Math.max(16, optionLines * optionFontPx * densityLineMult(settings));
 }
 
 /**
@@ -747,7 +863,7 @@ export function multiBlankOptionsHeaderHeight(
   if (!multiBlankOptionMatrix(item.options)) return 0;
   const compact = settings.density === "compact";
   const optionFontPx = fontPx ?? (compact ? 10 : 11);
-  return Math.max(16, optionFontPx * 1.45) + OPTION_ROW_GAP;
+  return Math.max(16, optionFontPx * densityLineMult(settings)) + OPTION_ROW_GAP;
 }
 
 export function estimateAnswerBlockHeight(item: PaperItem): number {
@@ -794,11 +910,15 @@ export function estimateExplanationBlockHeight(item: PaperItem, settings: Pagina
     } else if (row.type === "label") {
       height += lineH + 6;
     } else if (row.type === "text") {
-      height += estimateTextLines(row.text, columnWidth - 8, fontSize) * lineH + 2;
+      height += estimateTextLines(row.text, columnWidth - 8, fontSize, textMetricsOf(settings)) * lineH + 2;
     } else if (row.type === "bullet") {
-      height += estimateTextLines(`• ${row.text}`, columnWidth - 16, fontSize) * lineH + 2;
+      height +=
+        estimateTextLines(`• ${row.text}`, columnWidth - 16, fontSize, textMetricsOf(settings)) * lineH + 2;
     } else {
-      height += estimateTextLines(`${row.label} ${row.text}`, columnWidth - 16, fontSize) * lineH + 2;
+      height +=
+        estimateTextLines(`${row.label} ${row.text}`, columnWidth - 16, fontSize, textMetricsOf(settings)) *
+          lineH +
+        2;
     }
   }
   return Math.ceil(height);

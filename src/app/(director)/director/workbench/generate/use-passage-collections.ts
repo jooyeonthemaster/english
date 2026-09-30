@@ -24,6 +24,7 @@ import {
   type PassageCollectionItem,
 } from "./generate-page-types";
 import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
+import { confirmPassageDeletion } from "@/components/workbench/passage-delete-confirm";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 
 const UNDO_TOAST_DURATION = 8000;
@@ -641,10 +642,12 @@ export function usePassageCollections({
   const handleDeleteSelectedPassages = useCallback(async () => {
     const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     if (ids.length === 0 || passageBulkAction) return;
-    if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
 
+    // 영향 조회 동안에도 일괄 작업을 잠근다(finally 가 푼다). 확인창 문구는 실제
+    // 동작(동일 지문으로 옮김 / 원문 보관 후 삭제) 그대로다.
     setPassageBulkAction("delete");
     try {
+      if (!(await confirmPassageDeletion(ids))) return;
       const result = await bulkDeleteWorkbenchPassages(ids);
       if (!result.success) {
         toast.error(result.error || "삭제에 실패했습니다.");
@@ -660,11 +663,13 @@ export function usePassageCollections({
         );
       }
 
+      // 가드가 지우지 않은 지문(튜터 수업 연결 등)은 목록에 남긴다.
+      const removed = result.deletedIds ?? ids;
       setPassages((prev) =>
-        prev.filter((passage) => !ids.includes(passage.id)),
+        prev.filter((passage) => !removed.includes(passage.id)),
       );
       setSelectedIds(new Set());
-      if (selectedPassage && ids.includes(selectedPassage.id)) {
+      if (selectedPassage && removed.includes(selectedPassage.id)) {
         setSelectedPassage(null);
         setAnalysisData(null);
       }
@@ -680,10 +685,11 @@ export function usePassageCollections({
   const handleDeleteDetailPassage = useCallback(
     async (passage: PassageItem) => {
       if (deletingDetailId) return;
-      if (!window.confirm("이 지문을 삭제하시겠습니까?")) return;
 
+      // 영향 조회 동안에도 잠근다(finally 가 푼다). 확인창 문구는 실제 동작 그대로.
       setDeletingDetailId(passage.id);
       try {
+        if (!(await confirmPassageDeletion([passage.id]))) return;
         const result = await bulkDeleteWorkbenchPassages([passage.id]);
         if (!result.success || result.deleted === 0) {
           toast.error(result.error || "삭제에 실패했습니다.");

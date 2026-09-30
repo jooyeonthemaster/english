@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { deleteWorkbenchPassage, updatePassageAnalysis } from "@/actions/workbench";
+import { confirmPassageDeletion } from "./passage-delete-confirm";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
 import { DEFAULT_ANALYSIS_TONE } from "@/lib/passage-analysis-options";
@@ -170,9 +171,13 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
 
   // --- Delete passage ---
   async function handleDelete() {
-    if (!confirm("이 지문을 삭제하시겠습니까? 관련 문제도 모두 삭제됩니다."))
-      return;
+    if (deleting) return;
+    // 영향 조회 동안에도 버튼을 잠근다. 확인창 문구는 실제 동작 그대로.
     setDeleting(true);
+    if (!(await confirmPassageDeletion([passage.id]))) {
+      setDeleting(false);
+      return;
+    }
     const result = await deleteWorkbenchPassage(passage.id);
     if (result.success) {
       toast.success("지문이 삭제되었습니다.");

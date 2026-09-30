@@ -3,6 +3,10 @@
 작업일 2026-08-27 · 대상 `src/app/api/exams/[examId]/export-hwpx/`
 정본 스펙 `.tmp-hwpx-e36/SPEC.md` · 게이트 `.tmp-hwpx-e36/gate.py` · 빌드 하네스 `.tmp-hwpx-e36/build.ts`
 
+> 26-09-30 이후: HWPX 가 **무엇을 찍을지**(문항 · 지문 · 답란 · 배지 · 정답표)는 웹 · DOCX 와 같은 공용 모델이 정한다 —
+> [`docs/EXAM-PAPER-MODEL.md`](EXAM-PAPER-MODEL.md)(선지 묶음 §9 · lineseg §10 · 환경 변수 §11 · 남은 차이 §12). 이 문서는 구역 ·
+> 표지 · 정답표 모양 · 한컴 실측을 다룬다.
+
 검증 방법은 전부 **실측**이다: HWPX 생성 → 한컴 한글에서 열기 → PDF 내보내기 → PyMuPDF 로
 쪽수·좌표·색을 잰다. 아래 수치는 전부 그렇게 나온 값이다.
 
@@ -39,6 +43,8 @@ section2  정답표  1단 전체폭 · 쪽번호 이어짐        (해설 포함
 머리말은 이제 **어느 구역에도 없다**. 제목·학교/반/이름/시험일·안내문·학원 로고는 전부 표지로 갔다.
 표지는 `cover.enabled` 와 무관하게 항상 나오고, enabled 는 **모양**(classic/band/minimal ·
 eyebrow · footnote · 로고/정보박스 표시)만 좌우한다.
+(26-09-30 기록: 표지의 안내문은 저장값 그대로라 settings NULL 시험지는 안내문이 없다 — 웹 · DOCX 는 `DEFAULT_INSTRUCTIONS` 를
+찍는다. 표지 모델 통일은 범위 밖 — EXAM-PAPER-MODEL §12 · §13.)
 
 ### 2-2. 학생정보 박스 오른쪽 잘림
 | | 박스 우변 | "2학년" 끝 | 본문 우한계 |
@@ -159,8 +165,12 @@ off-by-one 을 가리려고 앞에 넣어둔 중복 "투명" 항목도 걷어냈
    저장돼 있고, 표기 함수 `formatStoredQuestionCorrectAnswer` 가 그대로 통과시킨다.
    **웹 미리보기도 똑같이 `4` 로 보여주므로 HWPX 결함이 아니다.** 다만 나머지가 전부 원문자라
    눈에 띈다. 고치려면 앱 전역이 쓰는 공용 함수를 건드려야 해서 손대지 않았다.
+   → **26-09-30 해소**: 정답표 표기는 공용 `answer-key-entries.circledObjectiveAnswer`(표시만, 저장값 불변)가 웹 · HWPX · DOCX 를
+   함께 ①~ 로 맞춘다(EXAM-PAPER-MODEL §7). 해설 포함 모드의 정답 배지는 아직 숫자 · 원문자가 섞인다(같은 문서 §12).
 2. **DOCX 다운로드는 그대로다.** 표지·정답표·쪽당 N문제 모두 DOCX 에는 아직 없다. 요청이
    한컴 한정이라 범위를 넓히지 않았다.
+   → 26-09-30: DOCX 도 공용 모델을 소비한다. 정답표는 웹과 같은 표기 · 모양(5열 그리드, 원문자)이다. 표지 · 쪽당 N문제 · 항목별
+   강제 나눔은 여전히 없다(EXAM-PAPER-MODEL §13 범위 밖).
 3. **사문(死文) 표면**: `renderPageHeader`/`floatHeaderBlocks`, `SectionSpec.header`/
    `headerApplyFirstOnly`, env `HWPX_HDR_PX`/`HWPX_HDR_BAND_MM` 는 이제 프로덕션 호출자가 0이다.
    (`page-header.ts` 는 검증 하네스가 쓴다.) 삭제는 별도 정리 건으로 남겨 둔다.
@@ -193,3 +203,37 @@ node .tmp-hwpx-e36/id-audit.mjs <hwpx> ...
 
 **음성 테스트**: 수리 전 산출물(`c:/tmp/hwpx-verify/base.pdf`)에 게이트를 걸면 반드시 **0/7** 이
 나와야 한다. 7/7 이 나오면 게이트가 무뎌진 것이다.
+
+---
+
+## 6. 운영 비상 스위치(env) — 26-09-30
+
+HWPX 내보내기(`src/app/api/exams/[examId]/export-hwpx/`)는 요청마다 `process.env` 를 읽는다. **미설정이 정상 동작**이고,
+아래 넷은 한컴 · 뷰어에서 예상 못 한 배치가 신고됐을 때 코드 배포 없이 되돌리거나 진단하는 스위치다. Vercel 프로젝트 환경변수에
+넣은 뒤 **재배포**해야 적용된다(환경변수 변경은 새 배포부터). 로컬은 개발 서버 재시작. 계약 정본은 EXAM-PAPER-MODEL §11.
+
+| 변수 | 값 | 미설정(기본) | 켜면 | 코드 |
+|---|---|---|---|---|
+| `HWPX_KEEP_TOGETHER` | `0` | 선지 ①~⑤ · 문항 머리 · 캡션 · 다중빈칸 머리 · 정답 배지 표를 keepWithNext/keepLines 사슬로 묶어 단 · 쪽 경계에서 안 쪼갠다(EXAM-PAPER-MODEL §9). 한 단보다 긴 사슬은 상한에서 끊는다 | 묶음 없이 종전처럼 흐른다(선지가 단 경계에서 갈라질 수 있다). 사슬 때문에 생긴 큰 빈칸이 신고됐을 때 켜 볼 스위치 | `_lib/keep-policy.ts` `keepTogetherEnabled()` |
+| `HWPX_LINESEG_WIDTH` | `full` | 본문 문단 lineseg 폭 = 한컴 양자화 폭 `floor(W/4)·4` 와 **겹치지 않는 값**(다단: 단 폭 안의 W−1 또는 W−2, 1단: 전체폭이 4의 배수일 때만 −1 — A4 54202 · 55142 는 그대로) | 예전처럼 어디서나 전체폭(contentWidth) 그대로 | `_lib/section-xml.ts` `linesegWidthFor()` |
+| `HWPX_NATIVE_2COL` | `0` | 2단 시험지 = 네이티브 2단 구역(한컴 자동 흐름) | 쪽마다 [좌칸 · 간격 · 우칸] 원자 표(순수 문항 — 웹 조판 쪽 나눔 사용, 해설 포함은 그리디 패킹) 또는 커스텀 블록이 섞이면 전체폭 1단 흐름. **표 경로는 keep 정책을 부르지 않아 선지 묶음이 통째로 꺼진다** — 진단 전용 | `_lib/builder.ts` `useNative2Col` |
+| `HWPX_SAFETY_PX` | 숫자(px) | 40 | `HWPX_NATIVE_2COL=0` 의 표 경로에서만 쪽 용량 안전 여백을 바꾼다(기본 경로에서는 효과 없음) | `_lib/builder.ts` `contentSafetyPx` |
+
+**왜 lineseg 규칙인가(한컴 2024 실측, 26-09-29 · 30)**: 한컴은 줄 폭을 4 HPU 단위로 내린 값으로 쓴다(재저장본이
+54202→54200, 22282→22280). 그리고 파일의 lineseg `horzsize` 가 그 값과 **정확히 같을 때만** 우리 줄바꿈 캐시(글리프 부류
+추정)를 믿는다 → 단어 간격이 벌어지고 쪽 수가 바뀌고 빈칸 밑줄이 사라졌다(A4 2단 25848: 57→58쪽, B4 2단 32508 · 1단 67524:
+단어 수만 개 이동). 한 칸이라도 다르면(25847 · 25849) 캐시를 버리고 스스로 배치해 lineseg 를 지운 파일과 단어 위치가 같다.
+4의 배수가 아닌 값은 한컴 폭과 겹칠 수 없다 — 캐시를 믿는 다른 뷰어엔 단 안에 들어가는 줄을, 한컴 2024 엔 자체 배치를 준다.
+`full` 은 **진단용**이다: A4 1단은 원래 규칙과 바이트가 같지만 B4 · 다단은 캐시 신뢰 붕괴가 다시 날 수 있으니 오래 두지 말 것.
+
+범위 · 한계
+- 실측은 이 머신의 한컴 2024(A4 · B4 × 보통 · 압축 × 1 · 2단)뿐이다. 다른 한컴 버전 · 한컴 뷰어 · 모바일 · 폴라리스는 미검증.
+- 표 셀 안 문단과 머리말 · 꼬리말 subList 의 lineseg 는 이 규칙 밖이다. 셀 내부 폭이 4의 배수면(A4 표지 11924 · 21088, 빈 답란
+  표 25848) 한컴이 캐시를 믿는다 — 지금은 짧거나 빈 텍스트라 이동 0 으로 무해하지만 긴 텍스트 셀이 생기면 같은 붕괴가 날 수 있다.
+- keep 사슬 상한 `CHAIN_CAP_FRACTION = 1`(추정 × `ESTIMATE_MARGIN` 1.15 > 단 높이면 쪼갬) — 이론상 한 단의 최대 약 87% 가 빌
+  수 있다. 국어 문항 · 다중 빈칸 optionHead · 커스텀 섹션 제목 뒤 큰 이미지 사슬은 한컴 실측 표본이 없다.
+- 관측: 라우트가 요청마다 `[export-hwpx] keep chains=… capped=… conflicts=… flagged=… droppedKeepLines=… enabled=…` 한 줄을
+  남긴다(`route.ts` `keepDiagnosticsLine`) — 스위치를 켰는지(`enabled=false`)와 상한에 걸린 사슬 수를 운영 로그에서 본다.
+- 해설 포함(`?answers=true`)은 「쪽당 N문제」 강제 배치를 쓰지 않는다(`builder.ts` `forcePerPage = forceTwoPerPage && !includeAnswers`
+  — 웹 PDF 해설도 같은 정책, `docs/EXAM-PAGINATION-OVERFLOW.md` §3.2).
+- 네 변수 모두 아직 `.env.example` 에 없다(설정 파일 소유자 몫 — 26-09-30 보고).

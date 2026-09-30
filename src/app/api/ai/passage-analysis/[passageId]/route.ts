@@ -111,8 +111,10 @@ export async function GET(
     );
     const creditCost = getPassageAnalysisCreditCost();
 
-    const passage = await prisma.passage.findUnique({
-      where: { id: passageId },
+    // 학원 범위(IDOR 수리 26-09-30) — 남의 학원 지문은 404(존재 여부를 드러내지 않는다).
+    // 아래 캐시 응답·분석 upsert·마킹 로드는 전부 이 확인을 통과한 passageId 에만 닿는다.
+    const passage = await prisma.passage.findFirst({
+      where: { id: passageId, academyId: staff.academyId },
       include: {
         analysis: true,
         school: { select: { type: true } },
@@ -262,8 +264,9 @@ export async function POST(
     const analysisTone = normalizeAnalysisTone(body.analysisTone);
     const creditCost = getPassageAnalysisCreditCost();
 
-    const passage = await prisma.passage.findUnique({
-      where: { id: passageId },
+    // 학원 범위(IDOR 수리 26-09-30) — GET 과 같다. 크레딧 차감·AI 호출·upsert 전에 거른다.
+    const passage = await prisma.passage.findFirst({
+      where: { id: passageId, academyId: staff.academyId },
       include: { analysis: true, school: { select: { type: true } } },
     });
 

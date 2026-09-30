@@ -17,85 +17,17 @@ import {
 } from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
+import type { ExamPrintArming } from "../paper-builder/print/print-arming";
+import { printArmHandlers, usePrintArmed } from "../paper-builder/print/print-arm-ui";
+import type { ExamPrintMode } from "@/lib/exams/print-event-meta";
+import { FORMAT_COLORS, FormatFileIcon } from "./format-file-icon";
 import { SaveButton } from "@/components/ui/save-button";
 import { confirmNative } from "@/lib/browser-confirm";
 
-// 다운로드 메뉴용 파일 포맷 아이콘 — 파일 모양 안에 포맷 텍스트(PDF/DOCX/HWPX)를 키컬러
-// 밴드로 박는다. 해설 포함 버전은 파일 두 개가 겹친 모양(stacked).
-function FormatFileIcon({
-  label,
-  color,
-  stacked = false,
-}: {
-  label: string;
-  color: string;
-  stacked?: boolean;
-}) {
-  const Page = ({
-    dx = 0,
-    dy = 0,
-    faded = false,
-    withLabel = true,
-  }: {
-    dx?: number;
-    dy?: number;
-    faded?: boolean;
-    withLabel?: boolean;
-  }) => (
-    <g transform={`translate(${dx} ${dy})`} opacity={faded ? 0.5 : 1}>
-      {/* 페이지(흰 바탕 + 키컬러 외곽선), 우상단 접힘 */}
-      <path
-        d="M6 2.5 H13.5 L18 7 V19.5 A2 2 0 0 1 16 21.5 H6 A2 2 0 0 1 4 19.5 V4.5 A2 2 0 0 1 6 2.5 Z"
-        fill="white"
-        stroke={color}
-        strokeWidth={1.4}
-      />
-      <path
-        d="M13.5 2.5 V7 H18"
-        fill="none"
-        stroke={color}
-        strokeWidth={1.4}
-        strokeLinejoin="round"
-      />
-      {withLabel && (
-        <>
-          <rect x={4} y={12.6} width={14} height={6.6} rx={1.2} fill={color} />
-          <text
-            x={11}
-            y={17.4}
-            textAnchor="middle"
-            fontSize={4.5}
-            fontWeight={800}
-            fill="white"
-            fontFamily="ui-sans-serif, system-ui, sans-serif"
-            letterSpacing={0.2}
-          >
-            {label}
-          </text>
-        </>
-      )}
-    </g>
-  );
-  return (
-    <svg
-      width={22}
-      height={22}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      {/* 해설 포함: 뒤에 옅은 페이지 한 장 더(두 장 겹침) */}
-      {stacked && <Page dx={3.5} dy={-2.2} faded withLabel={false} />}
-      <Page dx={stacked ? -1.5 : 0} dy={stacked ? 1.6 : 0} />
-    </svg>
-  );
-}
-
-const FORMAT_COLORS = {
-  pdf: "#DC2626", // red-600
-  docx: "#2563EB", // blue-600
-  hwpx: "#0EA5E9", // sky-500 (하늘)
-} as const;
+// 인쇄 · PDF · PDF 해설 메뉴 항목 — 인쇄 준비 중(printBusy)에는 disabled 로 연타를 막는다. 누르는 순간(:active ·
+// 무장 aria-busy) 눌린 모양이 click 전에 페인트된다.
+const PRINT_MENU_ITEM_CLASS =
+  "flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50 active:bg-slate-100 aria-busy:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white";
 
 // ---------------------------------------------------------------------------
 // 용지 미리보기 상단 헤더 툴바
@@ -112,12 +44,23 @@ interface PreviewToolbarProps {
   onUndo?: () => void;
   onRedo?: () => void;
   onPrint: () => void;
-  onDownloadPdf: () => void;
+  /** 미지정 = onPrint(PDF 는 인쇄 창의 「PDF로 저장」) */
+  onDownloadPdf?: () => void;
   onDownloadPdfWithAnswers: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
   onDownloadHwpx: () => void;
   onDownloadHwpxWithAnswers: () => void;
+  /**
+   * 인쇄 준비 · 인쇄 창 대기 중(인쇄 컨트롤러 busy) — 인쇄 버튼을 스피너로 바꾸고 인쇄 · PDF ·
+   * PDF 해설을 막아 연타로 두 번 인쇄되지 않게 한다. DOCX · HWPX(isPending) 경로와는 별개.
+   */
+  printBusy?: boolean;
+  /**
+   * 인쇄 컨트롤러의 누름 무장(printCtl.arming) — 인쇄 · PDF · PDF 해설을 누르는 순간(pointerdown · Enter/Space)
+   * 버튼 · 상태 표시줄이 「준비 중」으로 click 전에 페인트된다. 무장은 disabled 를 켜지 않는다(CC-2).
+   */
+  printArming?: ExamPrintArming;
   /** 시험지 전체 비우기(처음부터 다시) — 미지정 시 버튼 숨김. */
   onResetPaper?: () => void;
   /** 미지정 시 저장 버튼을 숨긴다 — 읽기 전용 미리보기에서 사용. */
@@ -150,6 +93,8 @@ export function PreviewToolbar({
   onDownloadDocxWithAnswers,
   onDownloadHwpx,
   onDownloadHwpxWithAnswers,
+  printBusy = false,
+  printArming,
   onResetPaper,
   onSave,
   onSaveAs,
@@ -161,6 +106,14 @@ export function PreviewToolbar({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const downloadMenuRef = useRef<HTMLDivElement>(null);
   const actionDisabled = isPending || paperItemsCount === 0;
+  const printDisabled = actionDisabled || printBusy;
+  const downloadPdf = onDownloadPdf ?? onPrint;
+  // 누름 무장 — 이 툴바만 다시 그려진다(호스트 무변). 스피너 · aria-busy 는 무장에도 켜되 disabled 는 printBusy 만.
+  const printArmed = usePrintArmed(printArming);
+  const [pressedPrintItem, setPressedPrintItem] = useState<string | null>(null);
+  const armedItem = printArmed !== null ? pressedPrintItem : null;
+  const armFor = (item: string, mode: ExamPrintMode) =>
+    printArmHandlers(printArming, mode, () => setPressedPrintItem(item));
   const templateLabel = TEMPLATE_META[template].label;
   const compactTemplateLabel = templateLabel.trim().slice(0, 1) || templateLabel;
 
@@ -322,11 +275,18 @@ export function PreviewToolbar({
         {/* compact 에선 인쇄 버튼을 지우고 아래 「⋯」 메뉴 첫 항목으로 옮긴다. */}
         {!compactLabels && (
           <button
+            type="button"
             onClick={onPrint}
-            disabled={actionDisabled}
-            className="hidden h-8 items-center justify-center gap-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
+            {...armFor("print", "plain")}
+            disabled={printDisabled}
+            aria-busy={printBusy || printArmed !== null || undefined}
+            className="hidden h-8 items-center justify-center gap-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 active:bg-slate-100 aria-busy:border-blue-200 aria-busy:bg-blue-50 aria-busy:text-[#3182F6] disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
           >
-            <Printer className="h-3.5 w-3.5" />
+            {printBusy || printArmed !== null ? (
+              <Loader2 className="h-3.5 w-3.5 motion-safe:animate-spin" aria-hidden="true" />
+            ) : (
+              <Printer className="h-3.5 w-3.5" />
+            )}
             <span className="hidden lg:inline">인쇄</span>
           </button>
         )}
@@ -366,9 +326,16 @@ export function PreviewToolbar({
                   <button
                     type="button"
                     onClick={() => runDownload(onPrint)}
-                    className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                    {...armFor("print-menu", "plain")}
+                    disabled={printBusy}
+                    aria-busy={printBusy || armedItem === "print-menu" || undefined}
+                    className={PRINT_MENU_ITEM_CLASS}
                   >
-                    <Printer className="h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
+                    {printBusy || armedItem === "print-menu" ? (
+                      <Loader2 className="h-4 w-4 shrink-0 text-slate-500 motion-safe:animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Printer className="h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
+                    )}
                     인쇄
                   </button>
                   <div className="my-1 h-px bg-slate-100" />
@@ -376,8 +343,11 @@ export function PreviewToolbar({
               )}
               <button
                 type="button"
-                onClick={() => runDownload(onDownloadPdf)}
-                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                onClick={() => runDownload(downloadPdf)}
+                {...armFor("pdf", "plain")}
+                disabled={printBusy}
+                aria-busy={armedItem === "pdf" || undefined}
+                className={PRINT_MENU_ITEM_CLASS}
               >
                 <FormatFileIcon label="PDF" color={FORMAT_COLORS.pdf} />
                 PDF
@@ -388,7 +358,10 @@ export function PreviewToolbar({
               <button
                 type="button"
                 onClick={() => runDownload(onDownloadPdfWithAnswers)}
-                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                {...armFor("pdf-answers", "explanation")}
+                disabled={printBusy}
+                aria-busy={armedItem === "pdf-answers" || undefined}
+                className={PRINT_MENU_ITEM_CLASS}
               >
                 <FormatFileIcon label="PDF" color={FORMAT_COLORS.pdf} stacked />
                 PDF 해설

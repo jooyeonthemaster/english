@@ -24,7 +24,7 @@ import type {
 } from "./passage-list-client/filters-toolbar";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { confirmNative } from "@/lib/browser-confirm";
+import { confirmPassageDeletion } from "./passage-delete-confirm";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
@@ -340,6 +340,8 @@ export function PassageListClient({
   const [dupError, setDupError] = useState<string | null>(null);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  // 삭제 전 영향 조회(확인창 문구) 중 — 버튼 잠금.
+  const [bulkDeleteChecking, setBulkDeleteChecking] = useState(false);
   const [bulkReviewing, setBulkReviewing] = useState(false);
   // "전체 페이지 선택" 진행 중 플래그 — 루트 목록은 20개 페이지네이션이라
   // selectAll()은 현재 페이지만 잡는다. 페이지 밖 지문까지 한 번에 선택하려면
@@ -839,9 +841,11 @@ export function PassageListClient({
       }
       // Mark as removed immediately so the grid and duplicates view update
       // without waiting for router.refresh() to round-trip.
+      // 가드가 지우지 않은 지문(튜터 수업 연결 등)은 화면에 남긴다.
+      const removed = result.deletedIds ?? ids;
       setRemovedIds((prev) => {
         const next = new Set(prev);
-        for (const id of ids) next.add(id);
+        for (const id of removed) next.add(id);
         return next;
       });
       selection.clearSelection();
@@ -858,16 +862,14 @@ export function PassageListClient({
   const handleDeleteOne = useCallback(
     async (id: string) => {
       if (deletingIds.has(id)) return;
-      if (
-        !window.confirm(
-          koScope
-            ? "이 지문을 삭제할까요? 되돌릴 수 없습니다."
-            : "이 학습지를 삭제할까요? 되돌릴 수 없습니다.",
-        )
-      )
-        return;
+      // 영향 조회 동안에도 카드를 잠근다(finally 가 풀어 준다). 확인창 문구는
+      // 실제 동작(동일 지문으로 옮김 / 원문 보관 후 삭제) 그대로다.
       setDeletingIds((prev) => new Set(prev).add(id));
       try {
+        const ok = await confirmPassageDeletion([id], {
+          noun: koScope ? "지문" : "학습지",
+        });
+        if (!ok) return;
         const result = await bulkDeleteWorkbenchPassages([id]);
         if (!result.success || result.deleted === 0) {
           toast.error(result.error || "삭제에 실패했습니다.");
@@ -971,24 +973,27 @@ export function PassageListClient({
   const bulkDeleteAction = (
     <button
       type="button"
-      onClick={() => {
-        if (selection.selectedIds.size === 0 || bulkDeleting) return;
-        const ok = confirmNative(
-          koScope
-            ? `선택한 지문 ${selection.selectedIds.size}편을 삭제하시겠습니까?`
-            : `선택한 학습지 ${selection.selectedIds.size}편을 삭제하시겠습니까?`,
-          koScope
-            ? "이 작업은 되돌릴 수 없습니다. 지문에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다."
-            : "이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다.",
-        );
+      onClick={async () => {
+        if (selection.selectedIds.size === 0 || bulkDeleting || bulkDeleteChecking) return;
+        // 확인창 문구는 서버 영향 조회 결과 그대로(문항은 지워지지 않는다 — 동일 지문으로
+        // 옮기거나 원문을 보관한 채 남는다).
+        setBulkDeleteChecking(true);
+        let ok = false;
+        try {
+          ok = await confirmPassageDeletion(Array.from(selection.selectedIds), {
+            noun: koScope ? "지문" : "학습지",
+          });
+        } finally {
+          setBulkDeleteChecking(false);
+        }
         if (ok) void handleBulkDelete();
       }}
-      disabled={selection.selectedIds.size === 0 || bulkDeleting}
+      disabled={selection.selectedIds.size === 0 || bulkDeleting || bulkDeleteChecking}
       title="삭제"
       aria-label="삭제"
       className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      {bulkDeleting ? (
+      {bulkDeleting || bulkDeleteChecking ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
       ) : (
         <Trash2 className="w-3.5 h-3.5" />

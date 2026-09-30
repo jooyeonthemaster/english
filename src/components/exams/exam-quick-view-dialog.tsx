@@ -269,7 +269,7 @@ export function ExamQuickViewDialog({
               </TabsList>
 
               <TabsContent value="preview" className="mt-0 min-h-0 flex-1">
-                <ExamDetailPaperPreview exam={exam} className="h-full min-h-0" />
+                <ExamDetailPaperPreview exam={exam} className="h-full min-h-0" printEntry="quick-view" />
               </TabsContent>
 
               <TabsContent

@@ -98,6 +98,22 @@ const { plan, pageCount } = computeBreakPlan({
 const planColumns = [...plan.values()].filter((v) => v === "column").length;
 const planPages = [...plan.values()].filter((v) => v === "page").length;
 
+// E36 구역 3분할: section0 = 표지, section1 = 본문, section2 = 정답표. 본문 계약은 section1 에서 본다.
+async function bodySectionOf(doc) {
+  const zip = await JSZip.loadAsync(await packageHwpx(doc));
+  return zip.file("Contents/section1.xml").async("string");
+}
+// 표 셀 안 문단을 제외한 최상위 <hp:p> 여는 태그만(나눔 플래그는 최상위 문단에만 의미가 있다).
+function topLevelOpenTags(sec) {
+  const tags = []; let depth = 0;
+  for (const m of sec.matchAll(/<hp:p [^>]*>|<\\/hp:p>/g)) {
+    if (m[0].startsWith("<hp:p ")) { if (depth === 0) tags.push(m[0]); depth++; }
+    else depth--;
+  }
+  return tags;
+}
+const countFlag = (sec, flag) => topLevelOpenTags(sec).filter((t) => t.includes(flag + '="1"')).length;
+
 const doc = buildBuilderHwpxDocument({
   title: "새 시험지 (테스트)",
   settings,
@@ -105,12 +121,21 @@ const doc = buildBuilderHwpxDocument({
   includeAnswers: false,
   fullExamQuestions: [],
 });
-const buf = await packageHwpx(doc);
-const zip = await JSZip.loadAsync(buf);
-const section = await zip.file("Contents/section0.xml").async("string");
+const section = await bodySectionOf(doc);
+const countColBreak = countFlag(section, "columnBreak");
+const countPageBreak = countFlag(section, "pageBreak");
 
-const countColBreak = (section.match(/columnBreak="1"/g) || []).length;
-const countPageBreak = (section.match(/pageBreak="1"/g) || []).length;
+// 분할 계획을 실제로 소비하는 경로 = 흐름형 1단 구역(builder.ts: 네이티브 2단은 한컴 자동 흐름에 맡겨
+// 계획을 쓰지 않고, 구형 2단 표 경로는 fragment 표로 배치한다). 같은 문항·1단 레이아웃으로 계획과 방출을 대조한다.
+const layout1 = { ...layout, columns: 1 };
+const plan1 = computeBreakPlan({ blocks: undefined, resolvedItems, layout: layout1, template: settings.template }).plan;
+const section1col = await bodySectionOf(buildBuilderHwpxDocument({
+  title: "새 시험지 (1단)",
+  settings: { ...settings, layout: layout1 },
+  resolvedItems,
+  includeAnswers: false,
+  fullExamQuestions: [],
+}));
 
 const HPU = (mmVal) => Math.round((mmVal * 7200) / 25.4);
 const MM_PER_PX = 210 / 760;
@@ -134,9 +159,7 @@ const docAns = buildBuilderHwpxDocument({
   includeAnswers: true,
   fullExamQuestions: [],
 });
-const bufAns = await packageHwpx(docAns);
-const zipAns = await JSZip.loadAsync(bufAns);
-const sectionAns = await zipAns.file("Contents/section0.xml").async("string");
+const sectionAns = await bodySectionOf(docAns);
 
 const summary = {
   pageCount,
@@ -160,8 +183,14 @@ const summary = {
     : null,
   expLR,
   expTB,
-  answersColBreak: (sectionAns.match(/columnBreak="1"/g) || []).length,
-  answersPageBreak: (sectionAns.match(/pageBreak="1"/g) || []).length,
+  answersColBreak: countFlag(sectionAns, "columnBreak"),
+  answersPageBreak: countFlag(sectionAns, "pageBreak"),
+  answersHasTwoCol: /colCount="2"/.test(sectionAns),
+  oneColPlanPages: [...plan1.values()].filter((v) => v === "page").length,
+  oneColPlanColumns: [...plan1.values()].filter((v) => v === "column").length,
+  oneColPageBreak: countFlag(section1col, "pageBreak"),
+  oneColColBreak: countFlag(section1col, "columnBreak"),
+  oneColHasTwoCol: /colCount="2"/.test(section1col),
 };
 process.stdout.write(JSON.stringify(summary));
 `;
@@ -205,7 +234,9 @@ test("HWPX: A4 portrait page with correct margins (preview px → mm)", () => {
 });
 
 test("HWPX: two-column layout is enabled", () => {
-  assert.equal(summary.hasTwoCol, true, "본문은 2단(colCount=2)이어야 한다");
+  assert.equal(summary.hasTwoCol, true, "본문 구역(section1)은 2단(colCount=2)이어야 한다");
+  assert.equal(summary.answersHasTwoCol, true, "정답포함도 설정한 2단을 따른다");
+  assert.equal(summary.oneColHasTwoCol, false, "layout.columns=1 이면 본문은 1단");
 });
 
 test("HWPX: preview pagination produces multi-page break plan", () => {
@@ -216,21 +247,20 @@ test("HWPX: preview pagination produces multi-page break plan", () => {
   );
 });
 
-// TODO(dongju): 하니스 이식성 수정(shell/tsconfig/CJS interop) 후 드러난 선존 이슈 —
-// 페이지네이션 개편(pagination-metrics/self-contained set) 이후 계획된 pageBreak(planPages=1)이
-// section0.xml 에 0개로 방출됨(columnBreak 동등성은 통과). 토픽문장영작 WIP 와 무관(WIP 되돌려도 동일 재현).
-// HWPX 페이지 분할 계약(plan↔emit)을 아는 동주가 "실버그 vs stale 기대"를 판정해야 하므로 todo 로 보류.
-test("HWPX: every planned break is emitted exactly once in section0.xml", { todo: "pre-existing dongju HWPX pagination: planned pageBreak not emitted — needs dongju triage" }, () => {
-  assert.equal(
-    summary.countColBreak,
-    summary.planColumns,
-    "columnBreak 개수 = 계획된 단 나눔 개수",
-  );
-  assert.equal(
-    summary.countPageBreak,
-    summary.planPages,
-    "pageBreak 개수 = 계획된 페이지 나눔 개수",
-  );
+// 예전 판본은 section0.xml(E36 이후 표지)을 읽어 todo 로 보류돼 있었다. 계획(plan)은 흐름형 1단 구역만
+// 소비하므로 거기서 「계획된 나눔 = 방출된 나눔」을 대조하고, 네이티브 2단은 계획을 쓰지 않는다(한컴 자동 흐름 —
+// 강제 나눔은 쪽당 N문제·breakBefore 뿐)는 것을 따로 고정한다.
+test("HWPX: every planned break is emitted exactly once in the body section (1-column flow)", () => {
+  assert.ok(summary.oneColPlanPages > 0, "1단 계획에도 쪽 나눔이 있어야 대조가 의미 있다");
+  assert.equal(summary.oneColPlanColumns, 0, "1단 계획에는 단 나눔이 없다");
+  assert.equal(summary.oneColPageBreak, summary.oneColPlanPages, "pageBreak 개수 = 계획된 페이지 나눔 개수");
+  assert.equal(summary.oneColColBreak, 0, "1단 본문에 columnBreak 가 없다");
+});
+
+test("HWPX: native two-column body leaves page/column flow to Hancom (no planned breaks emitted)", () => {
+  assert.ok(summary.planColumns + summary.planPages > 0, "2단 계획은 존재하지만");
+  assert.equal(summary.countColBreak, 0, "네이티브 2단 본문은 계획된 columnBreak 를 넣지 않는다");
+  assert.equal(summary.countPageBreak, 0, "네이티브 2단 본문은 계획된 pageBreak 를 넣지 않는다");
 });
 
 test("HWPX: answer-included export does not force preview breaks", () => {

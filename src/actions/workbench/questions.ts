@@ -19,6 +19,7 @@ import type {
   SaveQuestionData,
 } from "./_types";
 import { buildWorkbenchQuestionWhere } from "./_question-where";
+import { preserveSourcePassage } from "./_lib/source-passage-preserve";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -377,10 +378,14 @@ async function loadWorkbenchQuestionSurfaceItems(
 }
 
 export async function getWorkbenchQuestions(
-  academyId: string,
+  academyIdArg: string,
   filters?: WorkbenchQuestionFilters
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다 — 인자는 호환용(모든 호출부가 staff.academyId 를 넘긴다).
+  // 클라이언트가 남의 학원 id 를 넘겨도 자기 학원 목록만 나온다(IDOR 수리 26-09-30).
+  const staff = await requireAuth();
+  void academyIdArg;
+  const academyId = staff.academyId;
 
   const page = filters?.page || 1;
   const limit = filters?.limit || 20;
@@ -435,10 +440,13 @@ export async function getWorkbenchQuestions(
  * (which the control itself owns), so the three counts always sum to "전체".
  */
 export async function getWorkbenchQuestionStatusCounts(
-  academyId: string,
+  academyIdArg: string,
   filters?: WorkbenchQuestionFilters,
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(getWorkbenchQuestions 와 같은 이유).
+  const staff = await requireAuth();
+  void academyIdArg;
+  const academyId = staff.academyId;
 
   const rest =
     filters?.approved === undefined
@@ -457,10 +465,13 @@ export async function getWorkbenchQuestionStatusCounts(
  * on /director/workbench/questions.
  */
 export async function getWorkbenchQuestionsGroupedByPassage(
-  academyId: string,
+  academyIdArg: string,
   filters?: WorkbenchQuestionFilters
 ) {
-  await requireAuth();
+  // 학원 범위는 세션이 정한다(getWorkbenchQuestions 와 같은 이유).
+  const staff = await requireAuth();
+  void academyIdArg;
+  const academyId = staff.academyId;
 
   const page = filters?.page || 1;
   const limit = filters?.limit || 10; // passages per page
@@ -548,10 +559,11 @@ export async function getWorkbenchQuestionsGroupedByPassage(
 }
 
 export async function getWorkbenchQuestion(questionId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
 
+  // 학원 범위 — 남의 학원 문제 id 는 null(호출부의 「찾을 수 없음」 경로, IDOR 수리 26-09-30).
   const question = await prisma.question.findFirst({
-    where: { id: questionId, deletedAt: null },
+    where: { id: questionId, academyId: staff.academyId, deletedAt: null },
     include: {
       passage: {
         select: {
@@ -752,15 +764,23 @@ export async function updateWorkbenchQuestion(
   data: Partial<SaveQuestionData>
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const staff = await requireAuth();
+
+    // 학원 범위 — 남의 학원(또는 없는) 문제 id 는 아무것도 바꾸지 않는다(IDOR 수리 26-09-30).
+    // 아래 update·해설 갱신은 이 소유 확인을 통과한 id 에만 닿는다(문제의 academyId 는 바뀌지 않는다).
+    const owned = await prisma.question.findFirst({
+      where: { id: questionId, academyId: staff.academyId },
+      select: { tags: true, structuredData: true, deletedAt: true },
+    });
+    if (!owned) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
 
     // 직접 수정 반영을 위해 항상 현재 스냅샷을 읽는다. AI 생성 문제의 카드는
     // structuredData(JSON 컬럼)로 렌더되므로, flat 컬럼만 갱신하면 검수 화면에
     // 편집이 보이지 않는다(직접수정 미반영 버그). 여기서 스냅샷을 함께 맞춘다.
-    const currentQuestion = await prisma.question.findFirst({
-      where: { id: questionId, deletedAt: null },
-      select: { tags: true, structuredData: true },
-    });
+    // (휴지통 문제는 종전처럼 스냅샷 없이 flat 컬럼만 갱신한다.)
+    const currentQuestion = owned.deletedAt === null ? owned : null;
     const incomingTags =
       data.tags !== undefined ? readQuestionTags(data.tags) : undefined;
     const existingTags = readQuestionTags(currentQuestion?.tags);
@@ -788,16 +808,21 @@ export async function updateWorkbenchQuestion(
     let finalQuestionText: string | undefined = data.questionText;
 
     const existingSnapshot = currentQuestion?.structuredData;
+    // 지문 삭제로 떼어 보관한 원문(_sourcePassage)은 서버가 관리한다 — structuredData 를
+    // 새로 만드는 분기마다 DB 의 값을 이어 붙이고, 클라이언트가 보낸 값은 버린다(PI-R3).
     if (data.structuredData !== undefined) {
       finalStructuredData = toPrismaJson(
-        plan && isRecord(data.structuredData)
-          ? {
-              ...data.structuredData,
-              _generationPlan: plan,
-              tags:
-                updateTags ?? mergeQuestionGenerationPlanTag(existingTags, plan),
-            }
-          : data.structuredData,
+        preserveSourcePassage(
+          plan && isRecord(data.structuredData)
+            ? {
+                ...data.structuredData,
+                _generationPlan: plan,
+                tags:
+                  updateTags ?? mergeQuestionGenerationPlanTag(existingTags, plan),
+              }
+            : data.structuredData,
+          owned.structuredData,
+        ),
       );
     } else if (
       isRecord(existingSnapshot) &&
@@ -838,18 +863,23 @@ export async function updateWorkbenchQuestion(
           normalizeQuestionTextForCompare(derivedText);
 
       if (userEditedQuestionText) {
-        finalStructuredData = toPrismaJson({
-          ...(plan ? { _generationPlan: plan } : {}),
-          ...(updateTags !== undefined
-            ? { tags: updateTags }
-            : existingSnapshot.tags
-              ? { tags: existingSnapshot.tags }
-              : {}),
-          _manualEditedFlat: true,
-        });
+        finalStructuredData = toPrismaJson(
+          preserveSourcePassage(
+            {
+              ...(plan ? { _generationPlan: plan } : {}),
+              ...(updateTags !== undefined
+                ? { tags: updateTags }
+                : existingSnapshot.tags
+                  ? { tags: existingSnapshot.tags }
+                  : {}),
+              _manualEditedFlat: true,
+            },
+            existingSnapshot,
+          ),
+        );
         finalQuestionText = data.questionText;
       } else {
-        finalStructuredData = toPrismaJson(merged);
+        finalStructuredData = toPrismaJson(preserveSourcePassage(merged, existingSnapshot));
         finalQuestionText = derivedText;
       }
     } else {
@@ -1194,10 +1224,11 @@ export async function toggleQuestionStar(
   questionId: string
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const staff = await requireAuth();
 
+    // 학원 범위 — 남의 학원 문제 id 는 「문제를 찾을 수 없습니다」(IDOR 수리 26-09-30).
     const question = await prisma.question.findFirst({
-      where: { id: questionId, deletedAt: null },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       select: { starred: true },
     });
 

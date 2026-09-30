@@ -1,6 +1,5 @@
-import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
-import { getCircledNumber } from "@/lib/question-postprocess/types";
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "./constants";
+import { answerKeyEntries, type AnswerEntry } from "./answer-key-entries";
 import type { Density, PaperItem, PaperSize } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -11,7 +10,8 @@ import type { Density, PaperItem, PaperSize } from "./types";
 // 문항이 많으면(예: 445문항) 한 페이지에 다 못 들어가므로 페이지 단위로 쪼갠다.
 // ---------------------------------------------------------------------------
 
-export type AnswerEntry = { orderNum: number; answer: string };
+// 정답표 항목·표기 규칙은 answer-key-entries.ts(웹·HWPX·DOCX 공용)가 정본이다.
+export type { AnswerEntry };
 
 export type AnswerKeyLayout = {
   // 5열 그리드(grid) vs 전체 폭 번호 목록(list).
@@ -34,40 +34,6 @@ export const EMPTY_ANSWER_KEY_LAYOUT: AnswerKeyLayout = {
 // DOCX 빌더와 동일: 가장 긴 정답이 이 길이를 넘으면 5열 그리드가 세로로 터지므로
 // 전체 폭 목록으로 전환한다.
 const LONG_ANSWER_THRESHOLD = 20;
-
-// 정답표 표기 통일(표시 계층 전용 — 저장값 불변). 저장 형식은 유형별로 숫자("2") / 원문자("②") /
-// 괄호문자("(B)") 가 섞여 있어(기출 은행: 무관·삽입은 원문자, 나머지는 숫자; 어법은
-// formatStoredQuestionCorrectAnswer 가 (B)→② 로) 한 장 안에 「7. ②」 와 「1. 2」 가 혼용됐다.
-// 객관식(선지 있음) 단일 정답이 순수 숫자이고 선지 개수 안이면 ①~ 로 바꾼다.
-// 주관식(선지 0)·복수답("2, 4")·(A) 형·선지 범위 밖 숫자는 그대로 둔다.
-function circledObjectiveAnswer(item: PaperItem, answer: string): string {
-  const optionCount =
-    item.options.length + Math.max(0, Math.min(10, item.objectiveAnswerSlots || 0));
-  if (optionCount === 0) return answer;
-  const numeric = answer.match(/^\s*([1-9]\d?)\s*$/);
-  if (!numeric) return answer;
-  const index = Number(numeric[1]) - 1;
-  if (index < 0 || index >= optionCount) return answer;
-  return getCircledNumber(index);
-}
-
-function answerEntries(paperItems: PaperItem[]): AnswerEntry[] {
-  const entries: AnswerEntry[] = [];
-  for (const item of paperItems) {
-    if (item.blockType !== "question") continue;
-    const source = item.sourceQuestion;
-    // 빌더에서 편집한 정답(item.correctAnswer)을 우선, 없으면 원본 문항 값으로 폴백
-    // (export-docx route 와 동일한 우선순위).
-    const answer = formatStoredQuestionCorrectAnswer({
-      subType: source.subType,
-      typeId: source.type,
-      correctAnswer: item.correctAnswer || source.correctAnswer,
-      structuredData: source.structuredData,
-    });
-    entries.push({ orderNum: item.orderNum, answer: circledObjectiveAnswer(item, answer) });
-  }
-  return entries;
-}
 
 function chunk<T>(items: T[], size: number): T[][] {
   if (size <= 0) return items.length > 0 ? [items] : [];
@@ -111,7 +77,7 @@ export function buildAnswerKeyLayout(
   paperItems: PaperItem[],
   opts: { paperSize: PaperSize; density: Density },
 ): AnswerKeyLayout {
-  const entries = answerEntries(paperItems);
+  const entries = answerKeyEntries(paperItems);
   if (entries.length === 0) {
     return { mode: "grid", rowsPerPage: 1, pages: [] };
   }

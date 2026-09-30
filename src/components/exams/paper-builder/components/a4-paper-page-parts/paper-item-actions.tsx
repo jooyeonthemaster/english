@@ -18,6 +18,7 @@ import {
   isSourcePassageForcedForItem,
   shouldRenderSourcePassageForItem,
 } from "../../paper-item-utils";
+import { isPaperItemPrintedWithoutSourcePassage } from "./missing-passage-items";
 
 interface PaperItemActionsProps {
   item: PaperItem;
@@ -47,6 +48,8 @@ export function PaperItemActions({
 }: PaperItemActionsProps) {
   const passageForced = isSourcePassageForcedForItem(item);
   const passageActive = passageForced || shouldRenderSourcePassageForItem(item);
+  // 원문 지문이 없으면 토글을 켜도 찍을 지문이 없다 — 빨간색 + 이유 안내(칩 「원문 지문 없음」과 같은 판정).
+  const passageMissing = isPaperItemPrintedWithoutSourcePassage(item);
 
   return (
     <div
@@ -78,8 +81,9 @@ export function PaperItemActions({
             ? "text-blue-600"
             : "text-slate-400 hover:text-slate-700",
           passageForced && "cursor-not-allowed opacity-75",
+          passageMissing && "text-rose-600 hover:text-rose-700",
         )}
-        title="지문 표시 전환"
+        title={passageMissing ? "원문 지문 없음 — 연결된 원문 지문이 없어 켜도 지문이 찍히지 않습니다" : "지문 표시 전환"}
       >
         <BookOpen className="h-3 w-3" />
       </button>

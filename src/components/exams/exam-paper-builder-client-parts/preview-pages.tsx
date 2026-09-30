@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { A4PaperPage } from "../paper-builder/components/a4-paper-page";
 import { ExamCoverPage } from "../paper-builder/components/exam-cover-page";
 import { ExamAnswerKeyPage } from "../paper-builder/components/exam-answer-key-page";
@@ -87,6 +87,9 @@ interface PreviewPagesProps {
   answerKey: AnswerKeyLayout;
   // 해설 포함 PDF 인쇄 직전 모든 페이지를 강제 마운트(미스크롤 페이지 빈 인쇄 방지).
   forceMountAll?: boolean;
+  // 지연 마운트된 페이지가 처음 그려진 직후 호출 — 실측 넘침 가드(use-overflow-guarded-pagination)가
+  // 새로 그려진 칸을 잰다.
+  onPageMounted?: () => void;
 }
 
 // ─── 페이지 지연 마운트 (미리보기 가상화) ───
@@ -100,11 +103,13 @@ function LazyPaperPage({
   height,
   eager,
   forceMount,
+  onMounted,
   children,
 }: {
   pageIndex: number;
   height: number;
   eager: boolean;
+  onMounted?: () => void;
   // 인쇄(특히 해설 포함 PDF) 직전에 모든 페이지를 즉시 마운트해, 아직 스크롤하지 않은
   // 페이지가 빈 채로 인쇄되지 않게 한다.
   forceMount: boolean;
@@ -112,13 +117,25 @@ function LazyPaperPage({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(eager);
+  // forceMount 는 **렌더에서 바로** 반영한다(이펙트로 받으면 한 박자 늦다).
+  // 인쇄는 beforeprint 핸들러 안의 flushSync 한 번으로 전 쪽을 그려야 한다 — 브라우저는 핸들러가
+  // 끝나자마자 인쇄 레이아웃을 뜨므로, useEffect → setMounted 로 미룬 마운트는 인쇄에 못 들어가
+  // 3쪽 이후가 백지로 나갔다(26-09-29 실측: printToPDF 직행 3/29쪽 → 이 수정 후 30/30쪽).
+  const visible = mounted || forceMount;
 
+  // 인쇄가 끝나(forceMount=false) 다시 숨지 않도록 한 번 보인 쪽은 마운트 상태로 굳힌다.
   useEffect(() => {
     if (forceMount) setMounted(true);
   }, [forceMount]);
 
+  // 마운트 커밋 직후(페인트 전) 알린다 — 가드가 넘친 칸을 바로잡아도 넘친 프레임이 보이지 않는다.
+  // (onMounted 는 가드의 안정 콜백이라 사실상 마운트 때 한 번만 돈다.)
+  useLayoutEffect(() => {
+    if (visible) onMounted?.();
+  }, [visible, onMounted]);
+
   useEffect(() => {
-    if (mounted) return;
+    if (visible) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -133,16 +150,22 @@ function LazyPaperPage({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [mounted]);
+  }, [visible]);
 
+  // 【계약】 forceMount 는 반드시 **렌더에서 동기 반영**한다(위 visible). 이펙트로 미루면 인쇄 핸들러의
+  // flushSync 가 끝난 뒤에야 그려져 3쪽 이후가 백지로 나간다(26-09-29 printToPDF 3/29 → 30/30).
+  // data-exam-page-mounted 는 그 결과를 DOM 에 드러내는 셀렉터다 — 인쇄 CSS 의 「백지 대신 경고
+  // 문구」(print-styles.tsx)와 e2e 스냅숏이 읽는다. (개발 단언 use-print-portal.ts 와 인쇄 컨트롤러
+  // print/print-readiness.ts 는 한 단계 더 엄격하게 프레임 안 `.exam-a4-page` 실물을 센다.)
   return (
     <div
       ref={ref}
       className="exam-preview-page-frame w-full"
       data-exam-page-index={pageIndex}
+      data-exam-page-mounted={visible ? "true" : "false"}
       style={{ minHeight: height }}
     >
-      {mounted ? children() : null}
+      {visible ? children() : null}
     </div>
   );
 }
@@ -207,6 +230,7 @@ export function PreviewPages(props: PreviewPagesProps) {
             height={props.singlePageHeight}
             eager={pageIndex < 2}
             forceMount={props.forceMountAll ?? false}
+            onMounted={props.onPageMounted}
           >
             {() => (
             <A4PaperPage

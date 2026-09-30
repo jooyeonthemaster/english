@@ -225,6 +225,39 @@ function colPrCtrl(sec: SectionSpec): string {
   });
 }
 
+/**
+ * 본문 문단의 줄 배치 폭(lineseg horzsize·줄바꿈 기준) — **한컴 양자화 폭과 절대 겹치지 않는 값**.
+ *
+ * ── 한컴 2024 실측(26-09-29·30, 재발 금지) ─────────────────────────────────────────────
+ * ① 한컴의 실제 줄 폭은 가용 폭을 4 HPU 단위로 내린 값 floor(W/4)·4 다(재저장본이 54202→54200,
+ *    8945→8944, 22282→22280 으로 다시 씀). ② horzsize 가 그 값과 **정확히 같을 때만** 캐시를 믿고
+ *    우리 줄바꿈(textpos, 글리프 부류 추정)을 그대로 쓴다 → 단어 간격 벌어짐·쪽 수 변화·빈칸 밑줄 소실
+ *    (A4 2단 25848: 57→58쪽 / B4 2단 32508(=floor4(32509)): 22099/22155 단어 이동 / B4 1단 67524:
+ *    18649/22169 이동). 한 칸이라도 다르면(25847·25849·32507) 캐시를 버리고 스스로 배치해,
+ *    linesegarray 를 지운 파일과 단어 위치가 전부 같다.
+ * → 규칙: 4의 배수가 아닌 값은 한컴 폭(늘 4의 배수)과 겹칠 수 없다. 다단은 단 폭 W 안에 들어가도록
+ *   W−1 에서 시작해 4의 배수면 1 을 더 뺀다(W−1 또는 W−2). 1단은 전체폭이 4의 배수일 때만 1 을 뺀다
+ *   (A4 54202·55142 는 그대로 = 예전과 바이트 동일, B4 67524·68464 → 67523·68463).
+ * 캐시를 믿는 다른 뷰어엔 단 안에 들어가는 줄을, 한컴 2024 엔 자체 배치를 준다.
+ * env HWPX_LINESEG_WIDTH=full 이면 예전처럼 어디서나 전체폭 그대로(비상 스위치).
+ */
+function avoidHancomQuantizedWidth(width: number): number {
+  return width % 4 === 0 ? width - 1 : width;
+}
+
+function linesegWidthFor(contentWidth: number, columns: number, columnGapHpu: number): number {
+  if (process.env.HWPX_LINESEG_WIDTH === "full") return contentWidth;
+  const n = Math.max(1, columns);
+  if (n === 1) return avoidHancomQuantizedWidth(contentWidth);
+  const columnWidth = Math.floor((contentWidth - columnGapHpu * (n - 1)) / n);
+  return avoidHancomQuantizedWidth(columnWidth - 1);
+}
+
+function sectionLineWidth(sec: SectionSpec): number {
+  const contentWidth = sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
+  return linesegWidthFor(contentWidth, sec.columns, sec.columnGapHpu);
+}
+
 function colPrCtrlFor(opts: {
   columns: 1 | 2;
   columnGapHpu: number;
@@ -811,17 +844,12 @@ function emitBlock(
       columnGapHpu: block.columnGapHpu,
       contentWidthHpu: contentWidth,
     });
-    const lineWidth =
-      block.columns === 1
-        ? contentWidth
-        : Math.floor(
-            (contentWidth - block.columnGapHpu * (block.columns - 1)) /
-              block.columns,
-          );
+    // 폭 규칙은 sectionLineWidth 와 같다(한컴 양자화 폭 회피 — linesegWidthFor 주석).
+    const lineWidth = linesegWidthFor(contentWidth, block.columns, block.columnGapHpu);
     const xml = [
       `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
       `<hp:run charPrIDRef="0">${ctrl}<hp:t></hp:t></hp:run>`,
-      paragraphLineseg(contentWidth, registry, 0, [0]).xml,
+      paragraphLineseg(linesegWidthFor(contentWidth, 1, 0), registry, 0, [0]).xml,
       `</hp:p>`,
     ].join("");
     state.currentLineWidthHpu = lineWidth;
@@ -834,10 +862,15 @@ function emitBlock(
     // 표를 감싸는 문단도 강제 단/페이지 나눔을 따른다 (지문 boxed 등이 단/페이지를 시작할 때).
     const pageBreak = block.pageBreak ? "1" : "0";
     const columnBreak = block.columnBreak ? "1" : "0";
+    // 감싸는 문단은 기본 모양(paraPr 0)이다. keep-policy 가 표에 keepWithNext 를 준 경우(정답 배지)만
+    // 같은 기본 모양 + keepWithNext 로 등록한 paraPr 을 쓴다 — 표가 다음 문단(해설 라벨)과 한 단에 선다.
+    const wrapperParaPr = block.keepWithNext
+      ? registry.paraShapeFromStyle({ keepWithNext: true })
+      : 0;
     return [
-      `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="${pageBreak}" columnBreak="${columnBreak}" merged="0">`,
+      `<hp:p id="${pid}" paraPrIDRef="${wrapperParaPr}" styleIDRef="0" pageBreak="${pageBreak}" columnBreak="${columnBreak}" merged="0">`,
       `<hp:run charPrIDRef="0">${tblXml}</hp:run>`,
-      paragraphLineseg(state.currentLineWidthHpu, registry, 0, [0]).xml,
+      paragraphLineseg(state.currentLineWidthHpu, registry, wrapperParaPr, [0]).xml,
       `</hp:p>`,
     ].join("");
   }
@@ -855,7 +888,10 @@ export function buildSectionXml(
   const state: EmitState = {
     nextParaId: 0,
     nextCtrlId: 1,
-    currentLineWidthHpu: contentWidth,
+    // 네이티브 2단 구역의 본문 문단은 단 폭 안으로 줄을 배치한다(예전엔 전체폭 54202 로 계산해
+    // 줄이 두 단을 가로지르는 캐시가 나갔다). secPr 를 품은 첫 문단은 아래에서 전체폭을 유지한다.
+    // 어느 쪽이든 한컴 양자화 폭과는 겹치지 않는다(linesegWidthFor 주석).
+    currentLineWidthHpu: sectionLineWidth(sec),
     cellTextVertOffset: null,
   };
 
@@ -883,7 +919,8 @@ export function buildSectionXml(
     firstParaPrelude,
     firstParaHeader,
     firstParaFooter,
-    lineWidthHpu: contentWidth,
+    // 1단 흐름에선 이 문단이 첫 내용 문단이다 → B4 전체폭 67524(4의 배수)면 한컴이 캐시를 믿는다.
+    lineWidthHpu: linesegWidthFor(contentWidth, 1, 0),
   });
 
   const restXml = blocks

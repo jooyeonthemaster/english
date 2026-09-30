@@ -44,15 +44,14 @@ import {
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
-import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
 import {
   normalizeInlineText,
   normalizeQuestionText,
 } from "@/components/exams/paper-builder/text-normalization";
-import {
-  questionHasEmbeddedPassage,
-  shouldRenderSourcePassageInsideQuestion,
-} from "@/components/exams/paper-builder/passage-policy";
+import { questionHasEmbeddedPassage } from "@/components/exams/paper-builder/passage-policy";
+import { isFlowStructuredSubtype } from "@/components/exams/paper-builder/question-body-layout";
+import { resolvePaperLayout } from "@/components/exams/paper-builder/paper-layout-defaults";
+import type { BreakBefore, PaperItem } from "@/components/exams/paper-builder/types";
 import {
   isSummaryCompleteMc,
   isSummaryCompleteSubtype,
@@ -75,6 +74,7 @@ import {
 } from "@/lib/topic-sentence-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
+import { printInlinePassageOf } from "../export-model";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
 const GIVEN_BORDER: BorderSpec = {
@@ -110,6 +110,17 @@ export interface BuilderItemResolved {
   blockBold?: boolean;
   blockItalic?: boolean;
   blockAlign?: "left" | "center" | "right";
+  // 강제 나눔(SPEC §3.2) — builder-blocks.itemBreakFields 가 읽는다.
+  breakBefore?: BreakBefore;
+  keepWithPrev?: boolean;
+  /**
+   * 웹 인쇄가 이 문항 안(구조화 본문)에 그리는 지문(paper-export-items.inlineSourcePassageForItem). "" 면 없음.
+   * 문항 안 지문은 이 값으로만 판단한다 — includePassage 를 「문항 안 지문」으로 재해석하지 않는다(CM-R2).
+   * 없으면(손입력) printInlinePassageOf 가 같은 공용 규칙으로 계산한다.
+   */
+  printInlinePassage?: string;
+  /** 이 항목을 만든 공용 PaperItem(라우트가 채운다). 조판(buildGroups)·정답표가 이것을 쓴다. */
+  paperItem?: PaperItem;
   sourceQuestion: ExamQuestionData["question"];
 }
 
@@ -125,6 +136,8 @@ export interface QuestionRenderOptions {
   };
   includeAnswers: boolean;
   contentWidthHpu: number;
+  /** 그룹 지문 박스를 켠 그룹인가(group.includePassage) — 켰으면 본문 위 지문 제목을 또 찍지 않는다(웹·DOCX 와 같다). */
+  groupPassageShown?: boolean;
 }
 
 function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
@@ -164,6 +177,7 @@ function renderPassageTitleBlock(
   return [
     {
       kind: "p",
+      keepRole: "caption",
       style: { align: "LEFT", spaceBefore: 20, spaceAfter: 30, lineSpacingPct: 130 },
       runs: [
         txt(passageTitle.toUpperCase(), {
@@ -313,14 +327,17 @@ function resolveTopicSentenceWritingBlocks(
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
-  // 미리보기/break-plan 과 동일하게 기본 ON ([점·유형] 표시). 이전엔 === true 라 기본 OFF 였다.
-  const showMeta = layout.showQuestionMeta !== false;
-  const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
+  // 레이아웃 기본값은 웹 상세와 같은 정본(resolvePaperLayout) — [n점·유형] 배지는 기본 끔(docs/EXAM-PAPER-MODEL.md §8),
+  // 답란은 기본 켬. 예전 `showQuestionMeta !== false` 는 settings NULL 시험지에 배지를 107/107 붙였다(P8).
+  const resolvedLayout = resolvePaperLayout({ layout });
+  const showMeta = resolvedLayout.showQuestionMeta;
+  const showAnswerSpace = resolvedLayout.showAnswerSpace && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
-  const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || subType : "";
+  // 라벨이 없는 유형(UNKNOWN 등)은 유형 부분을 빼고 「[n점]」만 — 웹 a4-paper-page 배지와 같다(HW-4). 원시 코드 금지.
+  const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || "" : "";
   const questionText = normalizeQuestionText(
     formatInlineMarkersForSubtype(
       item.questionText ?? item.sourceQuestion.questionText ?? "",
@@ -348,7 +365,9 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   //   1:1 정합. 발문은 koPaperStemText([n점]·부정어 __밑줄__ 포함). 어댑터 해소
   //   실패(미등록 유형·데이터 결손)면 null → 아래 표준 경로(parseQuestionSections
   //   + 【보기】/【조건】 마커)로 비파괴 강등된다.
-  const koModel = koPaperRenderModel(item);
+  //   지문 박스는 문항 안 지문(printInlinePassageOf — 공용 규칙)이 있을 때만 그린다. includePassage 로 재해석하지
+  //   않는다(COH-7): 세트 멤버·지문 끔·구조화 유형 밖은 "" 라 억제 — DOCX question.ts 의 같은 호출과 술어가 같다.
+  const koModel = koPaperRenderModel({ ...item, includePassage: printInlinePassageOf(item).length > 0 });
   if (koModel) {
     const headerRuns: RunNode[] = [
       txt(`${orderNum}. `, { size: qNumSize, bold: true, color: COLORS.black }),
@@ -371,6 +390,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
       runs: headerRuns,
     });
@@ -474,12 +494,13 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
       runs: headerRuns,
     });
 
-    // 2. [지문] — SUMMARY_WRITING 과 동일하게 무조건 함께 렌더. 주제문/제시어 위에.
-    const tsPassage = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+    // 2. [지문] — 웹과 같은 문항 안 지문(단독 문항은 항상, 세트 멤버는 공유 지문이 맡아 없음). 주제문/제시어 위에.
+    const tsPassage = printInlinePassageOf(item).trim();
     if (tsPassage) {
       result.push(
         ...renderPassage({
@@ -604,12 +625,13 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
       runs: headerRuns,
     });
 
-    // 2. [지문] — "무조건" 함께 렌더(사용자 요구·레퍼런스 형식, SUMMARY_COMPLETE 미러). 요약문 위에.
-    const swPassage = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+    // 2. [지문] — 웹과 같은 문항 안 지문(단독 문항은 "무조건", 세트 멤버는 공유 지문이 맡아 없음). 요약문 위에.
+    const swPassage = printInlinePassageOf(item).trim();
     if (swPassage) {
       result.push(
         ...renderPassage({
@@ -698,13 +720,11 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     questionText,
     passage: { content: sourcePassageContent },
   });
-  // 출처 지문 인라인 렌더는 item.includePassage 토글을 존중한다(웹/DOCX 와 동일).
-  // CONDITIONAL_WRITING 처럼 정답이 지문 문장 번역인 유형은 기본 includePassage=false 라 미동봉.
-  const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) &&
-    item.includePassage !== false &&
-    !summaryMc &&
-    !hasEmbeddedSourcePassage;
+  // 문항 안 지문 = 웹 인쇄가 구조화 본문에 그리는 지문 박스 그대로(printInlinePassageOf — 공용 규칙).
+  // 저장 토글·강제 규칙·요약문류 항상 인라인·세트 멤버 억제(공유 지문은 그룹 박스)가 모두 그 안에서 끝난다.
+  // 여기서 includePassage 를 다시 해석하지 않는다(예전 `includePassage !== false` 는 settings NULL 에서
+  // undefined 를 「지문 포함」으로 읽었다).
+  const inlinePassageContent = printInlinePassageOf(item);
   const summaryParts = summaryComplete
     ? splitSummaryCompleteMcQuestionText(displayQuestionText)
     : { stem: "", summary: "" };
@@ -718,7 +738,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       ),
     )
     : "";
-  if (hasEmbeddedSourcePassage) {
+  // 본문 위 지문 제목 = 웹 a4-paper-page showBodyPassageTitle(DOCX question.ts 와 같은 술어): 내장 지문 유형이고,
+  // 구조화 본문이 아니며(구조화 유형은 문항 안 지문 박스가 제목을 싣는다), 그룹 지문 박스가 꺼졌을 때만.
+  // 예전에는 그룹 박스 제목에 더해 한 번 더 찍었다(지문 제목 표시 켬 + 내장 지문 유형 + 지문 켬).
+  if (hasEmbeddedSourcePassage && !isFlowStructuredSubtype(subType) && !opts.groupPassageShown) {
     result.push(...renderPassageTitleBlock(passageTitle, showPassageTitle));
   }
 
@@ -749,6 +772,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 80, lineSpacingPct: 158 },
       runs: headerRuns,
     });
@@ -781,21 +805,14 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
+      keepRole: "questionHead",
       style: { spaceBefore: 80, spaceAfter: 80 },
       runs: headerRuns,
     });
   }
 
-  // 2. 글로벌 지문 (passage 모델, embed 가 아닌 경우)
-  //    fragment 경로는 재구성된 PaperItem(sourceQuestion.passage 없음)을 넘기므로,
-  //    지문 존재 판정은 sourceQuestion.passage 가 아니라 passageContent 로 한다.
-  const sourcePassage = item.sourceQuestion.passage;
-  const inlinePassageContent =
-    formatSourcePassageForQuestionItems(
-      item.passageContent ?? sourcePassage?.content ?? "",
-      [item],
-    );
-  if (inlinePassageContent && (summaryMc || inlineSourcePassage)) {
+  // 2. 문항 안 지문(웹 structuredSegments 의 passage 박스와 같은 텍스트)
+  if (inlinePassageContent) {
     result.push(
       ...renderPassage({
         passageTitle,
@@ -814,6 +831,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     if (summaryMc) {
       result.push({
         kind: "p",
+        keepRole: "caption",
         style: { align: "CENTER", spaceBefore: 20, spaceAfter: 60 },
         runs: [txt("\u2193", { size: bodySize, bold: true, color: COLORS.gray })],
       });
@@ -843,12 +861,14 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       if (section.type === "direction") continue;
       switch (section.type) {
       case "passage":
+        // 발문 속 지문(본문 섹션)에는 제목을 달지 않는다 — 웹은 본문을 제목 없이 그리고, 제목은 위의 본문 위 제목·
+        // 그룹 지문 박스·문항 안 지문 박스에서만 찍는다(DOCX 도 같다). 예전에는 본문 위 제목과 합쳐 두 번 찍었다.
         result.push(
           ...renderPassage({
             passageTitle,
             passageContent: section.content,
             passageStyle: "plain",
-            showPassageTitle,
+            showPassageTitle: false,
             compact,
             usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
             contentWidthHpu,
@@ -912,6 +932,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       const displayText = objectiveAnswerTexts[i]?.trim() || "";
       result.push({
         kind: "p",
+        keepRole: "option",
         style: {
           leftMargin: 360,
           indentFirst: -280,
@@ -1006,6 +1027,7 @@ function renderKoStructBox(
     if (idx === 0 && KO_BOGI_HEADER_LINE_RE.test(line)) {
       blocks.push({
         kind: "p",
+        keepRole: "caption",
         style: { align: "CENTER", spaceBefore: 40, spaceAfter: 30, lineSpacingPct: 120 },
         runs: [txt(line, { size: SIZE.meta, bold: true, color: COLORS.darkGray })],
       });
@@ -1014,6 +1036,7 @@ function renderKoStructBox(
     if (idx === 0 && line === KO_CONDITION_HEADER_LINE) {
       blocks.push({
         kind: "p",
+        keepRole: "caption",
         style: { align: "LEFT", spaceBefore: 40, spaceAfter: 30, lineSpacingPct: 120 },
         runs: [txt(line, { size: SIZE.meta, bold: true, color: COLORS.gray })],
       });

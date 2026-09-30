@@ -27,18 +27,24 @@ import type {
   BuilderHeader,
   BuilderLayout,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
-// BuilderCover 는 배럴(build-builder-document/index.ts)이 아직 내보내지 않아 정의 모듈에서
-// 직접 가져온다(ko-set-passage 와 같은 깊은 import 패턴).
+// BuilderCover 는 배럴(build-builder-document/index.ts)이 아직 내보내지 않아 정의 모듈에서 직접 가져온다.
 import type { BuilderCover } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/model";
-import { suppressKoSetMemberInlinePassages } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
+import { resolvePaperLayout } from "@/components/exams/paper-builder/paper-layout-defaults";
 import { type BreakPlan, computeBreakPlan, computePaginatedLayout } from "./break-plan";
 import type { FragmentRenderOptions } from "./render/fragment";
 import type { BuildHwpxOptions } from "./builder-types";
 import { appendBlocksInOrder, buildColumnPageTable, renderColumn, renderGroupsToUnits } from "./builder-tables";
+import { applyKeepPolicy, type KeepPolicyStats } from "./keep-policy";
 
 export type {
   BuildHwpxOptions,
 } from "./builder-types";
+
+/**
+ * 본문·정답표 구역의 꼬리말(쪽번호) 밴드 높이. 한컴 본문 높이 = 용지 − 위/아래 여백 −
+ * 머리말(0) − 꼬리말 이므로, 묶음 유지 상한(keep-policy.ts)의 단 높이도 이 값을 뺀다.
+ */
+const BODY_FOOTER_HPU = mm(7);
 
 /** 구역 3개가 공유하는 용지/여백 치수. */
 interface PageMetrics {
@@ -112,17 +118,21 @@ export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
   const { title, settings, includeAnswers } = opts;
-  // KO 세트 멤버는 그룹 공유지문 1박스로 렌더하므로 멤버 인라인 지문을 억제한다
-  // (라우트의 shouldForceSourcePassage 되살림 상쇄 — 영어/KO 솔로는 원소 그대로).
-  const resolvedItems = suppressKoSetMemberInlinePassages(opts.resolvedItems);
+  // 문항 입력은 공용 정본(export-model.hwpxBuilderInput — toPaperExportItem + paperItem)이 판정을 끝낸 값이다.
+  // KO 세트 멤버의 문항 안 지문은 printInlinePassage("" — 세트 멤버) 로만 정해지고 공유지문은 buildGroups 가 1박스로
+  // 그린다. 예전의 suppressKoSetMemberInlinePassages(라우트의 force 되살림 상쇄)는 되살림이 없어져 효과가 없었다(COH-6).
+  const resolvedItems = opts.resolvedItems;
   // 템플릿(세리프/산세리프)별 본문 글꼴 — 미리보기·DOCX 와 동일 기준으로 통일.
   const bodyFont = bodyFontForTemplate(settings?.template);
   const header: BuilderHeader = settings?.header ?? {};
   const layout: BuilderLayout = settings?.layout ?? {};
-  const compact = layout.density === "compact";
+  // 레이아웃 기본값은 웹 상세와 같은 정본(resolvePaperLayout) — 라우트 입력은 이미 boolean 이라 값이 같고,
+  // 손입력(설정 일부만 있는 호출)도 웹 기본값(배지 끔·답란 켬)을 받는다.
+  const resolvedLayout = resolvePaperLayout({ layout, template: settings?.template });
+  const compact = resolvedLayout.density === "compact";
   const passageStyle = "plain";
-  const showPassageTitle = layout.showPassageTitle === true;
-  const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
+  const showPassageTitle = resolvedLayout.showPassageTitle;
+  const columns: 1 | 2 = resolvedLayout.columns;
 
   // 「쪽당 N문제」 강제 배치(SPEC §3.1)는 **정답포함(해설) 모드에서 쓰지 않는다.**
   //   해설이 붙으면 문항 한 개가 칸 하나보다 확실히 커져서 내용이 자연스럽게 다음 칸으로
@@ -185,6 +195,10 @@ export function buildBuilderHwpxDocument(
   // 본문(section1) 블록과 그 구역의 실제 단 수. 아래 두 갈래가 이 둘을 채운다.
   const bodyBlocks: BlockNode[] = [];
   let bodyColumns: 1 | 2 = 1;
+  // 선지·머리 묶음 유지(docs/EXAM-PAPER-MODEL.md §9). 흐름형 본문(네이티브 2단·1단 흐름)에서만 적용한다 —
+  // 구형 2단 표 경로는 칸 내용이 원자 표 셀이라 문단 keep 이 무의미하다(부르지 않음 = 바이트 동일).
+  const bodyColumnHeightHpu = pageHeight - 2 * marginTB - BODY_FOOTER_HPU;
+  let keepStats: KeepPolicyStats | undefined;
 
   // =========================================================================
   // 네이티브 2단 경로 (한컴 검증 방식·기본 활성): per-page 표를 폐기하고, 본문을
@@ -221,6 +235,11 @@ export function buildBuilderHwpxDocument(
       // (P4: columnBreak 가 네이티브 2단 구역에서 정확히 동작한다).
       forcePerPage,
       sectionColumns: 2,
+    });
+    // 강제 나눔(forcePerPage·breakBefore)이 붙은 뒤에 돌아야 충돌 가드가 최종 상태를 본다.
+    keepStats = applyKeepPolicy(bodyBlocks, {
+      columnWidthHpu: nativeColW,
+      columnHeightHpu: bodyColumnHeightHpu,
     });
   } else {
     // =======================================================================
@@ -276,8 +295,9 @@ export function buildBuilderHwpxDocument(
         const fopts: FragmentRenderOptions = {
           passageStyle,
           showPassageTitle,
-          showQuestionMeta: layout.showQuestionMeta !== false,
-          showAnswerSpace: layout.showAnswerSpace !== false,
+          // 예전 `!== false` 는 settings 없는 입력에 배지를 켰다(render/question.ts 가 고친 P8 과 같은 부류, COH-6).
+          showQuestionMeta: resolvedLayout.showQuestionMeta,
+          showAnswerSpace: resolvedLayout.showAnswerSpace,
           compact,
           template: settings?.template,
           columnWidthHpu: columnWidth,
@@ -390,6 +410,11 @@ export function buildBuilderHwpxDocument(
         forcePerPage,
         sectionColumns: 1,
       });
+      // 1단 흐름은 쪽 경계에서만 keep 이 의미가 있다(단 = 쪽 전체폭).
+      keepStats = applyKeepPolicy(bodyBlocks, {
+        columnWidthHpu: flatWidth,
+        columnHeightHpu: bodyColumnHeightHpu,
+      });
     }
   }
 
@@ -424,7 +449,7 @@ export function buildBuilderHwpxDocument(
       // 머리말을 쓰지 않으므로 밴드는 0 — 본문이 marginTop 바로 아래에서 시작한다.
       marginHeader: mm(0),
       // 꼬리말(autoNum 쪽번호)은 살아있어야 하므로 적당한 값 유지.
-      marginFooter: mm(7),
+      marginFooter: BODY_FOOTER_HPU,
       columns: bodyColumns,
       columnGapHpu: columnGap,
       // 표지 다음 쪽이 1쪽이 되도록 이 구역에서 쪽번호를 재시작한다(P7).
@@ -446,7 +471,7 @@ export function buildBuilderHwpxDocument(
       marginTop: marginTB,
       marginBottom: marginTB,
       marginHeader: mm(0),
-      marginFooter: mm(7),
+      marginFooter: BODY_FOOTER_HPU,
       columns: 1,
       columnGapHpu: columnGap,
       pageNumberStyle,
@@ -456,5 +481,11 @@ export function buildBuilderHwpxDocument(
     });
   }
 
-  return { title, sections, defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
+  return {
+    title,
+    sections,
+    defaultFontKr: bodyFont,
+    defaultFontLatin: bodyFont,
+    ...(keepStats ? { diagnostics: { keep: keepStats } } : {}),
+  };
 }

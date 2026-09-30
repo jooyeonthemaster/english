@@ -3,10 +3,11 @@ import { isGichulSetMemberItem } from "./paper-builder/question-body-layout";
 
 import { getClientQuestion, isClientQuestionId, peekQuestionIdAlias, takeQuestionIdAlias } from "./paper-builder/client-question-registry";
 import { deferWhileDragging } from "@/components/layout/panel-drag-freeze";
-import { type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
+import { flushSync } from "react-dom";
 import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { ChevronDown, ChevronLeft, CirclePlay, Download, GripVertical, Loader2, PanelLeftOpen, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, CirclePlay, Download, GripVertical, Loader2, PanelLeftOpen, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
 import { MobileStepHeader } from "@/components/workbench/mobile-step-flow";
 import { toast } from "sonner";
 import QRCode from "qrcode";
@@ -17,9 +18,12 @@ import { asDensity, asPaperSize, asPaperTemplate, asPassageStyle, buildPaperItem
 import { DEFAULT_TEMPLATE_SETTINGS, normalizePaperCover, readSavedTemplateSettings } from "./paper-builder/saved-template-settings";
 import { deleteExamPaperBuilderDraft, type ExamPaperBuilderDraft, type ExamPaperBuilderDraftState, getExamPaperBuilderDraftKey, readExamPaperBuilderDraft, writeExamPaperBuilderDraft } from "./paper-builder/indexeddb-drafts";
 import { useSidebarFocus } from "@/components/layout/sidebar-focus-context";
-import { paginateGroups } from "./paper-builder/pagination";
 import { buildAnswerKeyLayout, EMPTY_ANSWER_KEY_LAYOUT } from "./paper-builder/answer-key-layout";
 import { usePrintPortal } from "./paper-builder/hooks/use-print-portal";
+import { useOverflowGuardedPagination } from "./paper-builder/hooks/use-overflow-guarded-pagination";
+import { useExamPrintController } from "./paper-builder/print/use-exam-print-controller";
+import { PrintStatusBar } from "./paper-builder/print/print-status-bar";
+import { PrintArmIcon, printArmHandlers } from "./paper-builder/print/print-arm-ui";
 import { PrintStyles } from "./paper-builder/components/print-styles";
 import { BuilderPropertiesPanel } from "./paper-builder/components/builder-properties-panel";
 import { QuestionDetailModal } from "./paper-builder/components/question-detail-modal";
@@ -39,7 +43,6 @@ import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { addQuestionsToCollection, createQuestionCollection, deleteQuestionCollection, getAcademyQuestionCollectionMembership, getQuestionCollections, removeQuestionsFromCollection, updateQuestionCollection } from "@/actions/workbench";
-import { incrementExamPrintCount } from "@/actions/exams";
 import {
   getExamPaperBuilderSetMemberQuestionsByQuestionIds,
   getExamPaperBuilderQuestionSetsBySetIds,
@@ -69,6 +72,7 @@ import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUI
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
 import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths } from "./exam-paper-builder-client-parts/builder-helpers";
 import { PageThumbnails, thumbMetrics } from "./exam-paper-builder-client-parts/page-thumbnails";
+import { MissingPassageBanner, useMissingSourcePassage } from "./exam-paper-builder-client-parts/missing-passage-warning";
 
 // 미리보기 열이 필요로 하는 최소 폭(자동 접힘 판정 기준, §11.9-⑤).
 // 펼친 썸네일 104 + 편집 패널 핸들 컬럼 24(접혀도 남는다) + 패딩 40 + 스크롤바 17
@@ -1188,8 +1192,25 @@ export function ExamPaperBuilderClient({
       // 실측 `_dbg-cancel-real.mjs`). 최신 동기 집합에 없는 id 는 버린다. 임시 id(bank:)는 alias 로 실제 id 가
       // 됐을 수 있으니 그 실제 id 가 집합에 있으면 살린다(개명은 동기화 effect 가 한다).
       const live = opts.fromSync ? new Set(lastSyncIdsRef.current ?? []) : null;
+      // ⚠ 세트(장문 43-45 등)는 resolve 가 **형제를 펼쳐** 돌려준다 — 그 형제들은 체크
+      // 집합에 없으므로 위 가드를 그대로 돌리면 통째로 버려지고 시험지에 소문항 하나만
+      // 남는다(26-09-19 실측: 클래스 스튜디오에서 43-45 를 체크하면 45 한 문항만 조판).
+      // 그래서 먼저 **살아 있는 seed 가 속한 setId** 를 모으고, 그 세트의 멤버는 통과시킨다.
+      // 가드의 목적(취소된 체크의 유령 추가 차단)은 그대로다: seed 자신이 죽으면 그 setId 는
+      // 애초에 모이지 않아 멤버 전원이 함께 버려진다.
+      const isLiveId = (q: BuilderQuestion) =>
+        !!live &&
+        (live.has(q.id) ||
+          (isClientQuestionId(q.id) && live.has(peekQuestionIdAlias(q.id) ?? "")));
+      const liveSetIds = live
+        ? new Set(
+            resolved.flatMap((q) => (q.setId && isLiveId(q) ? [q.setId] : [])),
+          )
+        : null;
       const selectedQuestions = live
-        ? resolved.filter((q) => live.has(q.id) || (isClientQuestionId(q.id) && live.has(peekQuestionIdAlias(q.id) ?? "")))
+        ? resolved.filter(
+            (q) => isLiveId(q) || (!!q.setId && !!liveSetIds?.has(q.setId)),
+          )
         : resolved;
       if (selectedQuestions.length > 0) {
         addQuestionsAtDropTarget(selectedQuestions, null, "after");
@@ -1705,10 +1726,29 @@ export function ExamPaperBuilderClient({
   }, [headerVisible]);
 
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
-  // 해설 포함 PDF 인쇄 중에만 true — 켜지면 각 문항 뒤에 인라인 정답·해설을 페이지네이션/
-  // 렌더에 포함하고(아래 includeAnswers), 맨 뒤 정답표는 빼며(DOCX 해설과 동일), 인쇄가
-  // 끝나면 afterprint 에서 다시 끈다. 평소 편집 미리보기에는 영향이 없다.
-  const [explanationPrint, setExplanationPrint] = useState(false);
+  const missingPassage = useMissingSourcePassage(paperItems); // 「원문 지문 없음」 배너·칩·HWPX/DOCX 경고
+  // 인쇄·PDF·PDF 해설은 전부 이 컨트롤러로만 부른다(시간 추측 타이머 금지 — 준비 완료 신호가 모두
+  // 참일 때만 인쇄 · docs/EXAM-PRINT-PIPELINE.md). printCtl.explanation 은 해설 포함 인쇄 중에만
+  // true(인라인 해설을 조판에 넣고 맨 뒤 정답표는 뺀다), afterprint 에서 컨트롤러가 되돌린다.
+  // 컨트롤러는 아래 가드의 isSettled · requestMeasure 를 쓰고 가드 조판은 printCtl.explanation 을
+  // 쓰는 순환이라, 가드 신호는 레이아웃 이펙트가 채우는 ref 를 거쳐 넘긴다(인쇄 잡은 커밋 뒤에만 읽는다).
+  const guardSignalsRef = useRef<{ isSettled: () => boolean; requestMeasure: () => void } | null>(null);
+  const isGuardSettled = useCallback(() => guardSignalsRef.current?.isSettled() ?? false, []);
+  const requestGuardMeasure = useCallback(() => guardSignalsRef.current?.requestMeasure(), []);
+  const printCtl = useExamPrintController({
+    rootRef: previewScrollerRef,
+    isGuardSettled,
+    requestMeasure: requestGuardMeasure,
+    hasItems: paperItems.length > 0,
+    emptyMessage: "인쇄할 문제를 먼저 선택해주세요.",
+    examId: savedExamId, // 미저장이면 null — 인쇄 횟수·원격 측정 생략(귀속 대상 없음)
+    entry: "builder",
+    // 모바일 문항 선택 단계면 미리보기 section 이 display:none 이라 쪽을 잴 수 없다 → 동기로 전환.
+    ensureVisible: () => {
+      if (mobileStep === "preview" || previewScrollerRef.current?.offsetParent) return;
+      flushSync(() => setMobileStep("preview"));
+    },
+  });
   const paginationSettings = useMemo<PaginationSettings>(
     () => ({
       paperSize,
@@ -1720,7 +1760,9 @@ export function ExamPaperBuilderClient({
       showQuestionMeta,
       template,
       forceTwoPerPage,
-      includeAnswers: explanationPrint,
+      includeAnswers: printCtl.explanation,
+      // 미리보기·인쇄는 임베드 글꼴 실측 폭으로 줄 수를 센다(조판=인쇄 WYSIWYG).
+      textMetrics: "exam-font",
     }),
     [
       paperSize,
@@ -1732,13 +1774,18 @@ export function ExamPaperBuilderClient({
       showQuestionMeta,
       template,
       forceTwoPerPage,
-      explanationPrint,
+      printCtl.explanation,
     ],
   );
-  const paginationResult = useMemo(
-    () => paginateGroups(paperGroups, paginationSettings),
-    [paperGroups, paginationSettings],
-  );
+  // 추정 분할 + 실측 넘침 보정 — 미리보기에 그려진 칸이 페이지 아래로 넘치면 그 칸을 다시 나눈다.
+  const {
+    paginationResult,
+    requestMeasure: requestPaginationMeasure,
+    isSettled: isPaginationSettled,
+  } = useOverflowGuardedPagination(paperGroups, paginationSettings, previewScrollerRef);
+  useLayoutEffect(() => {
+    guardSignalsRef.current = { isSettled: isPaginationSettled, requestMeasure: requestPaginationMeasure };
+  }, [isPaginationSettled, requestPaginationMeasure]);
   const paperPages = paginationResult.pages;
   const overflowItemIds = paginationResult.overflowItems;
   // 시험지 맨 뒤 정답표 페이지(들). PDF(=미리보기 인쇄)에 정답지가 빠지지 않도록
@@ -1747,10 +1794,10 @@ export function ExamPaperBuilderClient({
   // 미리보기/PDF 에는 정답표를 붙인다.
   const answerKey = useMemo(
     () =>
-      explanationPrint
+      printCtl.explanation
         ? EMPTY_ANSWER_KEY_LAYOUT
         : buildAnswerKeyLayout(paperItems, { paperSize, density }),
-    [paperItems, paperSize, density, explanationPrint],
+    [paperItems, paperSize, density, printCtl.explanation],
   );
   // 표지(cover.enabled)는 본문 페이지 앞에 한 장 더 렌더되므로, scale 컨테이너의
   // 높이를 예약하는 zoom-spacer 높이에 표지 한 장 + 간격을 더해야 스크롤이 잘리지 않는다.
@@ -2525,51 +2572,17 @@ export function ExamPaperBuilderClient({
     });
   }
 
-  function handlePrint() {
-    if (paperItems.length === 0) {
-      toast.error("인쇄할 문제를 먼저 선택해주세요.");
-      return;
-    }
-    // 저장된 시험지에 한해 인쇄 횟수 집계 (미저장 상태는 귀속 대상이 없음)
-    if (savedExamId) {
-      void incrementExamPrintCount(savedExamId);
-    }
-    window.setTimeout(() => window.print(), 50);
-  }
-
-  // 해설 포함 PDF: 인라인 정답·해설을 켜고(재페이지네이션) 레이아웃이 적용된 다음 인쇄한다.
-  function handlePrintWithAnswers() {
-    if (paperItems.length === 0) {
-      toast.error("인쇄할 문제를 먼저 선택해주세요.");
-      return;
-    }
-    if (savedExamId) {
-      void incrementExamPrintCount(savedExamId);
-    }
-    setExplanationPrint(true);
-  }
-
-  useEffect(() => {
-    if (!explanationPrint) return;
-    // 해설 포함 재페이지네이션 + 전 페이지 강제 마운트가 레이아웃까지 반영된 뒤 인쇄한다
-    // (rAF 로 한 프레임 양보 후 약간의 지연 — 페이지 수가 많아도 빈 인쇄가 없게).
-    let timer = 0;
-    const raf = window.requestAnimationFrame(() => {
-      timer = window.setTimeout(() => window.print(), 120);
-    });
-    // 인쇄 종료(또는 취소) 후 인라인 해설 모드를 해제해 편집 미리보기를 원래대로 되돌린다.
-    const handleAfterPrint = () => setExplanationPrint(false);
-    window.addEventListener("afterprint", handleAfterPrint, { once: true });
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
-      window.removeEventListener("afterprint", handleAfterPrint);
-    };
-  }, [explanationPrint]);
-
-  usePrintPortal(paperSize);
+  // 진입점(툴바 · 다운로드 메뉴 · 모바일 하단 바)은 클릭 핸들러 안에서 **동기로** 부른다 — 빠른 경로가
+  // 클릭 태스크 안에서 인쇄해야 Safari 사용자 활성화가 산다. 인쇄 횟수 집계는 컨트롤러가 한다.
+  // 누름(pointerdown · Enter/Space)에서는 printCtl.arming 으로 무장해 click 전에 「준비 중」을 페인트한다(print-arming.ts).
+  const printPlain = () => printCtl.print("plain");
+  const printWithAnswers = () => printCtl.print("explanation");
+  // Ctrl+P · 브라우저 메뉴의 동기 안전망 — 포털을 실제로 태운 인쇄에서만 전 쪽을 그린다(숨은 스튜디오
+  // 빌더 · 남의 학습지 인쇄에서는 false → 헛마운트 0). rootRef 는 #exam-paper-print-root 그 자체.
+  const portalMountAll = usePrintPortal(paperSize, { rootRef: previewScrollerRef });
 
   function triggerDocxDownload(examId: string, withAnswers: boolean) {
+    missingPassage.warnExport("DOCX"); // 막지 않는 경고(토스트)
     const link = document.createElement("a");
     link.href = withAnswers
       ? `/api/exams/${examId}/export-docx?answers=true&t=${Date.now()}`
@@ -2601,6 +2614,7 @@ export function ExamPaperBuilderClient({
   }
 
   function triggerHwpxDownload(examId: string, withAnswers: boolean) {
+    missingPassage.warnExport("HWPX"); // 막지 않는 경고(토스트)
     const link = document.createElement("a");
     link.href = withAnswers
       ? `/api/exams/${examId}/export-hwpx?answers=true&t=${Date.now()}`
@@ -2903,9 +2917,11 @@ export function ExamPaperBuilderClient({
             canRedo={canRedo}
             onUndo={undo}
             onRedo={redo}
-            onPrint={handlePrint}
-            onDownloadPdf={handlePrint}
-            onDownloadPdfWithAnswers={handlePrintWithAnswers}
+            onPrint={printPlain}
+            onDownloadPdf={printPlain}
+            onDownloadPdfWithAnswers={printWithAnswers}
+            printBusy={printCtl.busy}
+            printArming={printCtl.arming}
             onDownloadDocx={handleDownloadDocx}
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
             onDownloadHwpx={handleDownloadHwpx}
@@ -2922,6 +2938,8 @@ export function ExamPaperBuilderClient({
               subjectScope === "KOREAN" ? "국어 시험지는 곧 지원됩니다" : null
             }
           />
+          <PrintStatusBar controller={printCtl} />
+          <MissingPassageBanner state={missingPassage} pages={paperPages} scrollRootRef={previewScrollerRef} />
 
           <div
             className={cn(
@@ -3049,7 +3067,8 @@ export function ExamPaperBuilderClient({
                   previewContentHeight={previewContentHeight}
                   singlePageHeight={singlePageHeight}
                   answerKey={answerKey}
-                  forceMountAll={explanationPrint}
+                  forceMountAll={printCtl.forceMountAll || portalMountAll}
+                  onPageMounted={requestPaginationMeasure}
                   examEnrollQrDataUrl={examEnrollQrDataUrl}
                   title={title}
                   paperSize={paperSize}
@@ -3316,11 +3335,13 @@ export function ExamPaperBuilderClient({
                 </button>
                 <button
                   type="button"
-                  onClick={handlePrint}
-                  disabled={questionItemsCount === 0}
-                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  onClick={printPlain}
+                  {...printArmHandlers(printCtl.arming, "plain")}
+                  disabled={questionItemsCount === 0 || printCtl.state.phase === "preparing"}
+                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 active:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <Printer className="size-4" aria-hidden="true" />
+                  {/* 누르는 순간(click 전) 스피너 — 이 아이콘만 다시 그려진다(빌더 무변) */}
+                  <PrintArmIcon arming={printCtl.arming} busy={printCtl.state.phase === "preparing"} className="size-4" />
                   인쇄
                 </button>
                 <div className="relative min-w-0 flex-1">
@@ -3348,8 +3369,8 @@ export function ExamPaperBuilderClient({
                       {/* 위로 열리는 메뉴 */}
                       <div className="absolute bottom-[calc(100%+6px)] right-0 z-40 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-300/50">
                         {[
-                          { label: "PDF", onClick: handlePrint },
-                          { label: "PDF 해설", onClick: handlePrintWithAnswers },
+                          { label: "PDF", onClick: printPlain, arm: "plain" as const },
+                          { label: "PDF 해설", onClick: printWithAnswers, arm: "explanation" as const },
                           { label: "DOCX", onClick: handleDownloadDocx },
                           { label: "DOCX 해설", onClick: handleDownloadDocxWithAnswers },
                           { label: "HWPX", onClick: handleDownloadHwpx },
@@ -3362,7 +3383,8 @@ export function ExamPaperBuilderClient({
                               setMobileDownloadOpen(false);
                               opt.onClick();
                             }}
-                            className="flex h-10 w-full items-center px-3 text-left text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                            {...(opt.arm ? printArmHandlers(printCtl.arming, opt.arm) : null)}
+                            className="flex h-10 w-full items-center px-3 text-left text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50 active:bg-slate-100"
                           >
                             {opt.label}
                           </button>

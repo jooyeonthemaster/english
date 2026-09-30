@@ -118,7 +118,9 @@ async function buildXml({ showPassageTitle, passageTitle }: { showPassageTitle: 
     fullExamQuestions,
   });
   const hwpxZip = await JSZip.loadAsync(await packageHwpx(hwpxDoc));
-  const sectionXml = await hwpxZip.file("Contents/section0.xml")!.async("string");
+  // E36 부터 section0 = 표지, section1 = 본문(정답표는 section2). 지문 제목은 본문 구역에 찍힌다(COH-14 —
+  // 예전에 section0 을 읽어 표지만 보고 영구 실패했다).
+  const sectionXml = await hwpxZip.file("Contents/section1.xml")!.async("string");
 
   return { documentXml, sectionXml };
 }

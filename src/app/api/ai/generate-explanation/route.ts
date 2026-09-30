@@ -38,8 +38,10 @@ export async function POST(request: NextRequest) {
       throw err;
     }
 
+    // 학원 범위(IDOR 수리 26-09-30) — 남의 학원 문제는 404(차감한 크레딧은 아래에서 환불).
+    // 해설 upsert 는 이 확인을 통과한 questionId 에만 닿는다.
     const question = await prisma.question.findFirst({
-      where: { id: questionId, deletedAt: null },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       include: {
         passage: { select: { content: true, title: true } },
       },
