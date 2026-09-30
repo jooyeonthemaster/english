@@ -218,7 +218,7 @@ export async function openGuardedContext({
   await context.addCookies([
     { name: "authjs.session-token", value: mintCookie(session), domain: new URL(base).hostname, path: "/", httpOnly: true, secure: false, sameSite: "Lax" },
   ]);
-  const net = { ...newWriteNet(), held: [], hung: [] };
+  const net = { ...newWriteNet(), held: [], hung: [], hungRoutes: [], hangReleased: false };
   await installDownloadGuard(context, net, { fault }); // 페이지 층 + 경보 — 페이지를 만들기 전에
   await context.route("**/*", async (route) => {
     const req = route.request();
@@ -227,13 +227,18 @@ export async function openGuardedContext({
     // 시험지 글꼴이 늦게 온다(결국 도착) — releaseHeldFonts(net) 가 풀 때까지 응답을 붙잡는다(V7-1).
     if (fault === "hold-exam-fonts" && url.includes("/fonts/exam/")) return void net.held.push(route);
     // 무관한 UI 글꼴(Pretendard CDN)이 영영 안 온다 — 로컬 설치본(local())을 지워 CDN 을 타게 하고 응답하지 않는다.
-    // 시험지 글꼴은 정상이다. 인쇄 준비가 이것을 기다리면 안 된다(PRINT-R1).
+    // 시험지 글꼴은 정상이다. 이 글꼴이 붙잡는 문서 load 전에는 인쇄를 부르지 않는다(XB-1) — releaseHungFonts(net) 가
+    // 망이 포기한 상태(abort)로 풀면 load 가 끝나고 인쇄가 이어진다.
     if (fault === "hang-ui-font" && /pretendard(\.min)?\.css/i.test(url)) {
       const res = await route.fetch();
       const css = (await res.text()).replace(/src:\s*local\([^)]*\)\s*,/g, "src:");
       return route.fulfill({ response: res, body: css, headers: { ...res.headers(), "content-type": "text/css" } });
     }
-    if (fault === "hang-ui-font" && /Pretendard-[\w-]+\.woff2?(\?|$)/i.test(url)) return void net.hung.push(url.slice(-48));
+    if (fault === "hang-ui-font" && /Pretendard-[\w-]+\.woff2?(\?|$)/i.test(url)) {
+      if (net.hangReleased) return route.abort();
+      net.hung.push(url.slice(-48));
+      return void net.hungRoutes.push(route);
+    }
     // 네트워크 층(write-guard): 분석 abort · 내보내기 경로 메서드 무관 abort · GET/HEAD 는 get-policy 허용 목록만
     // (공지 배너 · credits 는 로컬 스텁 — 배너 모달이 클릭을 막고, credits 는 부작용 GET) · 읽기 전용 액션만 허용 ·
     // 인쇄 집계 본문은 abort 하며 증거로 적는다.
@@ -248,6 +253,14 @@ export async function openGuardedContext({
 export function releaseHeldFonts(net) {
   const routes = net.held.splice(0);
   for (const route of routes) route.continue().catch(() => {});
+  return routes.length;
+}
+
+/** hang-ui-font 로 걸어 둔 UI 글꼴 요청을 망이 포기한 것처럼 끝낸다(abort) — 이후 요청도 즉시 실패. 문서 load 가 끝난다 */
+export function releaseHungFonts(net) {
+  net.hangReleased = true;
+  const routes = net.hungRoutes.splice(0);
+  for (const route of routes) route.abort().catch(() => {});
   return routes.length;
 }
 

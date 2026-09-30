@@ -6,7 +6,9 @@
 // 계약(26-09-29 확정 · docs/EXAM-PRINT-PIPELINE.md):
 //  · 인쇄는 「준비 완료 신호」가 모두 참일 때만 부른다(print-readiness.ts). 시간 추측 타이머
 //    (setTimeout 50/120/600 뒤 인쇄) 금지 — 진입점은 ctl.print(mode) 만 부른다.
-//  · 상태: idle → preparing → printing → done | needs-gesture | blocked
+//  · 상태: idle → preparing(⇄ waiting-load) → printing → done | needs-gesture | blocked
+//  · waiting-load: 문서 load 전이면 잡이 load 가 끝날 때까지 print() 를 부르지 않는다(exam-print-job 【load 전 인쇄 금지】,
+//    26-09-30 XB-1). 준비의 한 단계라 연타 무시 · 취소 · 네이티브 인쇄 넘겨받기(PRINT-R5)가 preparing 과 같다.
 //  · 빠른 경로: 글꼴이 이미 준비된 클릭이면 클릭 태스크 안에서 전 쪽을 flushSync 로 그리고 같은
 //    태스크에서 인쇄한다(Safari 사용자 활성화 보존). 그 밖에는 준비 경로(exam-print-job.ts).
 //  · print() 호출 동안 beforeprint 가 한 번도 안 오면 needs-gesture — 상태 표시줄의 [인쇄](새 제스처,
@@ -44,7 +46,14 @@ import { createPrintArmStore, printArmIntent, watchArmedGesture, type ExamPrintA
 export type { ExamPrintEntry, ExamPrintMode } from "@/lib/exams/print-event-meta";
 export type { ExamPrintArming } from "./print-arming";
 
-export type ExamPrintPhase = "idle" | "preparing" | "printing" | "done" | "needs-gesture" | "blocked";
+export type ExamPrintPhase =
+  | "idle"
+  | "preparing"
+  | "waiting-load"
+  | "printing"
+  | "done"
+  | "needs-gesture"
+  | "blocked";
 
 export interface ExamPrintControllerState {
   phase: ExamPrintPhase;
@@ -295,6 +304,9 @@ export function useExamPrintController(options: UseExamPrintControllerOptions): 
         onPreparing: () => {
           if (aliveRef.current) setState(phaseState("preparing", mode));
         },
+        onWaitingLoad: (waiting) => {
+          if (aliveRef.current) setState(phaseState(waiting ? "waiting-load" : "preparing", mode));
+        },
         isDead,
         report: (meta) => {
           job.meta = meta;
@@ -401,7 +413,7 @@ export function useExamPrintController(options: UseExamPrintControllerOptions): 
 
   return {
     state,
-    busy: state.phase === "preparing" || state.phase === "printing",
+    busy: state.phase === "preparing" || state.phase === "waiting-load" || state.phase === "printing",
     forceMountAll,
     explanation,
     print,

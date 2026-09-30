@@ -6,6 +6,7 @@
 //     그 afterprint 에서 outcome 'native'(26-09-30 PRINT-R5, 종전: 준비가 끝난 뒤 두 번째 인쇄 창)
 //   · 정리(전 쪽 마운트 해제 · done · onFinished)는 afterprint 에서만 — 비차단 print() 반환 직후 금지
 //   · print() 동안 beforeprint 0회 → needs-gesture, 다음 잡 prior · 늦은 beforeprint 는 prior 를 지운다(PRINT-R6)
+//   · 문서 load 전에는 print() 를 부르지 않는다 — waiting-load, load 사건 다음 태스크에 1회 · 취소 · 넘겨받기(XB-1)
 //   · autoStart 는 StrictMode 에서도 정확히 1회
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -180,6 +181,62 @@ test("controller: print() 동안 beforeprint 0회 → needs-gesture · 다음 �
   s.seen.ctl.print("plain");
   await env.settle();
   assert.equal(env.calls.telemetry.at(-1).meta.prior, undefined, "늦게라도 인쇄됐으면 다음 잡은 재시도가 아니다");
+  s.unmount();
+});
+
+test("controller(XB-1): 문서 load 전에는 print() 를 부르지 않고 waiting-load — 연타 무시, load 사건이 끝난 다음 태스크에 1회 인쇄", async () => {
+  const s = await setup();
+  env.doc.readyState = "interactive"; // 무관한 UI 글꼴(CDN)이 load 를 붙잡고 있다
+  s.seen.ctl.print("plain");
+  await drain(() => phase(s) === "waiting-load");
+  assert.equal(phase(s), "waiting-load");
+  assert.equal(s.seen.ctl.busy, true, "대기 중에는 인쇄 버튼을 막는다");
+  s.seen.ctl.print("plain"); // 조바심에 다시 누름
+  await drain();
+  assert.equal(env.win.printCalls.length, 0, "load 전에 print() 를 불렀다(브라우저가 미루고, 미뤄진 인쇄가 React 를 멈춘다)");
+  assert.deepEqual(telemetry(), [], "인쇄 전 기록");
+  // load — 리스너(같은 태스크) 안에서는 아직 부르지 않는다: 미뤄진 인쇄는 load 와 같은 태스크에서 발화한다
+  env.doc.readyState = "complete";
+  env.win.dispatch("load");
+  await env.settle(); // 마이크로태스크 · React 작업까지(가짜 시계의 타이머 = 다음 태스크는 아직)
+  assert.equal(env.win.printCalls.length, 0, "load 와 같은 태스크(리스너 · 이어진 마이크로태스크)에서 print() 를 불렀다(다시 미뤄진다)");
+  await drain();
+  assert.equal(env.win.printCalls.length, 1);
+  assert.deepEqual(telemetry(), ["printed"]);
+  assert.equal(env.calls.telemetry[0].meta.path, "prepare");
+  assert.deepEqual(outcomes(s), ["printed"]);
+  assert.equal(phase(s), "done");
+  assert.equal(env.win.listenerCount("load"), 0, "load 리스너가 남았다");
+  s.unmount();
+});
+
+test("controller(XB-1): load 대기 중 취소하면 load 뒤에도 인쇄 · 기록 0, Ctrl+P 는 넘겨받는다(PRINT-R5)", async () => {
+  const s = await setup();
+  env.doc.readyState = "loading";
+  s.seen.ctl.print("explanation");
+  await drain(() => phase(s) === "waiting-load");
+  s.seen.ctl.cancel();
+  await env.settle();
+  assert.equal(phase(s), "idle");
+  env.doc.readyState = "complete";
+  env.win.dispatch("load");
+  await drain();
+  assert.equal(env.win.printCalls.length, 0, "취소한 잡이 load 뒤 인쇄했다");
+  assert.deepEqual(telemetry(), []);
+  assert.equal(s.seen.ctl.explanation, false);
+
+  // 대기 중 사용자가 직접 연 인쇄(브라우저 인쇄는 미뤄지지 않는다) — 잡은 넘겨주고 load 뒤 두 번째 인쇄 0
+  env.doc.readyState = "interactive";
+  s.seen.ctl.print("plain");
+  await drain(() => phase(s) === "waiting-load");
+  env.win.dispatch("beforeprint");
+  env.win.dispatch("afterprint");
+  env.doc.readyState = "complete";
+  env.win.dispatch("load");
+  await drain();
+  assert.equal(env.win.printCalls.length, 0);
+  assert.deepEqual(outcomes(s), ["cancelled", "native"]);
+  assert.equal(phase(s), "done");
   s.unmount();
 });
 

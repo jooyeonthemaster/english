@@ -385,7 +385,8 @@ test("C14 인쇄 진입점은 누름에서 무장한다(click 전 「준비 중�
   // 무장은 disabled 를 켜지 않는다 — 켜면 뒤따를 click 이 사라져 인쇄가 안 된다
   assert.match(toolbar, /const\s+printDisabled\s*=\s*actionDisabled\s*\|\|\s*printBusy\s*;/, "인쇄 버튼 disabled 가 printBusy 밖의 것(무장)에 묶였다");
   const ctl = code(CONTROLLER);
-  assert.match(ctl, /busy:\s*state\.phase\s*===\s*["']preparing["']\s*\|\|\s*state\.phase\s*===\s*["']printing["']\s*,/, "컨트롤러 busy 가 무장까지 센다(버튼 disabled → click 유실)");
+  // busy 는 잡 단계(preparing · load 대기 · printing)만 센다 — 무장은 세지 않는다(XB-1 waiting-load 는 준비의 한 단계)
+  assert.match(ctl, /busy:\s*state\.phase\s*===\s*["']preparing["']\s*\|\|\s*state\.phase\s*===\s*["']waiting-load["']\s*\|\|\s*state\.phase\s*===\s*["']printing["']\s*,/, "컨트롤러 busy 가 무장까지 센다(버튼 disabled → click 유실)");
   const bar = code(BAR);
   assert.equal(armedButton(bar, "onClick={() => print(mode)}"), true, "상태 표시줄 [인쇄] · [다시 시도] 가 누름에서 무장하지 않는다");
   assert.equal(armedButton(code(BUILDER), "onClick={printPlain}"), true, "빌더 모바일 바 [인쇄] 가 누름에서 무장하지 않는다");

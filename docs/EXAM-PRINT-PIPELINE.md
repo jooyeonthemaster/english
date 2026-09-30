@@ -13,7 +13,8 @@
 언마운트는 그 인쇄의 afterprint 로 미룸(PH-R1, `matchMedia('print')`) · 준비 중 네이티브 인쇄 넘겨받기(R5) · 원격 측정
 `fonts:'error'` · `guard:'stuck'` · `overflowColumns` · PDF 해설 블록 줄 단위 분할(§6.2 수리 완료) · 해설 모드에서 「쪽당 N문제」
 강제 배치 끔 · 검증 도구의 다운로드 쓰기 가드(§6.1 — 9/30 운영 쓰기 사고). Wave 4: 누름 무장(§3.3) · 인쇄 집계가 `updatedAt` 을
-안 올림(§3.2) · 쓰기 가드 GET 기본 거부(§6.1) · 정답표 쪽 PDF 하한(§6).
+안 올림(§3.2) · 쓰기 가드 GET 기본 거부(§6.1) · 정답표 쪽 PDF 하한(§6). XB-1: 문서 load 전 print() 금지 — 잡이 load 를
+기다리고 표시줄은 「페이지를 마저 불러오는 중」(§3.2 · 교차 브라우저 게이트가 잡음).
 
 ---
 
@@ -92,6 +93,9 @@
 다 기다린 뒤, 가드가 한 번도 재지 못한 추정 조판 그대로 인쇄했다(실측 80문항 12.6초 · 넘친 칸 6). 시험지 조판의 글꼴
 스택은 시험지 글꼴 → 시스템 맑은 고딕 → sans-serif 라 다른 웹 글꼴은 칸 높이에 영향이 없다. 넘침 가드도 같은 이유로
 시험지 글꼴 면이 `loading` 일 때만 측정을 보류한다(`examFontsLoading`).
+⚠ 정정(26-09-30 XB-1): UI 글꼴이 걸려 있으면 **문서 load 도 끝나지 않는다.** 이때의 「빠른 경로」 print() 는 브라우저가 load
+뒤로 미뤘다 — PRINT-R1 의 GREEN 은 스텁 print 에서만 참이었다. 이제 잡은 load 가 끝날 때까지 print() 를 부르지 않는다(§3.2).
+UI 글꼴 **상태**를 기다리지 않는다는 판정은 그대로다(load 가 끝나면 UI 글꼴이 실패로 끝났어도 인쇄한다).
 
 **인쇄 순간 남은 넘침(PRINT-R3)**: 인쇄 잡은 최종 판정 때 인쇄될 DOM 의 넘친 칸을 실측해(`column-overflow.ts`)
 `overflowColumns` 로 싣고, 가드가 수렴했는데도 남았으면 `guard:'stuck'` 으로 보고한다 — 종이에서 잘린 칸이 「정상
@@ -102,6 +106,7 @@
 
 ```
 idle ──print(mode)──▶ preparing ──모든 조건 참──▶ printing ──afterprint──▶ done
+                     (⇄ waiting-load: 문서 load 전)    │
                         │   │                       │
                         │   │                       └─ print() 동안 beforeprint 0회 ─▶ needs-gesture ─[인쇄]─▶ (새 제스처, 빠른 경로)
                         │   │                                                  └─ 늦은 beforeprint ─▶ printing(prior 지움)
@@ -112,6 +117,15 @@ idle ──print(mode)──▶ preparing ──모든 조건 참──▶ print
 - **빠른 경로**: 글꼴이 이미 준비된 클릭이면 await 가 하나도 없다 — 클릭 태스크 안에서 `flushSync` 로 전 쪽을
   그리고(같은 커밋에서 가드 layout effect 가 수렴) 같은 태스크에서 `print()`. Safari 사용자 활성화가 보존된다.
 - **준비 경로**: 조건 하나라도 거짓이면 「준비 중」을 한 번 페인트한 뒤 조건마다 기다린다.
+- **【load 전 인쇄 금지】(26-09-30 XB-1)**: 문서 load 전의 `print()` 는 Chromium · Gecko · WebKit 이 load 뒤로 미룬다(사건 0으로
+  즉시 반환). 미뤄진 인쇄는 load 와 같은 태스크에서 발화하는데, 그 beforeprint · afterprint 리스너 안에서 예약된
+  마이크로태스크는 **실행되지 않는다**(Chromium 실측: `queueMicrotask` 0회 · `setTimeout` 실행). React 는 렌더 예약을 그
+  마이크로태스크로 하므로 포털의 `flushSync` 한 번으로 루트가 영구 정지한다(`pendingLanes 32 · callbackNode null` — 인쇄 뒤
+  화면이 다시 그려지지 않는다). 그래서 잡은 글꼴 단계 뒤 `isDocumentLoadPending` 이면 `waiting-load`(표시줄 「페이지를 마저
+  불러오는 중」 · [취소]) 로 두고 `waitDocumentLoad` — load 사건이 **끝난 다음 태스크**(리스너 · 이어진 마이크로태스크는 아직
+  로딩 중으로 친다)까지 기다린다. 상한 없음(브라우저도 load 까지 미룬다) · 연타 무시 · 취소 · 네이티브 넘겨받기는 preparing 과
+  같다. 종전: 미뤄진 print() 를 「브라우저가 막음」(needs-gesture)으로 오판 · 재시도도 미뤄짐 · 기록만 2건 · 이어서 React 정지.
+  같은 함정은 다른 영역의 `window.print()` 에도 있다 — 새 인쇄 진입점은 load 뒤에만 부를 것.
 - **잡 시작**: 첫 양보 전에 `settleStalePrintPortal(doc, null)` 로 지난 인쇄의 남은 포털을 치우고(R7 — 남은 호스트 안의
   옛 루트가 첫 매칭이 되어 차단되지 않게), 잡의 beforeprint/afterprint 리스너를 **잡 시작부터** 단다(R5).
 - **준비 중 네이티브 인쇄(26-09-30 PRINT-R5)**: preparing 에서 컨트롤러가 부르지 않은 beforeprint 가 오면 = 사용자가 Ctrl+P ·
@@ -217,12 +231,12 @@ idle ──print(mode)──▶ preparing ──모든 조건 참──▶ print
 | C10 | `useExamPrintController` 를 쓰는 호스트(상세 · 빌더)는 그 `forceMountAll` 을 `PreviewPages forceMountAll` 에 OR | 버튼 인쇄가 전부 blocked |
 | C11 | autoStart 래치는 rAF 콜백 안에서만(1곳) · `invokePrint` 의 `window.print()` 뒤에 `endJob` 없음(정리는 afterprint 에서만) | StrictMode 0/2회 인쇄 · 모바일 인쇄 전 원복 |
 | C12 | 인쇄 잡은 첫 양보(글꼴 단계) 전에 `settleStalePrintPortal(doc, null)` · 컨트롤러는 `runExamPrintJob` 전에 `watchPrintEvents(job)` · 준비 중 `native` 면 잡을 멈춘다 | 남은 루트로 차단 · 준비 중 Ctrl+P 뒤 두 번째 인쇄 창 |
-| C14 | 인쇄 진입점(툴바 `onPrint` · `downloadPdf` · `onDownloadPdfWithAnswers` 버튼, 상태 표시줄 [인쇄] · [다시 시도], 빌더 모바일 [인쇄])은 `armFor` · `printArmHandlers` · `retryProps` 로 누름에서 무장 · `printDisabled = actionDisabled \|\| printBusy`(무장 무관) · 컨트롤러 `busy` 는 preparing · printing 만 · `PreviewToolbar` 를 그리는 컨트롤러 호스트는 `printArming={ctl.arming}` · `print-arming.ts` 에 타이머 0 (§3.3) | 빠른 경로 무페인트 동결 재발 · 무장이 버튼을 막아 인쇄 불가 |
+| C14 | 인쇄 진입점(툴바 `onPrint` · `downloadPdf` · `onDownloadPdfWithAnswers` 버튼, 상태 표시줄 [인쇄] · [다시 시도], 빌더 모바일 [인쇄])은 `armFor` · `printArmHandlers` · `retryProps` 로 누름에서 무장 · `printDisabled = actionDisabled \|\| printBusy`(무장 무관) · 컨트롤러 `busy` 는 잡 단계(preparing · waiting-load · printing)만 · `PreviewToolbar` 를 그리는 컨트롤러 호스트는 `printArming={ctl.arming}` · `print-arming.ts` 에 타이머 0 (§3.3) | 빠른 경로 무페인트 동결 재발 · 무장이 버튼을 막아 인쇄 불가 |
 | C13 | 검증 스크립트 쓰기 가드(§6.1): `write-guard.mjs` 페이지 층(navigate `downloadRequest` 취소 · 캡처 click · 앵커 `click()` · 떨어진 앵커 `dispatchEvent` · 다운로드 속성 앵커 전부) · `guardRoute` 의 내보내기 abort 가 GET 처리보다 앞 · `openGuardedContext` 는 route · 계측 전에 `installDownloadGuard`, 자체 `route.continue()` 없이 `guardRoute` 로 끝남 · `clickToolbar` 는 인쇄 · PDF · PDF 해설만 · 브라우저를 열어 클릭하는/인쇄/스윕 스크립트는 가드를 건다 · print-e2e · paper-print-check · paper-sweep 은 `judgeWriteGuard`. GET 기본 거부(`get-policy.mjs`)의 증명은 브라우저가 필요한 `write-guard.mjs` 자가 시험에만 있다(`test:unit` 밖) | 검증이 운영 DB 에 쓴다(9/30 사고 재발) |
 
 **동작 게이트** `tests/unit/exam-print-behavior.test.mjs`(`npm run test:unit` 에 포함): 계약은 모양만 본다.
 동작은 이 게이트가 `node --import=tsx --test` 로 `tests/unit/exam-print/*.gate.mjs` 6개를 띄워 실제로 돌린다(케이스 하한
-`MIN_CASES = 57` — 케이스를 지워 공허하게 만드는 것을 막는다). 저장소에 jsdom 이 없어 `fake-print-env.mjs`(가짜 DOM ·
+`MIN_CASES = 59` — 케이스를 지워 공허하게 만드는 것을 막는다). 저장소에 jsdom 이 없어 `fake-print-env.mjs`(가짜 DOM ·
 FontFaceSet · 수동 시계)를 쓰고, 훅(`usePrintPortal` · `useExamPrintController`)은 `react-hook-env.mjs` 가 **진짜 React**
 (react-dom/client + 가짜 문서/창)로 돌린다.
 - `exam-print-job.gate.mjs`(20): 원격 측정 메타 검증 · 준비 판정(시험지 글꼴 면만) · 칸 넘침 실측 · 빠른 경로 동기 인쇄 ·
@@ -230,7 +244,8 @@ FontFaceSet · 수동 시계)를 쓰고, 훅(`usePrintPortal` · `useExamPrintCo
 - `exam-preview-cache.gate.mjs`(5): 우선순위 · 승격 · 버전 · 실패/null 비캐시 · TTL · LRU
 - `print-job-hardening.gate.mjs`(5): 잡 시작 치우기 · 라벨(R7 · R8)
 - `print-portal.gate.mjs`(10): 인쇄 중 언마운트 원복 · 남은 호스트 자가 치유 · 두 인스턴스 규칙(R7) · 인쇄 레이아웃 도중 미룸(PH-R1)
-- `print-controller.gate.mjs`(7): 준비 중 네이티브 넘겨받기(R5) · 비차단 print 정리 시점 · needs-gesture · StrictMode autoStart 1회
+- `print-controller.gate.mjs`(9): 준비 중 네이티브 넘겨받기(R5) · 비차단 print 정리 시점 · needs-gesture · StrictMode autoStart 1회 ·
+  load 전 print() 0(waiting-load · 연타 무시 · load **다음 태스크**에 1회 · 취소 · 넘겨받기, XB-1)
 - `print-arming.gate.mjs`(10): 누름 무장(§3.3) — click 전 「준비 중」 · 호스트 재렌더 0 · busy 거짓 · mouse/touch/Enter/Space 해제 규칙 ·
   요소 blur 무시 · 준비 경로 무깜박임 · [취소] · 연타 · 빈 시험지 · autoStart 무장 프레임 · 래치 뒤 autoStart 꺼짐 · 언마운트
 
@@ -351,7 +366,7 @@ prisma 쓰기 · `$executeRaw` · 쓰기 SQL · storage/fs 쓰기 · 외부 POST
 | `no-preview-data` | dialog **RED** | 카드 데이터 실패 → print() 0 |
 | `overflow-dom` | paper-print-check · button · force-per-page **RED** | 인쇄된 DOM 넘침 감지(「1쪽 1칸 +1770px」) |
 | `host-preexists` | native · button **GREEN**(악조건) | 지난 인쇄가 남긴 주인 없는 호스트를 포털이 치우고 선다(R7). 인쇄 전 호스트가 실제로 있었는지(시험 조건) · 인쇄 뒤 0 인지도 본다. Wave 1 에서는 이것이 「포털 미탑승 → RED」 fault 였다 — 그 역할은 `portal-opt-out` · `portal-removed` 가 잇는다 |
-| `hang-ui-font` | button **GREEN** | 무관한 UI 글꼴(Pretendard CDN)이 영영 로딩 — 시험지 글꼴만 도착한 뒤 누른 [인쇄]가 빠른 경로 · `fonts:'loaded'` · `guard:'settled'`(PRINT-R1) |
+| `hang-ui-font` | button(`--real-print` 포함) **GREEN** | 무관한 UI 글꼴(Pretendard CDN)이 문서 load 를 붙잡음 — 시험지 글꼴만 도착한 뒤 누른 [인쇄]가 「페이지를 마저 불러오는 중」 · load 전 print() 0, 하네스가 걸린 요청을 끝내면(`releaseHungFonts` — abort) load 다음 태스크에 1회 · `path:'prepare'` · `fonts:'loaded'` · 인쇄 뒤 done(XB-1). 잡의 load 대기를 끄면 RED 5건 |
 | `hold-exam-fonts` | button **GREEN** | 시험지 글꼴 응답을 붙잡았다가 「준비 중」 사건에 보냄 — 준비 경로에서 도착 뒤 인쇄(V7-1) |
 | `no-download-guard` · `no-export-block` | write-guard 자가 시험 **RED** | 쓰기 가드 각 층이 필요하다(§6.1) |
 | `get-passthrough` · `allow-side-effect-get` · `sweep-blind` | write-guard 자가 시험 **RED** | GET 기본 거부 · 허용 목록 · 부작용 스윕이 무뎌지지 않았다(§6.1) |
@@ -379,55 +394,14 @@ Git Bash 주의: `/` 로 시작하는 인자는 `C:/Program Files/Git/…` 로 �
 - 인쇄 직후(앱의 afterprint 정리 전) 인쇄 루트가 계속 바뀐다(글꼴 로드 후에도 20~1,131회). 인쇄된 DOM 자체는 넘침 0 이지만,
   인쇄 순간이 가드 · 렌더가 완전히 멈춘 시점인지는 이 계기로 판정할 수 없다(보조 감사를 생략하는 이유).
 
-### 6.4 실측 기록(개발 서버 3109 turbopack · StrictMode, 운영 DB 쓰기 0 — 전후 printCount · updatedAt · app_events 대조)
+- **문서 load 전 [인쇄]가 「브라우저가 막음」으로 오판되고, 미뤄진 인쇄 뒤 React 가 멈췄다 → 26-09-30 수리 완료(XB-1).**
+  교차 브라우저 게이트(진짜 print · UI 글꼴 걸림)가 잡았다. 스텁 print 는 사건을 안 쏘므로 이 경로를 영영 못 본다 —
+  `hang-ui-font` 는 `--real-print` 로도 돌린다. 수리와 근거는 §3.2, 실측은 `EXAM-PRINT-MEASUREMENTS.md`.
 
-26-09-29(Wave 1): native 고객 80문항 인쇄 전 3/31 → 인쇄된 DOM 31/31 → PDF 31/31(최소 338자) · 107문항 3/44 → 44/44 ·
-button 고객 80 · 107 클릭→print() 0.54 · 0.77초 · dialog(카드 84장) 캐시 적중 18/18 · 캐시 미스 9/9 · 요청 누계 1 · 집계 1 ·
-deeplink-strictmode print() 정확히 1회 · 새로고침 뒤 0회 · paper-print-check 빌더 53 화면 4/18 → 인쇄 19/19 · timing CPU 4× 에서
-빠른 경로 9~10초짜리 긴 작업 하나(페인트 없음 — 운영 빌드 V10 에서 반드시 다시 잴 것).
+### 6.4 실측 기록
 
-26-09-30 Wave 1 수리 · Wave 2:
-
-| 실행 | 결과 |
-|---|---|
-| button + `hang-ui-font`(고객 80) | GREEN — 1.40초, `path:'fast'` · `fonts:'loaded'` · `guard:'settled'`, 31/31. 수리 전 판정으로 되돌리면 RED |
-| button + `hold-exam-fonts`(고객 107) | GREEN — `path:'prepare'`, 44/44 |
-| R5 준비 중 Ctrl+P(고객 80 · 107, 카드 대화상자 53) | 네이티브 PDF 31/31 · 44/44 · 18/18, 컨트롤러 print() 0회 · 집계 0건(대조군 1회 · printed 1건) |
-| R7 카드 대화상자 인쇄 중 Esc(진짜 print() + afterprint 보류) | 닫은 직후 호스트 0 · body 클래스 없음 · 루트 0, 재인쇄 18/18 |
-| PH-R1 랜딩 PC 데모 네이티브 인쇄 | PDF 4,324자(데모 시험지). 미룸 분기를 끄면 905자(랜딩 히어로) RED |
-| button `--explanation`(내부 53 · 고객 80 · 107) | 26/26 · 44/44 · 63/63, 넘침 0, `guard:'settled'`, `prior` 없음 |
-| force-per-page `--per 2` · `--per 1`(내부 53, 쪽당 2: 16→27쪽) | 일반 29/29 · 55/55, 해설 26/26 · 32/32, 넘침 0, 인쇄 뒤 강제 배치 · 쪽 수 유지 |
-
-26-09-30 TOOLS-FINISH(도구 마감 — 쓰기 가드 · 새 fault · force-per-page):
-
-| 실행 | 결과 |
-|---|---|
-| write-guard 자가 시험 `--base 3109` | GREEN. 대조군 9/9 가짜 서버 도달(앱 모양 앵커 4종 route · request 사건 0 = 사고 구멍 재현), controlDeny(`acceptDownloads:false`) 3/3 도달, 가드 9/9 도달 0 · 다운로드 0(페이지 층 8: anchor.click 2 · click 2 · dispatch · navigate · window.open · submit, 네트워크 층 1: fetch), 실제 앱 문서 3/3 삼킴 |
-| 자가 시험 음성 | `no-download-guard` RED(다운로드 속성 트리거 4종 서버 도달) · `no-export-block` RED(fetch 도달) |
-| native 고객 80 | GREEN 2/30 → 31/31 → PDF 31/31(최소 338자), 인쇄 뒤 호스트 0. 넘친 칸 2 경고(글꼴 경주, §6.3) |
-| native `portal-opt-out` · `portal-removed` · `host-preexists` | RED(3/31 · 부모 null · PDF 2 ≠ 31) · RED(부모 null · PDF 1쪽 백지) · GREEN(인쇄 전 호스트 1 → 31/31 → 뒤 0) |
-| paper-print-check `--url` 고객 80 / `portal-opt-out` | GREEN 3/31 → 31/31 → PDF 31, 넘침 0 / RED(포털 미탑승 · 3/31 · PDF 2 ≠ 31) |
-| button `--explanation` 고객 80 · `--surface builder --explanation` 내부 53 | GREEN 31/31 + 44/44 · 18/18 + 26/26, 엔진 인쇄 뒤 상태 done, `prior` 없음 |
-| button `--real-print` + `portal-opt-out`(고객 80) | RED(「인쇄된 루트의 부모 null(포털 미탑승)」) |
-| force-per-page `--per 2`(내부 53) | GREEN ×3(16→27쪽, 29/29 · 26/26, 넘침 0). 첫 회 RED(두 번째 잡 `prior:'needs-gesture'`)는 실행 중 다른 세션의 `paper-export-items.ts` 편집(Fast Refresh)과 겹친 것 — 재실행 GREEN. `overflow-dom` → RED |
-| dialog 내부 53(캐시 적중) | GREEN 18/18, 추가 미리보기 요청 0, 집계 1(읽기 전용 액션 허용 목록 정상) |
-| paper-sweep `--base 3109` | 가드 켬 5쪽 넘침 0(보정 1회) · 1단 압축 5쪽 0 / `--guard-off` 넘침 1(보정 0) — 가드 스위치가 init script 로 먹는다 |
-
-26-09-30 Wave 4 PRINT-RESPONSE(누름 무장 §3.3 — 개발 서버, 다른 트랙이 CPU 를 포화시킨 구간 포함). 타이밍 계기는
-scratchpad `arm-timing.mjs`(쓰기 차단 하네스 재사용): 누른 채 「준비 중」 페인트 **사건**을 기다린 뒤 떼고, 페인트는 프레임 번호
-(매 프레임 첫 rAF 의 메시지 · 다음 프레임 rAF 시작)로 판정한다. 계기 자가 시험 7/7 × 3(같은 rAF 에서 커밋 + 인쇄 · 태스크 커밋 뒤
-다음 rAF 인쇄는 RED, CPU 6× 포함).
-
-| 실행 | 결과 |
-|---|---|
-| 상세 [인쇄] 고객 80(빠른 경로) | pointerdown→「준비 중」 페인트 1× 12~23ms · 4× 33~57ms(한가한 구간) / 80~130ms(포화 구간), click 전 페인트 전부. click→print() 1× 0.7~1.4초 · 4× 3.6~15초(동결 자체는 그대로 — 이제 그동안 「준비 중」과 스피너가 보인다) |
-| 빌더 [인쇄] 내부 53 | 1× 20~52ms · 4× 56~80ms(한가) / 57~126ms, 포화 구간 한 회차 99 · 219 · 451ms — 누름 태스크에 빌더가 누름과 무관하게 돌리는 호스트 재렌더가 끼인 경우(대조: 인쇄가 아닌 툴바 자리 누름에서도 1.4~2.4초 긴 작업). 무장 자체의 커밋은 13~30ms |
-| 카드 대화상자(autoStart) 내부 53 | print() 전 표시줄 페인트 4/4(무장 프레임 → 다음 프레임 인쇄). 1×: click→표시줄 0.47~0.54초 · click→print() 1.2초 |
-| 음성 대조 `ARM_TIMING_FAULT=no-arm`(React 전에 툴바 누름 삼킴) | RED — click 전 페인트 없음 · click 순간 표시줄 빈 값 |
-| 메뉴 [PDF] · [PDF 해설] | 누르는 동안 「준비 중」 · `aria-busy`, 레이아웃 이동 0px, 누른 자리의 요소 = 메뉴 항목(겹친 막대가 가로채지 않음), print() 1회. 수리 전: 메뉴를 열 때 포커스가 간 [다운로드] 의 blur 가 무장을 즉시 풀었다 |
-| 키보드 | Space: 누르는 동안 「준비 중」 페인트 · 떼면 print() 1회 31/31 · Enter: print() 1회 31/31 · Space 누른 채 Tab 뒤 떼기 · 마우스 밖으로 끌어 떼기: 무장 해제 · print() 0 |
-| print-e2e 회귀(무장 뒤) | native 80 · 107, button 80 · 107 · 빌더 53(+해설), dialog 53 hit/miss · 모바일, deeplink 53 · 80, real-print 80 · 107 · 빌더 53 전부 GREEN. 빠른 경로 잡도 print() 순간 표시줄이 「준비 중」(종전 빈 값) |
-| 동작 게이트 · 계약 음성테스트 | 사본 변이 21종(무장이 host/busy 를 켬 · touch 프레임 해제 · mouse 무해제 · Space 조기 해제 · 빈 시험지 · 상태 커밋 미정리 · autoStart 무장 없음/같은 프레임 인쇄/cleanup 취소 · 연타 무장 · 표시줄 무시 · [취소] · 요소 blur · 오른쪽 버튼 · 툴바/표시줄/빌더 모바일 무장 누락 · disabled 결합 · busy 결합 · 호스트 printArming 누락 · 타이머) → 전부 RED, 무변이 GREEN |
+날짜별 실측 결과(Wave 1~4 · TOOLS-FINISH · PRINT-RESPONSE · XB-1)는 [`docs/EXAM-PRINT-MEASUREMENTS.md`](EXAM-PRINT-MEASUREMENTS.md)
+로 옮겼다(26-09-30, 500줄 규칙). 새 실측은 그 문서에 날짜와 조건을 붙여 덧붙인다.
 
 ## 7. 운영 감시(읽기 전용 SQL)
 
@@ -487,6 +461,8 @@ GROUP BY 1;
 ## 8. 하지 말 것
 
 - 인쇄 진입점에서 `window.print()` 를 직접 부르기, `setTimeout`/`rAF + n ms` 뒤 인쇄 — `ctl.print(mode)` 만 부른다.
+- 문서 load 전(또는 load 리스너 · 거기 이어진 마이크로태스크 안)에서 `print()` 부르기 — 미뤄진 인쇄가 React 를 멈춘다(§3.2 XB-1).
+  「미뤄진 인쇄를 받아서 처리」하는 식의 수리도 같은 이유로 안 된다(그 사건 안의 setState 가 정지를 부른다).
 - 새 인쇄 진입점에 누름 무장(`printArmHandlers`)을 빼먹기 · 무장으로 버튼을 `disabled` 로 만들기(click 유실) · 무장 상태를
   호스트 state 로 옮기기(빌더 전체 재렌더 = 누름과 click 사이 페인트를 놓침) · 무장 해제를 타이머로 하기 · 빠른 경로를
   「먼저 페인트하고 다음 프레임에 print()」로 바꾸기(click 태스크 밖 print() 는 Chromium 이 연속 호출을 버리고 Safari 는 막는다, §3.3).

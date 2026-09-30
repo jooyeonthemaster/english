@@ -26,7 +26,7 @@ const GATES = [
   "tests/unit/exam-print/print-arming.gate.mjs",
 ];
 /** 케이스 수 하한 — 케이스를 지워 게이트를 공허하게 만드는 것을 막는다(26-09-30 실측 20 + 5 + 5 + 10 + 7 + 누름 무장 10). */
-const MIN_CASES = 57;
+const MIN_CASES = 59;
 
 test("시험지 인쇄 동작 게이트(잡 · 준비 판정 · 메타 · 미리보기 캐시 · 포털 훅 · 컨트롤러 훅)가 전건 통과한다", () => {
   for (const gate of GATES) assert.ok(existsSync(path.join(process.cwd(), gate)), `게이트가 없다: ${gate}`);

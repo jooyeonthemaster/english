@@ -74,11 +74,11 @@ export function PrintStatusBar({
 
   let body = null;
   if (visible) {
-    const busy = phase === "preparing" || phase === "printing" || armed !== null;
-    // 진행 중(무장 · 준비 · 인쇄 창) 막대는 미리보기 위에 겹쳐 그린다 — 흐름에 끼우면 미리보기 전체가 44px 밀려 A4 쪽을
+    const busy = phase === "preparing" || phase === "waiting-load" || phase === "printing" || armed !== null;
+    // 진행 중(무장 · 준비 · 인쇄 창 · load 대기) 막대는 미리보기 위에 겹쳐 그린다 — 흐름에 끼우면 미리보기 전체가 44px 밀려 A4 쪽을
     // 전부 다시 래스터한다(CPU 4× 실측 커밋→페인트 12~135ms, 누름과 click 사이 페인트를 놓침). 메뉴(z-30)보다 아래(z-20)라
     // 메뉴 항목을 누르는 중 막대가 떠도 click 을 가로채지 않는다. 사용자가 반응해야 하는 needs-gesture · blocked 는 흐름 안.
-    const overlay = phase === "preparing" || phase === "printing";
+    const overlay = phase === "preparing" || phase === "waiting-load" || phase === "printing";
     const tone =
       phase === "blocked"
         ? "border-rose-200 bg-rose-50 text-rose-900"
@@ -95,19 +95,23 @@ export function PrintStatusBar({
     const title =
       phase === "preparing"
         ? `${subject} 준비 중`
-        : phase === "printing"
-          ? "인쇄 창 여는 중"
-          : phase === "needs-gesture"
-            ? "인쇄 창이 열리지 않았다면 [인쇄]를 눌러 주세요"
-            : "인쇄 준비에 실패했습니다";
+        : phase === "waiting-load"
+          ? "페이지를 마저 불러오는 중"
+          : phase === "printing"
+            ? "인쇄 창 여는 중"
+            : phase === "needs-gesture"
+              ? "인쇄 창이 열리지 않았다면 [인쇄]를 눌러 주세요"
+              : "인쇄 준비에 실패했습니다";
     const detail =
       phase === "preparing"
         ? "글꼴 · 쪽 그리기"
-        : phase === "needs-gesture"
-          ? "브라우저가 자동으로 연 인쇄 창을 막았을 수 있습니다."
-          : phase === "blocked"
-            ? blockedDetail(state)
-            : null;
+        : phase === "waiting-load"
+          ? "다 불러오면 인쇄 창이 열립니다."
+          : phase === "needs-gesture"
+            ? "브라우저가 자동으로 연 인쇄 창을 막았을 수 있습니다."
+            : phase === "blocked"
+              ? blockedDetail(state)
+              : null;
     // 이 막대의 [인쇄] · [다시 시도]도 진입점이다 — 누르는 순간 무장(배치 불변, 아이콘만 스피너)
     const retryProps = { ...printArmHandlers(arming, mode), "aria-busy": armed !== null || undefined };
 
@@ -140,7 +144,7 @@ export function PrintStatusBar({
             </button>
           )}
           <button type="button" className={BUTTON_QUIET} onClick={cancel}>
-            {phase === "preparing" ? "취소" : "닫기"}
+            {phase === "preparing" || phase === "waiting-load" ? "취소" : "닫기"}
           </button>
         </div>
       </div>

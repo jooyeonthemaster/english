@@ -253,6 +253,31 @@ export function isDocumentVisible(doc: Document = document): boolean {
 }
 
 /**
+ * 문서 load 가 아직 안 끝났나 — 이때 부른 print() 는 Chromium · Gecko · WebKit 모두 load 뒤로 미룬다(사건 없이 즉시
+ * 반환). 무관한 UI 글꼴(CDN)이 느리면 이 창이 길어진다(26-09-30 XB-1). readyState 가 없는 환경은 끝난 것으로 본다.
+ */
+export function isDocumentLoadPending(doc: Document = document): boolean {
+  return doc.readyState === "loading" || doc.readyState === "interactive";
+}
+
+/**
+ * 문서 load 사건이 **끝난 다음 태스크**까지 기다린다(이미 끝났으면 즉시). 상한 없음 — 브라우저도 load 전 인쇄를 load 까지
+ * 미룬다. 취소된 잡은 load 뒤 isDead 로 멈춘다.
+ * 왜 다음 태스크인가: 미뤄진 인쇄는 load 사건과 같은 태스크(Document::CheckCompleted)에서 발화한다 — load 리스너나 거기서
+ * 이어진 마이크로태스크에서 print() 를 부르면 아직 로딩 중으로 쳐 또 미뤄진다.
+ */
+export function waitDocumentLoad(doc: Document = document, win: Window = window): Promise<void> {
+  if (!isDocumentLoadPending(doc)) return Promise.resolve();
+  return new Promise((resolve) => {
+    const onLoad = () => {
+      win.removeEventListener("load", onLoad);
+      win.setTimeout(resolve, 0);
+    };
+    win.addEventListener("load", onLoad);
+  });
+}
+
+/**
  * 루트 안 미완료 이미지를 decode 까지 기다린다 — 상한과 경주. 화면 밖 loading=lazy 이미지는
  * 인쇄 전에는 영영 불러오지 않으므로 eager 로 바꿔 지금 불러오게 한다(인쇄 결과에만 영향).
  */

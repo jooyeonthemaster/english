@@ -4,6 +4,7 @@
 // 순서(설계 확정안 층 3):
 //   0) 남은 포털  지난 인쇄의 #exam-print-host 잔재를 치운다(print-portal-registry — PRINT-R7, 동기)
 //   1) 글꼴      examFontsReady() 가 거짓이면 준비 경로 → ensureExamFonts(상한 8초)
+//   1-2) 문서 load  아직이면 load 사건이 끝난 다음 태스크까지(상한 없음 — 취소로만 멈춘다, XB-1 · 아래 【load 전 인쇄 금지】)
 //   2) 탭 visible 숨은 탭이면 보일 때까지(상한 없음 — 취소로만 멈춘다)
 //   3) 전 쪽 마운트  ensureVisible() → mountAll()  ← 둘 다 flushSync 동기 커밋(컨트롤러 제공)
 //   4) 가드 수렴  isGuardSettled() 가 참이 될 때까지 프레임마다(상한 4초)
@@ -19,6 +20,10 @@
 // 【준비 경로】 조건 하나라도 거짓이면 onPreparing() 으로 「준비 중」을 알리고 한 프레임 양보해
 // 페인트한 뒤 조건마다 기다린다. 시간은 **실패 상한**에만 쓴다(PRINT_BUDGETS).
 // 매 await 뒤 isDead() 를 확인한다 — 취소 · 언마운트 · 대체된 잡은 절대 인쇄를 호출하지 않는다.
+// 【load 전 인쇄 금지(26-09-30 XB-1)】 문서 load 전의 print() 는 브라우저가 load 뒤로 미룬다. 그 늦은 인쇄의
+// beforeprint/afterprint 리스너 안에서 예약된 마이크로태스크는 실행되지 않는다(Chromium 실측: queueMicrotask 0회 ·
+// setTimeout 은 실행). React 는 렌더 예약을 그 마이크로태스크로 하므로, 포털의 flushSync 한 번으로도 루트가 「예약됨」에
+// 영영 걸려(pendingLanes 32 · callbackNode null) 인쇄 뒤 화면이 다시 그려지지 않는다. 그래서 load 뒤에만 부른다.
 // ============================================================================
 
 import type {
@@ -40,10 +45,12 @@ import {
   examFontsFailed,
   examFontsReady,
   inspectExamPrintRoot,
+  isDocumentLoadPending,
   isDocumentVisible,
   isPrimaryPrintRoot,
   nextFrame,
   pendingImages,
+  waitDocumentLoad,
   waitImages,
   type ExamPrintRootInspection,
 } from "./print-readiness";
@@ -63,6 +70,8 @@ export interface ExamPrintJobDeps {
   remeasure?: () => void;
   /** 준비 경로에 들어섰다(처음 한 번만 불린다) */
   onPreparing: () => void;
+  /** 문서 load 를 기다리기 시작(true) · 끝(false) — 상태 표시줄 「페이지를 마저 불러오는 중」(선택) */
+  onWaitingLoad?: (waiting: boolean) => void;
   /** 취소 · 언마운트 · 대체 — 참이면 즉시 멈추고 인쇄를 호출하지 않는다 */
   isDead: () => boolean;
   /** 원격 측정(fire-and-forget) — 인쇄 호출 직전 또는 차단 시 1회 */
@@ -132,6 +141,16 @@ export async function runExamPrintJob(d: ExamPrintJobDeps): Promise<ExamPrintJob
   } else if (examFontsFailed(doc)) {
     // 준비됐다고 답했지만 시험지 글꼴 면이 실패 상태(check 가 실패 면을 참으로 치는 엔진) — 대체 글꼴 인쇄다.
     fonts = "error";
+  }
+
+  // 1-2) 문서 load — 끝나기 전의 print() 는 미뤄지고, 미뤄진 인쇄는 React 를 멈춘다(머리 주석 【load 전 인쇄 금지】).
+  if (isDocumentLoadPending(doc)) {
+    await yieldFrame();
+    if (d.isDead()) return ABORTED;
+    d.onWaitingLoad?.(true);
+    await waitDocumentLoad(doc, win);
+    if (d.isDead()) return ABORTED;
+    d.onWaitingLoad?.(false);
   }
 
   // 2) 탭 visible — 숨은 탭에서 그리면 rAF 가 멈춰 수렴 확인이 1초 단위로 늘어진다.

@@ -44,8 +44,9 @@
 //  paper-print-check RED) · block-fonts · no-replace-state · no-preview-data · overflow-dom 로 브라우저 쪽 조건만
 //  망가뜨리면 해당 모드가 RED 여야 한다(저장소 코드는 건드리지 않는다).
 // 【악조건(GREEN 이어야 한다)】 PRINT_E2E_FAULT=host-preexists(지난 인쇄가 남긴 주인 없는 호스트 — R7 자가 치유, 인쇄 전
-//  호스트가 실제로 있었는지 · 인쇄 뒤 0 인지도 본다) · hang-ui-font(무관한 UI 글꼴이 영영 로딩 — 시험지 글꼴이 준비됐으면
-//  빠른 경로 · 상한 대기 0, PRINT-R1) · hold-exam-fonts(시험지 글꼴이 늦게 도착 — 준비 경로에서 도착 뒤 인쇄, V7-1)
+//  호스트가 실제로 있었는지 · 인쇄 뒤 0 인지도 본다) · hang-ui-font(무관한 UI 글꼴이 load 를 붙잡음 — 누름 뒤 「페이지를 마저
+//  불러오는 중」 · load 전 print() 0회, 글꼴 요청을 끝내면(abort) load 뒤 1회 인쇄 · path 'prepare' · 인쇄 뒤 done, XB-1 ·
+//  PRINT-R1 의 「빠른 경로」 판정은 스텁 print 에서만 참이었다) · hold-exam-fonts(시험지 글꼴이 늦게 도착 — 준비 경로에서 도착 뒤 인쇄, V7-1)
 // 종료 코드: 0 GREEN · 1 RED · 2 실행 오류
 // ============================================================================
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -69,6 +70,7 @@ import {
   openPage,
   printReady,
   releaseHeldFonts,
+  releaseHungFonts,
   summarizeNet,
   telemetryMeta,
   twoFrames,
@@ -115,6 +117,18 @@ async function buttonJob(ctx, page, o, r, mode) {
     // 컨트롤러가 글꼴을 기다리는 준비 경로에 들어선 사건 → 그때 글꼴을 보낸다(늦게 도착)
     await page.waitForFunction((sel) => /준비 중/.test(document.querySelector(sel)?.textContent ?? ""), STATUS, { timeout: CAP });
     job.releasedFonts = releaseHeldFonts(ctx.net);
+  }
+  if (r.fault === "hang-ui-font" && !ctx.net.hangReleased) {
+    // 문서 load 전 — 잡은 print() 를 부르지 않고 load 를 기다린다(미뤄진 인쇄는 React 를 멈춘다, XB-1). 대기 표시 사건 뒤
+    // 인쇄 호출 0 을 확인하고, 걸린 UI 글꼴을 끝내 load 를 보낸다.
+    job.waitingLoad = await page
+      .waitForFunction((sel) => /페이지를 마저 불러오는 중/.test(document.querySelector(sel)?.textContent ?? ""), STATUS, { timeout: CAP })
+      .then(() => true, () => false);
+    check(r.fails, job.waitingLoad, `${mode}: load 전 누름에 「페이지를 마저 불러오는 중」이 없다`);
+    job.callsBeforeLoad = (await callsNow(page)) - n;
+    check(r.fails, job.callsBeforeLoad === 0, `${mode}: load 전에 print() ${job.callsBeforeLoad}회(브라우저가 미룬다)`);
+    job.readyStateBeforeRelease = await page.evaluate(() => document.readyState);
+    job.releasedHung = releaseHungFonts(ctx.net);
   }
   job.snapshot = await waitPrintCall(page, n);
   judgeSnapshot(job.snapshot, r.fails);
@@ -163,7 +177,7 @@ async function modeButton(ctx, o, r) {
   await page.goto(url, { waitUntil: "commit", timeout: CAP });
   await printReady(page);
   if (r.fault === "hang-ui-font") {
-    // 시험지 글꼴만 도착한 사건(UI 글꼴은 영영 로딩) — 이 상태의 클릭은 빠른 경로여야 한다
+    // 시험지 글꼴만 도착한 사건(UI 글꼴은 로딩 중 = 문서 load 전) — 이 상태의 클릭은 load 를 기다렸다 인쇄해야 한다(XB-1)
     await page.evaluate(() => Promise.all(["400", "700"].map((w) => document.fonts.load(`${w} 16px "Malgun Gothic Exam"`, "가A1①"))));
     r.uiFontHung = await page.evaluate(() => ({ status: document.fonts.status, hung: [...document.fonts].filter((f) => f.status === "loading").length }));
     check(r.fails, r.uiFontHung.status === "loading" && ctx.net.hung.length > 0, `시험 조건 불성립: UI 글꼴이 로딩 중이 아니다(${JSON.stringify(r.uiFontHung)})`);
@@ -181,7 +195,7 @@ async function judgeJobsTelemetry(ctx, o, r) {
   const arrived = await waitTelemetry(ctx.net, o.exam, 120_000, printed.length);
   check(r.fails, arrived, `인쇄 집계 ${ctx.net.telemetry.length}건(기대 ${printed.length})`);
   const metas = ctx.net.telemetry.filter((t) => JSON.stringify(t).includes(o.exam)).map(telemetryMeta);
-  const expectPath = r.fault === "hang-ui-font" ? "fast" : r.fault === "hold-exam-fonts" ? "prepare" : undefined;
+  const expectPath = r.fault === "hang-ui-font" || r.fault === "hold-exam-fonts" ? "prepare" : undefined;
   printed.forEach((j, i) => {
     j.meta = metas[i] ?? null;
     judgeTelemetry(j.meta, r.fails, `${j.mode} 원격 측정`, {
