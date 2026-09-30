@@ -26,7 +26,7 @@
 //   계기 음성테스트: PRINT_E2E_FAULT=no-download-guard(① 끔) · no-export-block(② 의 내보내기 차단 끔) ·
 //      get-passthrough(GET 전부 통과 = 종전) · allow-side-effect-get(credits 를 허용 목록에) → 자가 시험 RED.
 // ============================================================================
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { classifyGet } from "./get-policy.mjs";
@@ -48,14 +48,50 @@ const MANIFESTS = [".next/dev/server/server-reference-manifest.json", ".next/ser
 
 let actionIndex = null;
 const missedIds = new Set();
+// 운영(webpack) 빌드의 서버 매니페스트는 workers 에 {moduleId, async} 만 있고 이름이 없다(개발 매니페스트만 이름을 갖는다).
+// 이름 없는 항목이 이름 있는 항목을 덮어쓰면 읽기 전용 액션까지 「모르는 액션」으로 막혀 운영 빌드 검증이 거짓 RED 가 된다
+// (26-09-30 배포 스모크 실측). → 이름 없는 항목은 덮어쓰지 않고, 이름은 클라이언트 청크의
+// createServerReference("<id>", …, "<exportedName>") 에서 보충한다. 파일은 READ_ONLY_ACTIONS(이름→파일) 역매핑.
+const CLIENT_REF = /createServerReference\)\("([0-9a-f]{40,})",[^)]*?"([A-Za-z0-9_$]+)"\)/g;
+function namesFromClientChunks() {
+  const out = new Map();
+  const root = path.join(".next", "static", "chunks");
+  if (!existsSync(root)) return out;
+  const stack = [root];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const ent of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, ent.name);
+      if (ent.isDirectory()) stack.push(p);
+      else if (ent.name.endsWith(".js")) {
+        for (const m of readFileSync(p, "utf8").matchAll(CLIENT_REF)) out.set(m[1], m[2]);
+      }
+    }
+  }
+  return out;
+}
 function loadActionIndex() {
   const map = new Map();
+  let needClientNames = false;
   for (const file of MANIFESTS) {
     if (!existsSync(file)) continue;
     const manifest = JSON.parse(readFileSync(file, "utf8"));
     for (const [id, entry] of Object.entries(manifest.node ?? {})) {
       const w = Object.values(entry.workers ?? {})[0];
-      if (w) map.set(id, { name: w.exportedName, file: w.filename });
+      if (!w) continue;
+      if (w.exportedName) map.set(id, { name: w.exportedName, file: w.filename });
+      else if (!map.has(id)) {
+        map.set(id, { name: undefined, file: undefined });
+        needClientNames = true;
+      }
+    }
+  }
+  if (needClientNames) {
+    const fileOf = new Map();
+    for (const [file, names] of Object.entries(READ_ONLY_ACTIONS)) for (const n of names) fileOf.set(n, file);
+    for (const [id, name] of namesFromClientChunks()) {
+      const cur = map.get(id);
+      if (cur && !cur.name) map.set(id, { name, file: fileOf.get(name) });
     }
   }
   return map;
