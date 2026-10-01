@@ -6046,3 +6046,84 @@ model AnalyticsLinkClick {
   @@index([createdAt])
   @@map("analytics_link_clicks")
 }
+
+// ============================================================================
+// 학교별 내신 적중 예측 팩(exam-forecast) — prisma/migrations-manual/20261001_exam_forecast.sql
+// 관계 없는 독립 테이블(packId·passageId 느슨한 참조). 계약 src/lib/exam-forecast/types.ts
+// ============================================================================
+
+model ExamForecastPack {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  schoolName String
+  title      String
+  subtitle   String?
+  examMeta   Json     @default("{}")
+  analysis   Json     @default("{}")
+  rangeInfo  Json     @default("{}")
+  status     String   @default("draft")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("exam_forecast_packs")
+}
+
+model ExamForecastPassage {
+  id          String   @id @default(cuid())
+  packId      String
+  code        String
+  sourceGroup String
+  sourceLabel String
+  sortOrder   Int      @default(0)
+  titleKo     String
+  titleEn     String?
+  text        String
+  sentences   Json     @default("[]")
+  footnotes   Json     @default("[]")
+  analysis    Json     @default("{}")
+  prediction  Json     @default("{}")
+  createdAt   DateTime @default(now())
+
+  @@unique([packId, code])
+  @@map("exam_forecast_passages")
+}
+
+model ExamForecastQuestion {
+  id          String   @id @default(cuid())
+  packId      String
+  passageId   String
+  code        String
+  role        String   @default("forecast")
+  qtype       String
+  kind        String   @default("MC")
+  difficulty  Int      @default(3)
+  points      Float?
+  body        Json
+  answer      String
+  explanation String   @default("")
+  rationale   String   @default("")
+  transform   Json     @default("{}")
+  tags        Json     @default("[]")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@unique([packId, code])
+  @@index([packId, passageId])
+  @@index([packId, qtype])
+  @@map("exam_forecast_questions")
+}
+
+model ExamForecastSet {
+  id          String   @id @default(cuid())
+  packId      String
+  no          Int
+  title       String
+  tier        String
+  description String   @default("")
+  items       Json     @default("[]")
+  pdfPaths    Json     @default("{}")
+  createdAt   DateTime @default(now())
+
+  @@unique([packId, no])
+  @@map("exam_forecast_sets")
+}
