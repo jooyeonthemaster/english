@@ -276,8 +276,18 @@ test("ISO-7: webtoons/list 과목 스코프(기본=국어 제외·NULL 보존, s
     "src/components/workbench/analysis-report/webtoon-picker-modal.tsx",
   );
   assert.match(picker, /subject === "KOREAN" \? "&scope=KOREAN" : ""/);
-  const fetchCount = (picker.match(/\/api\/webtoons\/list\?status=COMPLETED&limit=100\$\{scopeParam\}/g) || []).length;
+  // 웹툰 v2(57e7e9f0)부터 페치는 webtoon-picker-utils.ts 헬퍼가 한다 — 모달은 두 완료 목록 페치 모두에 scopeParam 을
+  // 넘기고, 헬퍼는 받은 쿼리를 URL 끝에 그대로 붙여야 한다(둘 중 하나라도 빠지면 국어 웹툰이 영어 픽커에 섞인다).
+  const fetchCount = (picker.match(/fetchCompletedWebtoons\(scopeParam\b/g) || []).length;
   assert.equal(fetchCount, 2, "픽커의 두 페치 모두 scopeParam 을 실어야 한다");
+  const utils = src(
+    "src/components/workbench/analysis-report/webtoon-picker-modal-parts/webtoon-picker-utils.ts",
+  );
+  assert.match(
+    utils,
+    /export async function fetchCompletedWebtoons\([\s\S]*?\/api\/webtoons\/list\?status=COMPLETED&limit=100\$\{query\}/,
+    "헬퍼가 받은 scope 쿼리를 완료 목록 URL 에 붙이지 않는다",
+  );
 });
 
 test("ISO-9: 영어 시험지 목록 폴더 배지가 영어 시험지 id 로 교집합", () => {
