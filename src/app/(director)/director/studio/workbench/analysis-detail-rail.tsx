@@ -166,12 +166,17 @@ function AnalysisRowRail({
       : STATUS_BADGE[row.status];
 
   // 검수 게이트 — 단일 소스 함수(레일·워크스페이스·서버 공용).
+  // `isInternal`(26-09-19): 스모트 시험지는 구조상 열림이라 S1 검수 섹션이 아예 뜨지
+  // 않는다. 종전엔 이 계산만 예외를 못 받아, 학생 등록도 막지 않고 공개 답안 페이지도
+  // 가리지 않는(둘 다 각자 INTERNAL 예외 보유) 상태에서 「0/N 확인이 필요합니다」 경고만
+  // 떠 있었다 — 눌러서 고쳐도 다음 동기화가 시험지 값으로 덮어쓰는 자리였다.
   const gate =
     detail?.examMap && detail.examMap.questions.length > 0
       ? getMapGateStatus({
           questionNumbers: detail.examMap.questions.map((q) => q.number),
           reviewState: detail.reviewState,
           studentCount: detail.students.length,
+          isInternal,
         })
       : null;
 

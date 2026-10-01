@@ -176,6 +176,16 @@ export type ComposerRow =
       key: `q:${string}`;
       sortAt: string;
       row: StudioClassQuestionRow;
+      /**
+       * [SET] 장문 세트(43-45·41-42)가 **한 행으로 접혔을 때** 그 세트의 전 멤버
+       * (대표 포함, `setOrder` 오름차순). 단독 문항 행은 undefined.
+       *
+       * 목록은 이 행 하나만 그리지만 **커밋 델타는 멤버 전부**로 펼쳐 보낸다
+       * (`withSetMembers`) — 호스트 픽 Map 과 조판은 지금까지처럼 문항 단위
+       * 그대로이고, 접기는 순전히 **목록 문법**이다. 호스트를 세트-aware 로
+       * 만들지 마라: 픽 순서·조판 순서·저장이 전부 문항 id 위에 서 있다.
+       */
+      setMembers?: readonly StudioClassQuestionRow[];
     }
   | {
       kind: "worksheet";
@@ -187,6 +197,20 @@ export type ComposerRow =
 const DIFFICULTY_LABEL_MAP: ReadonlyMap<string, string> = new Map(
   DIFFICULTY_LEVELS.map((d) => [d.value, d.label]),
 );
+
+/**
+ * [SET] 행의 유형 자리에 설 라벨. 접힌 세트는 **소문항 유형이 아니라 묶음**을 말한다
+ * (「43~45번 · 장문」 — `QuestionSet.setLabel` 정본). 세트 이름이 없으면 「N문항 묶음」으로
+ * 폴백한다: 세트는 장문만이 아니라 생성 세트(어법·요약·독해 종합)도 있어서 유형을
+ * 추측하면 거짓을 말하게 된다. 단독 문항은 기존 라벨 그대로.
+ */
+function composerRowTypeLabel(
+  it: Extract<ComposerRow, { kind: "question" }>,
+): string {
+  const count = it.setMembers?.length ?? 0;
+  if (count <= 1) return questionRowTypeLabel(it.row.type, it.row.subType);
+  return it.row.setLabel?.trim() || `${count}문항 묶음`;
+}
 
 const STATUS_BADGE = SHEET_STATUS_BADGE;
 
@@ -588,9 +612,62 @@ function ComposerListPaneInner({
   // 두 축의 시간 의미를 섞지 않기 위해 정렬 축은 **생성 시각 하나**로 못 박는다.
   // 「마지막 수정(updatedAt)」은 학습지에만 있는 개념이라 정렬 축이 되면 같은
   // 목록에서 두 행이 서로 다른 의미의 시간으로 줄을 서게 된다.
+  /**
+   * [SET] 세트 조회표 — **접기·체크·순번이 공유하는 단일 파생**이다(세 곳에서 따로
+   * 만들면 「행은 접혔는데 체크는 멤버 기준」 같은 어긋남이 무증상으로 생긴다).
+   * 모집단은 `questionsState.rows` 전량 — 필터·렌더 상한에 가려진 멤버도 세트의 일부다.
+   */
+  const questionSets = useMemo(() => {
+    const membersBySetId = new Map<string, StudioClassQuestionRow[]>();
+    const setIdByQuestionId = new Map<string, string>();
+    for (const r of questionsState.rows) {
+      if (!r.setId) continue;
+      setIdByQuestionId.set(r.id, r.setId);
+      const bucket = membersBySetId.get(r.setId);
+      if (bucket) bucket.push(r);
+      else membersBySetId.set(r.setId, [r]);
+    }
+    for (const members of membersBySetId.values()) {
+      // setOrder 결손(멤버십 행 없음)은 생성 시각으로 폴백 — 반입이 43→44→45 순서로
+      // 만들므로 실측상 같은 순서가 된다. id 타이브레이크로 전순서 확정.
+      members.sort((a, b) => {
+        const ao = a.setOrder ?? Number.MAX_SAFE_INTEGER;
+        const bo = b.setOrder ?? Number.MAX_SAFE_INTEGER;
+        if (ao !== bo) return ao - bo;
+        if (a.createdAt !== b.createdAt) return a.createdAt < b.createdAt ? -1 : 1;
+        return a.id.localeCompare(b.id);
+      });
+    }
+    return { membersBySetId, setIdByQuestionId };
+  }, [questionsState.rows]);
+
   const mergedRows = useMemo<ComposerRow[]>(() => {
     const out: ComposerRow[] = [];
+    // ── [SET] 장문 세트는 **한 행**으로 접는다 ───────────────────────────────
+    // 43-45(순서·지칭·내용일치)는 공유 지문 1개를 세 소문항이 나눠 쓰는 구조라
+    // 사용자에게 「한 문제」다. 낱개 3행으로 두면 한 개만 체크해 부분 세트가
+    // 조판되고(지칭 밑줄만 남은 지문·지문 없는 소문항), 하나를 해제하면 조판기가
+    // setId 기준으로 묶음째 걷어가 「체크는 남았는데 지면에서 사라지는」 상태가 된다.
+    // 대표 = setOrder 최소(= 43번). 표시·상세·딥링크는 대표가 맡고, 담기·해제는
+    // 아래 withSetMembers 가 멤버 전부로 펼친다.
     for (const r of questionsState.rows) {
+      if (r.setId) {
+        const members = questionSets.membersBySetId.get(r.setId);
+        // 대표가 아닌 멤버는 목록에 **행을 만들지 않는다**(같은 세트가 N번 보이던 것).
+        if (!members || members[0]?.id !== r.id) continue;
+        // 멤버가 1개뿐인 세트(부분 반입·타 멤버 삭제)는 접을 것이 없다 —
+        // setMembers 를 달지 않아 단독 문항과 **완전히 같은 행**이 된다.
+        if (members.length > 1) {
+          out.push({
+            kind: "question",
+            key: `q:${r.id}`,
+            sortAt: r.createdAt,
+            row: r,
+            setMembers: members,
+          });
+          continue;
+        }
+      }
       out.push({ kind: "question", key: `q:${r.id}`, sortAt: r.createdAt, row: r });
     }
     for (const r of worksheetsState.rows) {
@@ -679,17 +756,21 @@ function ComposerListPaneInner({
           : -1;
     });
     return out;
-  }, [questionsState.rows, worksheetsState.rows]);
+  }, [questionSets, questionsState.rows, worksheetsState.rows]);
 
   // 옵션은 **현재 데이터에 실존하는 값만**(빈 옵션 나열 금지).
+  // [SET] 모집단이 원시 행이 아니라 `mergedRows` 인 이유: 접힌 세트는 목록에서
+  // 「43~45번 · 장문」 한 줄로 서는데 옵션만 소문항 유형(내용 일치·지칭 추론…)을
+  // 말하면 **눌러도 0건이 되는 옵션**이 생긴다(이 파일이 이미 세 곳에서 금지한 것).
   const typeOptions = useMemo(() => {
     const seen = new Map<string, number>();
-    for (const r of questionsState.rows) {
-      const label = questionRowTypeLabel(r.type, r.subType);
+    for (const it of mergedRows) {
+      if (it.kind !== "question") continue;
+      const label = composerRowTypeLabel(it);
       seen.set(label, (seen.get(label) ?? 0) + 1);
     }
     return [...seen.entries()].sort((a, b) => b[1] - a[1]);
-  }, [questionsState.rows]);
+  }, [mergedRows]);
 
   // ⚠ [E28] 구 전역 `planOptions` 는 **삭제**했다 — 플랜 필터가 카드 안으로
   //   내려가면서 옵션의 모집단도 「그 카드의 학습지 행」으로 좁아졌다(아래 cards
@@ -733,10 +814,7 @@ function ComposerListPaneInner({
         if (it.kind === "question") {
           const r = it.row;
           if (qAxis) {
-            if (
-              typeFilter !== "all" &&
-              questionRowTypeLabel(r.type, r.subType) !== typeFilter
-            ) {
+            if (typeFilter !== "all" && composerRowTypeLabel(it) !== typeFilter) {
               return false;
             }
             if (diffFilter !== "all" && r.difficulty !== diffFilter) return false;
@@ -877,22 +955,53 @@ function ComposerListPaneInner({
   // ── 선택 ──────────────────────────────────────────────────────────────────
   const selectedKeys = useMemo(() => {
     const s = new Set<string>();
-    for (const id of pickedQuestionIds) s.add(`q:${id}`);
+    for (const id of pickedQuestionIds) {
+      s.add(`q:${id}`);
+      // [SET] 픽은 **멤버 단위**인데 목록에 선 것은 대표 행 하나다. 멤버만 담긴 픽
+      // (도시에 승계·구 버전에서 남은 부분 픽)에서도 그 행이 체크로 보여야 한다 —
+      // 안 그러면 「조판에는 있는데 목록은 꺼져 있는」 유령이 되고, 해제할 방법이 없다.
+      const setId = questionSets.setIdByQuestionId.get(id);
+      const rep = setId ? questionSets.membersBySetId.get(setId)?.[0] : undefined;
+      if (rep) s.add(`q:${rep.id}`);
+    }
     for (const id of pickedSheets.keys()) s.add(`w:${id}`);
     return s;
-  }, [pickedQuestionIds, pickedSheets]);
+  }, [pickedQuestionIds, pickedSheets, questionSets]);
 
   // 체크 순번은 **타입별 시퀀스**(E22-UNITS [U10] 6). 통합 번호를 만들지 마라 —
   // 인쇄는 「학습지 전부 → 문항 전부」라 목록 순서와 애초에 다르다.
   // 순번의 원천은 **호스트 대기열의 삽입 순서**라, 이 목록에 없는(다른 표면에서
   // 담은) 항목까지 포함한 전역 순서가 그대로 보인다 — 부분 목록 기준으로 다시
   // 매기면 「3번으로 체크했는데 1번으로 보이는」 불일치가 난다.
+  // [SET] 세트는 **한 번만 센다** — 멤버 3개가 각자 번호를 받으면 그 뒤 문항이
+  // 「2번째로 체크했는데 4번」이 된다(목록은 한 행인데 픽은 3건이라 눈에 안 보이는
+  // 점프다). 같은 세트의 멤버는 전부 같은 번호를 공유한다.
   const questionOrder = useMemo(() => {
     const m = new Map<string, number>();
+    const numberBySetId = new Map<string, number>();
     let i = 0;
-    for (const id of pickedQuestionIds) m.set(id, ++i);
+    for (const id of pickedQuestionIds) {
+      const setId = questionSets.setIdByQuestionId.get(id);
+      if (setId !== undefined) {
+        const seen = numberBySetId.get(setId);
+        if (seen !== undefined) {
+          m.set(id, seen);
+          continue;
+        }
+        i += 1;
+        numberBySetId.set(setId, i);
+        m.set(id, i);
+        // 목록에 선 것은 대표 행이므로 대표에도 같은 번호를 준다 — 멤버만 담긴
+        // 픽(selectedKeys 주석의 유령 방지와 같은 경로)에서 체크는 켜졌는데 번호만
+        // 비는 일이 없게. 대표가 픽에 있으면 이 줄은 위에서 이미 쓴 값을 덮어쓰지 않는다.
+        const rep = questionSets.membersBySetId.get(setId)?.[0];
+        if (rep && !m.has(rep.id)) m.set(rep.id, i);
+        continue;
+      }
+      m.set(id, ++i);
+    }
     return m;
-  }, [pickedQuestionIds]);
+  }, [pickedQuestionIds, questionSets]);
   const sheetOrder = useMemo(() => {
     const m = new Map<string, number>();
     let i = 0;
@@ -1155,7 +1264,7 @@ function ComposerListPaneInner({
       const typeSeen = new Map<string, number>();
       for (const it of b.q) {
         if (it.kind !== "question") continue;
-        const label = questionRowTypeLabel(it.row.type, it.row.subType);
+        const label = composerRowTypeLabel(it);
         typeSeen.set(label, (typeSeen.get(label) ?? 0) + 1);
       }
       // [E28B §8-1 C5] 상태·난이도도 **이 카드의 행**에서 파생한다(플랜·유형과 같은
@@ -1183,10 +1292,7 @@ function ComposerListPaneInner({
       const qShown = b.q.filter((it) => {
         if (it.kind !== "question") return false;
         const r = it.row;
-        if (
-          filter.type !== "all" &&
-          questionRowTypeLabel(r.type, r.subType) !== filter.type
-        ) {
+        if (filter.type !== "all" && composerRowTypeLabel(it) !== filter.type) {
           return false;
         }
         if (filter.diff !== "all" && r.difficulty !== filter.diff) return false;
@@ -1739,6 +1845,46 @@ function ComposerListPaneInner({
     return appended ? out : removed;
   };
 
+  /**
+   * [SET] 접힌 세트 행 1개 → **멤버 전부**(43 → 44 → 45)로 펼친다. 담기·해제 **양쪽**
+   * 커밋의 마지막 통과 지점이다(동반 픽 다음 — 학습지 동반과 축이 달라 순서 무관).
+   *
+   * 왜 커밋 직전인가: 위 D-COMPANION 과 같은 이유다. 히트 수집 단계에서 펼치면
+   * 마키의 removed 루프가 「히트하지 않은 픽」으로 보고 방금 담은 멤버를 도로 뺀다.
+   * 그리고 이 판이 호스트에 보내는 것은 언제나 **문항 행**이라, 호스트·조판기·저장은
+   * 세트를 몰라도 된다(접기는 목록 문법일 뿐이라는 ComposerRow 주석의 계약).
+   *
+   * ⚠ 멤버 행의 key 는 각자 `q:<자기 id>` 다 — 대표 key 를 복제하면 호스트 픽 Set 이
+   *   한 칸만 늘고 나머지 둘이 조용히 증발한다.
+   */
+  const withSetMembers = (rows: readonly ComposerRow[]): ComposerRow[] => {
+    let expanded = false;
+    const out: ComposerRow[] = [];
+    const seen = new Set<string>();
+    for (const it of rows) {
+      if (it.kind !== "question" || !it.setMembers || it.setMembers.length <= 1) {
+        if (it.kind === "question") {
+          if (seen.has(it.key)) continue;
+          seen.add(it.key);
+        }
+        out.push(it);
+        continue;
+      }
+      expanded = true;
+      for (const member of it.setMembers) {
+        const key = `q:${member.id}` as const;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(
+          member.id === it.row.id
+            ? it
+            : { kind: "question", key, sortAt: member.createdAt, row: member },
+        );
+      }
+    }
+    return expanded ? out : [...rows];
+  };
+
   /** DragSelect(deferCommit) 릴리스 1회 커밋 → 타입 태그가 실린 델타로 환산. */
   const handleMarquee = (next: Set<string>) => {
     const added: ComposerRow[] = [];
@@ -1765,7 +1911,8 @@ function ComposerListPaneInner({
       // ⚠ 동반 픽분까지 **그대로** 넘긴다 — 빼고 넘기면 「배지는 2 늘었는데 카드는
       //   접힌 채」가 된다(호스트에서 주입하지 않는 이유와 같은 계통).
       latchPickedCards(grownAdded);
-      onCommit(grownAdded, grownRemoved);
+      // [SET] 접힌 세트 행은 멤버 전부로 펼쳐 보낸다(담기·해제 양쪽).
+      onCommit(withSetMembers(grownAdded), withSetMembers(grownRemoved));
     }
   };
 
@@ -1774,13 +1921,13 @@ function ComposerListPaneInner({
       // 해제는 래치하지 않는다 — 그리고 **카드를 접지도 않는다**
       // ([E28B §8-1 C1] 증상 1: 마지막 픽 해제로 본문이 사라지던 것).
       // [E30 §4-5] 기본을 빼면 같은 지문의 실전도 **같은 델타**에 실린다.
-      onCommit(NO_ROWS, withCompanionRemovals([it]));
+      onCommit(NO_ROWS, withSetMembers(withCompanionRemovals([it])));
       return;
     }
     // [E30 §4-4] 실전·파이널을 담으면 같은 지문의 기본이 **앞쪽에** 함께 담긴다.
     const grown = withCompanionAdds([it]);
     latchPickedCards(grown);
-    onCommit(grown, NO_ROWS);
+    onCommit(withSetMembers(grown), NO_ROWS);
   };
 
   // ── 전체 선택(**렌더분** 기준 — mixed = Minus) ────────────────────────────
@@ -1819,14 +1966,14 @@ function ComposerListPaneInner({
     if (allChecked) {
       // [E30 §4-5] 렌더분 전량 해제라도 기본만 렌더돼 있고 실전은 접힌 카드에
       // 담겨 있을 수 있다 — 그 경우까지 대칭을 지킨다.
-      onCommit(NO_ROWS, withCompanionRemovals(renderedRows));
+      onCommit(NO_ROWS, withSetMembers(withCompanionRemovals(renderedRows)));
       return;
     }
     // 이미 담긴 행은 다시 보내지 않는다(재삽입 = 조판 순서 뒤집힘).
     // [E30 §4-4] 동반 픽분(접힌 카드의 기본 행 포함)도 같은 델타에 실린다.
     const grown = withCompanionAdds(unpickedVisible);
     latchPickedCards(grown);
-    onCommit(grown, NO_ROWS);
+    onCommit(withSetMembers(grown), NO_ROWS);
   };
 
   /**
@@ -1863,7 +2010,7 @@ function ComposerListPaneInner({
     const r = it.row;
     const checked = selectedKeys.has(it.key);
     const order = checked ? questionOrder.get(r.id) : undefined;
-    const typeLabel = questionRowTypeLabel(r.type, r.subType);
+    const typeLabel = composerRowTypeLabel(it);
     return (
       <div
         key={it.key}
@@ -2032,7 +2179,7 @@ function ComposerListPaneInner({
    */
   const clearCardPicks = (rows: readonly ComposerRow[]) => {
     if (rows.length === 0) return;
-    onCommit(NO_ROWS, [...rows]);
+    onCommit(NO_ROWS, withSetMembers(rows));
   };
 
   /**
@@ -3121,7 +3268,7 @@ function ComposerListPaneInner({
                     // 계약을 그대로 승계한다(체크 상태 무관·행별 고유).
                     aria-label={
                       isQ
-                        ? `${it.row.passageTitle} · ${questionRowTypeLabel(it.row.type, it.row.subType)} 문항 선택`
+                        ? `${it.row.passageTitle} · ${composerRowTypeLabel(it)} 문항 선택`
                         : `${it.row.title} · ${it.row.passageTitle} 학습지 선택`
                     }
                     title={
@@ -3209,7 +3356,7 @@ function ComposerListPaneInner({
                             </span>
                           ) : null}
                           <span className="shrink-0 text-[11px] font-medium text-slate-500">
-                            {questionRowTypeLabel(it.row.type, it.row.subType)}
+                            {composerRowTypeLabel(it)}
                           </span>
                           {it.row.difficulty &&
                           DIFFICULTY_LABEL_MAP.has(it.row.difficulty) ? (

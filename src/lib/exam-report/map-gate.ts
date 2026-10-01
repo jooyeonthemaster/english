@@ -16,6 +16,21 @@ export interface MapGateInput {
   reviewState: ExamReviewState;
   /** 소속 학생 수 — 레거시 승계 판정에만 쓴다 */
   studentCount: number;
+  /**
+   * 스모트 시험지(`sourceType === "INTERNAL"`)인가 — 그렇다면 게이트는 **구조상 열림**이다.
+   *
+   * 근거: INTERNAL 분석의 정답·배점은 사람이 확인할 AI 추정값이 아니라 **시험지가 확정한
+   * 값**이다(report-bridge 가 Exam 문항 링크의 correctAnswer·points 를 그대로 옮겨 적고,
+   * 동기화 때마다 structure 를 시험지 기준으로 다시 덮어쓴다 — 여기서 손으로 고쳐도 남지
+   * 않는다). 검수할 대상 자체가 없다.
+   *
+   * 이 플래그가 생긴 이유(26-09-19): 같은 예외를 funnel.ts·next-step.ts·
+   * actions/exam-report/students.ts·app/r/exam/[token] **네 곳이 각자** 들고 있었고,
+   * 스튜디오 레일만 그 사본을 받지 못해 「정답·배점 확인이 필요합니다 0/15」 배너가
+   * 아무것도 막지 않으면서 떠 있었다. 예외를 판정 함수 안으로 들여 사본이 더 늘지 않게 한다.
+   * (위 네 곳은 각자의 산식을 그대로 두되, 옮길 때는 이 플래그로 수렴시킬 것.)
+   */
+  isInternal?: boolean;
 }
 
 export interface MapGateStatus {
@@ -43,6 +58,9 @@ export interface MapGateStatus {
  *  학생이 있는 건이므로 무해하다.)
  */
 export function isMapGateGrandfathered(input: MapGateInput): boolean {
+  // 스모트 시험지는 검수 이력과 **무관하게** 열림(MapGateInput.isInternal 주석) —
+  // 확인 도장을 찍을 대상이 없으므로 `touched` 판정보다 먼저 온다.
+  if (input.isInternal) return true;
   const touched = (input.reviewState.mapConfirmedNumbers?.length ?? 0) > 0;
   if (touched) return false;
   return input.reviewState.mapConfirmed === true || input.studentCount > 0;

@@ -13,7 +13,10 @@
 // 그리드 안에서 이질감이 없다. 메타 줄은 「시험 종류 · 문항 N」 + **상태 칩**
 // (ANALYSIS_STATE_CHIP.none — 분석 행 카드의 깊이 칩과 공용 토큰, 26-09-04) +
 // 절대 타임스탬프(MetaChipsRow 문법) — 동일 제목 2장이 구분된다.
-// self-start: 이웃 분석 카드 높이로 늘어나지 않는다(그리드 stretch 차단).
+// 높이: 이웃 분석 행 카드와 **같다**(26-09-19 사용자 지시). 구 `self-start`(그리드
+// stretch 차단)는 걷어냈다 — 후보는 「리포트 N건」 줄이 없어 35px 낮았고, 최신순
+// 단일 줄로 두 종류가 섞이면서 그 차이가 카드마다 드러났다. 남는 공간은 날짜 줄의
+// `mt-auto` 가 바닥으로 밀어 흡수한다(BOARD_GRID_CLASS 주석과 한 벌).
 // 계약 셀렉터 `[data-analysis-candidate="<examId>"]`(§2.5 프로브).
 // ============================================================================
 
@@ -79,7 +82,7 @@ export function CandidateCard({
       }}
       className={cn(
         // BoardCard(hideThumbnail) 셸 자구 미러 — 선택 하이라이트도 동일.
-        "group relative flex w-full min-w-0 max-w-full cursor-pointer flex-row self-start overflow-hidden rounded-xl border bg-white text-left transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+        "group relative flex h-full w-full min-w-0 max-w-full cursor-pointer flex-row overflow-hidden rounded-xl border bg-white text-left transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
         active
           ? "border-blue-400 shadow-[0_0_0_1px_rgba(96,165,250,0.55)]"
           : "border-slate-200 hover:border-slate-300",
@@ -122,8 +125,8 @@ export function CandidateCard({
             {stateChip.label}
           </span>
         </div>
-        {/* (구 타임스탬프 전용 줄 폐기 — 후보 카드는 집계가 없으므로 분석 행 카드
-            보다 한 줄 낮다. self-start 라 이웃 높이로 늘어나지 않는다.) */}
+        {/* (구 타임스탬프 전용 줄 폐기 — 후보 카드는 집계 줄이 없다. 그만큼 생기는
+            여백은 아래 날짜 줄의 `mt-auto` 가 바닥으로 밀어 흡수한다.) */}
         {hint ? (
           <div data-analysis-hint className="mt-2 min-w-0">
             {hint}
@@ -136,7 +139,9 @@ export function CandidateCard({
             폭을 온전히 쓴다. 연월일 시:분 전문(툴팁 불필요). 분석 행(analyses-board-cards) 카드와 동일. */}
         <p
           title="마지막 수정일"
-          className="mt-2 whitespace-nowrap text-[10.5px] leading-none tabular-nums text-slate-400"
+          // mt-auto: 카드가 이웃 높이로 늘어나면 남는 공간을 **날짜 위**로 몰아
+          // 날짜를 바닥선에 붙인다(카드들의 아랫줄이 한 축에 선다).
+          className="mt-auto whitespace-nowrap pt-2 text-[10.5px] leading-none tabular-nums text-slate-400"
         >
           {formatDateTime(candidate.updatedAt)}
         </p>

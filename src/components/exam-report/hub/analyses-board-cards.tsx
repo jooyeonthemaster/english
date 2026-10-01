@@ -373,7 +373,14 @@ export function BoardCard({
             폭을 온전히 쓴다. 연월일 시:분 전문(툴팁 불필요). 후보(analyses-board-candidate-card) 카드와 동일. */}
         <p
           title="마지막 수정일"
-          className="mt-2 whitespace-nowrap text-[10.5px] leading-none tabular-nums text-slate-400"
+          className={cn(
+            "whitespace-nowrap text-[10.5px] leading-none tabular-nums text-slate-400",
+            // 바닥 앵커는 **마지막 요소 하나**여야 한다(auto 마진이 둘이면 남는
+            // 공간을 나눠 가져 날짜가 카드 한가운데 뜬다). 액션 줄이 있으면 그쪽이
+            // 이미 `mt-auto` 라 여기는 평범한 간격, 액션이 없는 스튜디오 카드에서는
+            // 날짜가 바닥을 맡는다(후보 카드와 같은 아랫줄 = BOARD_GRID_CLASS 주석).
+            hideActions ? "mt-auto pt-2" : "mt-2",
+          )}
         >
           {formatDateTime(row.updatedAt)}
         </p>

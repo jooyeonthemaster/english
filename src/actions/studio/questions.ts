@@ -123,6 +123,11 @@ export async function listStudioClassQuestions(input: {
         questionText: true,
         tags: true,
         createdAt: true,
+        // 장문 세트(43-45 등) 소속 — 목록이 세트를 **한 행**으로 접는 유일한 재료다.
+        // setId 는 Question 의 비정규화 컬럼이라 조인 없이 오고, 세트 안 순서만
+        // 1:1 관계(QuestionSetItem)에서 끌어온다(세트 행이 없으면 null).
+        setId: true,
+        setItem: { select: { orderInSet: true, set: { select: { setLabel: true } } } },
       },
     });
 
@@ -191,6 +196,11 @@ export async function listStudioClassQuestions(input: {
         passageId: q.passageId,
         passageTitle: titleByPassageId.get(q.passageId) ?? "",
         origin: gichulIds.has(q.id) ? "gichul" : null,
+        setId: q.setId ?? null,
+        // 멤버십 행이 없는 setId(수작업 정합 붕괴)는 순서를 모른다 — 접기 자체는
+        // setId 로 성립하므로 null 을 그대로 내보내고 정렬은 createdAt 폴백에 맡긴다.
+        setOrder: q.setItem?.orderInSet ?? null,
+        setLabel: q.setItem?.set?.setLabel ?? null,
       });
     }
 

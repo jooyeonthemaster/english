@@ -80,6 +80,26 @@ export interface StudioClassQuestionRow extends DossierQuestionRow {
    * 소비처가 undefined 를 「기출 아님」으로 읽어야 하지 컴파일 불능이 돼선 안 된다.
    */
   origin?: "gichul" | null;
+  /**
+   * 장문 세트(43-45·41-42 등) 멤버면 `QuestionSet.id`, 단독 문항이면 null
+   * (additive 옵셔널 — 이 필드를 싣지 않던 구 응답은 「세트 아님」으로 읽힌다).
+   *
+   * 세트는 **목록에서 한 행**으로 접힌다(composer-list-pane `mergedRows`): 공유
+   * 지문 1개 + 소문항 N개는 사용자에게 「한 문제」이고, 낱개로 담기면 조판에
+   * 지문만 있고 문항이 빠지거나(부분 세트) 지칭 밑줄 같은 마커가 주인 없이 남는다.
+   */
+  setId?: string | null;
+  /**
+   * 세트 안 순서(`QuestionSetItem.orderInSet`, 0-indexed) — 접힌 행의 **대표 선정**과
+   * 담기 순서(43 → 44 → 45)의 정렬 축. 세트가 아니면 null.
+   */
+  setOrder?: number | null;
+  /**
+   * 세트 표시 이름(`QuestionSet.setLabel` — 「43~45번 · 장문」·「독해 종합 3문항」).
+   * 접힌 행의 유형 자리에 그대로 선다. 세트가 아니거나 이름이 없으면 null
+   * (그때는 소비처가 「N문항 묶음」으로 폴백한다 — 유형을 추측하지 않는다).
+   */
+  setLabel?: string | null;
 }
 
 /**

@@ -4,9 +4,20 @@
 // 학생 시험 리포트 — 분석 현황 보드 2그룹 렌더(스튜디오 전용, v4 26-09-02)
 // 정본: docs/exam-analysis-v4-spec.md §1-1 · §3 U4-1·4 · §4(밴드)
 //
-// 왼쪽 목록을 「스모트 시험지」(INTERNAL 분석 행 + 분석 전 후보 카드 말미) /
+// 왼쪽 목록을 「스모트 시험지」(INTERNAL 분석 행 + 분석 전 시험지) /
 // 「외부 시험지 · 사진·PDF」(그 외)로 나눈다. 필터·검색은 컨테이너가 먼저
 // 적용해 내려주므로 여기는 순수 배치만 맡는다.
+//
+// 【26-09-19 사용자 지시 — 스모트 탭은 **한 줄 최신순**】 "시험 분석에 들어가면
+// 내가 저장한 시험지가 바로바로 보이는게 아닌 것 같아."
+// → 구 배치는 `분석 행 전부 → 분석 전 시험지 전부` 2단이라, 방금 저장한 시험지가
+//   목록에서 가장 최신인데도 오래된 분석 행 7장 **아래**(8번째 카드)로 밀렸다
+//   (26-09-19 실측: 20:43 저장분이 09.12~07.09 분석 행 뒤). 두 종류는 사용자에게
+//   같은 「내 시험지」라 종류로 줄을 가르면 최신이 위에 오지 않는다.
+// → 이제 두 종류를 **`updatedAt` 내림차순 한 줄**로 섞는다(`internalFeed`). 정렬 축이
+//   곧 카드에 인쇄된 날짜라(분석 행·후보 카드 모두 updatedAt 표기) 「왜 이 순서인가」가
+//   화면에서 읽힌다. 범위 세그먼트(이 클래스/전체)는 **무엇을 넣을지**만 정하고
+//   순서에는 관여하지 않는다 — 펼친 타 클래스 후보도 같은 한 줄에 섞인다.
 // 카드 렌더 함수를 주입받는 이유: BoardCard 의 핸들러 묶음(restarting·삭제·
 // 재분석·힌트)은 컨테이너 소유라 여기로 복제하면 두 벌이 된다.
 //
@@ -109,9 +120,36 @@ const GROUP_ORDER: readonly AnalysisGroupKey[] = ["internal", "external"];
 /** 클래스 축이 없을 때 인라인으로 두는 후보 상한(SUP-U4-1). */
 const INLINE_CANDIDATE_CAP = 8;
 
+/**
+ * 스모트 탭 본문의 한 칸 — 분석 행과 분석 전 시험지를 **같은 줄에 섞기** 위한
+ * 태그 유니온(26-09-19). `at` = 정렬 축(양쪽 모두 `updatedAt`), `id` = 동시각
+ * 타이브레이크. 카드 렌더는 종류별로 갈리므로(renderRow / renderCandidate) 원본을
+ * 그대로 물고 간다 — 여기서 카드 모양을 통일하려 들지 마라(두 카드는 담는 정보가
+ * 다르다: 분석 행은 리포트·퍼널, 후보는 문항 수와 「분석을 시작하세요」).
+ */
+type InternalFeedItem =
+  | { kind: "row"; at: string; id: string; row: ExamReportSummaryRow }
+  | { kind: "candidate"; at: string; id: string; candidate: ExamCandidateRow };
+
 /** 그리드 규격 — analyses-board 본체 그리드와 동일(컨테이너 쿼리 열 수). */
+/**
+ * 보드 카드 그리드. `auto-rows-fr`(26-09-19 사용자 지시 "카드들 크기가 다 제각각인게
+ * 마음에 안 들어") = 모든 행이 **같은 높이**(그리드에서 가장 큰 카드 기준)다.
+ *
+ * 왜 행 단위 stretch 만으로는 부족한가: 그리드 기본값도 같은 **행 안**에서는 높이를
+ * 맞추지만 행끼리는 제각각이라, 2열에서 1·2행의 카드 높이가 35px 씩 어긋났다
+ * (분석 행 169px / 분석 전 카드 134px — 「리포트 N건」 줄 한 개 차이. 26-09-19 실측).
+ * 최신순 단일 줄(위 26-09-19 절)로 두 종류가 **섞여** 서면서 그 어긋남이 매 행마다
+ * 보이게 됐다.
+ *
+ * ⚠ 늘어난 카드의 남는 공간은 **날짜 줄을 바닥에 붙여**(카드의 `mt-auto`) 흡수한다 —
+ *   안 그러면 카드만 커지고 내용은 위에 몰려 「빈 상자」로 보인다.
+ * ⚠ 이 그리드를 **높이가 고정된** 컨테이너 안에 넣지 마라. `1fr` 행이 그 높이를
+ *   N등분하게 되어(카드 37장이면 행 하나가 몇 px) 목록이 통째로 찌그러진다.
+ *   지금은 스크롤러 안 내용 높이(auto)라 「가장 큰 카드로 통일」로 해석된다.
+ */
 export const BOARD_GRID_CLASS =
-  "grid grid-cols-1 gap-3 @2xl:grid-cols-2 @5xl:grid-cols-3";
+  "grid auto-rows-fr grid-cols-1 gap-3 @2xl:grid-cols-2 @5xl:grid-cols-3";
 
 // ── 탭 시각 문법 ────────────────────────────────────────────────────────────
 // 【26-09-05 사용자 지시 "ui 좀 개선해봐"】 구 탭은 파스텔 필(h-8 · bg-slate-100 /
@@ -405,6 +443,34 @@ export function GroupedBoardGrid({
         : "internal";
   const tab = tabPref ?? autoTab;
 
+  // ── 스모트 탭 본문 = 분석 행 + 분석 전 시험지의 **최신순 단일 줄**(파일 머리) ──
+  // 정렬 축은 양쪽 모두 `updatedAt`(카드에 인쇄되는 그 값)이다. 동시각은 id 로 깨
+  // **전순서**로 만든다 — 5초 폴이 돌 때마다 같은 시각 두 장의 앞뒤가 뒤바뀌면
+  // 카드가 사용자 눈앞에서 자리를 바꾼다.
+  const internalFeed: InternalFeedItem[] = [
+    ...internalRows.map(
+      (row): InternalFeedItem => ({
+        kind: "row",
+        at: row.updatedAt,
+        id: row.id,
+        row,
+      }),
+    ),
+    ...(expanded
+      ? [...inlineCandidates, ...foldedCandidates]
+      : inlineCandidates
+    ).map(
+      (candidate): InternalFeedItem => ({
+        kind: "candidate",
+        at: candidate.updatedAt,
+        id: candidate.examId,
+        candidate,
+      }),
+    ),
+  ].sort((a, b) =>
+    a.at === b.at ? a.id.localeCompare(b.id) : a.at < b.at ? 1 : -1,
+  );
+
   // 빈 판정은 **지금 그려지는 수**로 한다. 구 코드는 접힌 후보가 있으면 「비지
   // 않음」으로 쳤는데, 그건 점선 토글 행이 그리드 안에 있어서 화면이 실제로는
   // 비지 않았기 때문이다. 그 행을 걷어낸 지금 같은 판정을 쓰면 「이 클래스 0건 +
@@ -456,12 +522,14 @@ export function GroupedBoardGrid({
             {emptyHint}
           </p>
         ) : tab === "internal" ? (
+          // 분석 행과 분석 전 시험지를 **한 줄 최신순**으로(파일 머리 26-09-19).
+          // 펼친 타 클래스 후보도 같은 줄에 섞인다 — 범위는 모집단만 정한다.
           <div className={BOARD_GRID_CLASS}>
-            {internalRows.map(renderRow)}
-            {inlineCandidates.map(renderCandidate)}
-            {/* 펼침은 카드 흐름을 끊는 띠 없이 뒤에 그대로 이어 붙는다
-                (구 `col-span-full` 점선 토글 행은 탭 줄 세그먼트로 이사). */}
-            {expanded && foldedCandidates.map(renderCandidate)}
+            {internalFeed.map((item) =>
+              item.kind === "row"
+                ? renderRow(item.row)
+                : renderCandidate(item.candidate),
+            )}
           </div>
         ) : (
           <div className={BOARD_GRID_CLASS}>{externalRows.map(renderRow)}</div>
