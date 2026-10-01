@@ -358,7 +358,8 @@ Word 로 렌더했다. 매 실행 전후로 printCount · updatedAt · app_event
 4. **공지** — 스모트 소식 「시험지 인쇄와 한글 파일을 고쳤어요」(release-notes 자동 발행, 원장·강사, 상단 고정).
    네이버 카페 「공지 · 업데이트」 글은 **보류** — 로그인 시 네이버가 카페 계정에 「아이디 보호조치」(본인 확인)를 걸었다.
    본문은 `naver-mcp/.naver-cafe/out/post-exam-print-fix.json` 에 준비돼 있고, 해제 뒤 `publish.mjs … --apply` 로 올린다.
-5. **후속 수리(XB-1, 미배포 — 배포 승인 대기)** — 문서 load 전에 누른 [인쇄]. 아래 6.2.
+5. **후속 수리(XB-1) 배포 완료(26-10-01)** — 문서 load 전에 누른 [인쇄]. 아래 6.2. 배포 `dpl_GDFAxeYadUL9BWgU2YYXQkY675gK`
+   (커밋 `53c82330` — 같은 배포에 웹툰 v2 Vercel 쪽 · 스튜디오 세트 접기 · 시험 분석 탭 정렬 · qgen-lab(운영 404) 포함).
 
 ### 6.2 새로 발견한 것
 - **Vercel 배포 차단**: 이 PC 의 git 작성자 이메일(`jooyeonthemaster@…`)이 Vercel 팀 멤버와 매칭되지 않아, git 메타데이터가 붙는
@@ -389,4 +390,4 @@ Word 로 렌더했다. 매 실행 전후로 printCount · updatedAt · app_event
 3. **검증 공백** — Firefox 는 26-09-30 교차 브라우저 게이트에서 전 경로 GREEN(동기 모형 — Playwright Firefox 는 진짜 인쇄 PDF 를
    못 얻는다). Safari 실기(XB-2~4) · 모바일 실기 · 실제 데스크톱 인쇄 미리보기 대화상자는 미측정. 같은 결함을 겪었을 다른 학원
    (3쪽 이상 인쇄 710회)은 공지로 알렸다.
-4. **XB-1 수리 배포** — 커밋은 브랜치에 있다. 배포는 사용자 승인 뒤(배포 트리 = 운영 배포본 + 이 커밋의 파일).
+4. **XB-1 수리 배포** — 26-10-01 완료(위 6.1-5). 배포 트리 = `git archive 53c82330` + `.vercel/project.json` 만(git 없는 폴더).
