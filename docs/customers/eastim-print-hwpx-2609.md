@@ -13,7 +13,7 @@
 | 항목 | 값 |
 |---|---|
 | 학원 | 이스팀영어학원 `cmtrdob3m0000jm04nf2ce50c` (TRIAL, 9/8 가입) |
-| 원장 | 이정현 `cmtrdob3s0002jm0498mxtscx`, 카카오 로그인 |
+| 원장 | (실명·사용자 id 비공개 — 공개 저장소), 카카오 로그인 |
 | 기기 | Windows 11 · Chrome 153 / Edge 154 · 화면 1536×864 (analytics_sessions) |
 | 결제 | **9/29 17:11 49,500원** (신고 1시간 40분 전) |
 | 신고 | 인스타 DM 18:51 「문제를 만들고 시험지로 변환해서 인쇄할 때 로딩이 너무 오래 걸려서 1~3쪽 정도밖에 인쇄가 안 된다」 · 「한글로 받으면 (사진) 이렇게 깨진다」 · 19:41 「지금 바로 인쇄해야 한다. 단순히 로딩 문제가 아닌 것 같다」 |
@@ -263,13 +263,13 @@ HEAD를 `next build` → `next start` 로 띄웠다. 목록 카드 「인쇄」�
 ## 4. 증거·도구
 
 - 스크래치(세션): `…/scratchpad/repro/`(HEAD 재현 PDF·접촉 인화), `repro-fix/`(수리본 실측), `hwpx/EVIDENCE-*.png`
-- 재현 스크립트(리포 `.tmp-crm/lee89/`, git 무시)
+- 재현 스크립트(리포 `.tmp-crm/<고객 폴더>/`, git 무시)
   - `print-repro.mjs`: 카드 iframe·상세 툴바 경로. print() 순간 마운트 상태 + 인쇄 DOM → PDF
   - `print-native.mjs`: Chrome printToPDF 직행 / 1.5초 대기 대조
   - `print-timing.mjs`: 프로덕션 빌드 체감 시간
   - `print-scroll-workaround.mjs`: 스크롤 우회 검증
   - `mint-lee.mjs`: 고객 세션 쿠키. 로컬 재현 서버 전용이며, 스크립트가 모든 POST를 막는다.
-- SQL: `.tmp-crm/lee89/s1~s7.sql`, `h1~h3.sql`
+- SQL: `.tmp-crm/<고객 폴더>/s1~s7.sql`, `h1~h3.sql`
 - 수리 뒤 검증 도구(저장소, 26-09-30): `scripts/exam-pagination/print-e2e.mjs`(진입점별 실엔진 인쇄) · `write-guard.mjs`(쓰기 가드 +
   자가 시험) · `export-parity-audit.ts`(웹 ↔ HWPX ↔ DOCX 전 시험지 대조) · `scripts/backfill/orphan-passage-backfill.ts`(dry-run).
   사용법은 EXAM-PRINT-PIPELINE §6 · EXAM-PAPER-MODEL §14. 한컴 · Word 렌더와 게이트 산출물은 세션 스크래치(`gate-print-e2e/` ·
