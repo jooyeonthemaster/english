@@ -23,6 +23,9 @@ import { ForecastPrintClient } from "@/components/exam-forecast/print/forecast-p
 export const metadata: Metadata = { title: "시험지 인쇄", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
+/** 실물 기출(2026 1학기 1차) 쪽수 */
+const EXAM_PAGES = 10;
+
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 function one(v: string | string[] | undefined): string | undefined {
@@ -59,7 +62,8 @@ export default async function ForecastPrintPage({ params, searchParams }: { para
       return <ForecastPrintClient mode="answers" title={a.title} answers={a} footer={footer} autoPrint={autoPrint} />;
     }
     const paper = setToPaper(set, qs, meta);
-    return <ForecastPrintClient mode="paper" title={set.title} paper={paper} footer={footer} autoPrint={autoPrint} />;
+    // 봉투는 실물 기출과 같은 10쪽이 목표 — 넘치면 조판 엔진이 압축·쪼개기 조건을 한 단계씩 푼다
+    return <ForecastPrintClient mode="paper" title={set.title} paper={paper} footer={footer} autoPrint={autoPrint} targetPages={EXAM_PAGES} />;
   }
 
   const qParam = one(sp.q);

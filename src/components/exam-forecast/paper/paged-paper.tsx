@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FORECAST_BLOCK_CSS, FORECAST_PAGED_CSS } from "./paper-css";
-import { paginate, type ColumnPlan, type MeasuredItem, type PagePlan } from "./paginate";
+import { paginateFit, type ColumnPlan, type MeasuredItem, type PagePlan } from "./paginate";
 import { QuestionHead, QuestionTail, hasTail, type PaperHeader, type PaperItem } from "./question-parts";
 
 // 기출 동형 시험지 — 블록 높이를 재서(숨은 측정 단) 단·쪽에 배치한 뒤 A4 쪽으로 그린다.
@@ -22,6 +22,8 @@ export interface PagedPaperProps {
   /** exam = 논술형은 새 쪽·단마다 하나(기출) / inline = 이어서(문제집·선택 인쇄) */
   essayMode?: "exam" | "inline";
   showCheckBox?: boolean;
+  /** 목표 쪽수(실물 시험지 쪽수). 넘치면 압축·쪼개기 조건을 한 단계씩 풀어 다시 배치한다 */
+  targetPages?: number;
   onReady?: (pages: number) => void;
 }
 
@@ -82,7 +84,7 @@ interface Layout {
   wraps: Set<string>;
 }
 
-export function PagedPaper({ header, items, footer, essayMode = "exam", showCheckBox = true, onReady }: PagedPaperProps) {
+export function PagedPaper({ header, items, footer, essayMode = "exam", showCheckBox = true, targetPages, onReady }: PagedPaperProps) {
   const measureRef = useRef<HTMLDivElement>(null);
   const [fontsReady, setFontsReady] = useState(false);
   const [layout, setLayout] = useState<Layout | null>(null);
@@ -139,13 +141,17 @@ export function PagedPaper({ header, items, footer, essayMode = "exam", showChec
       const el = root.querySelector(`[data-mkey="${CSS.escape(it.key)}"]`);
       return { key: it.key, head: h(el?.querySelector('[data-part="head"]') ?? null), tail: h(el?.querySelector('[data-part="tail"]') ?? null), essay: it.essayNo != null };
     });
-    const pages = paginate(measured, {
-      leadHeight: header ? h(root.querySelector('[data-part="lead"]')) : null,
-      essayMode,
-      checkHeight: showCheckBox ? h(root.querySelector('[data-part="check"]')) : 0,
-    });
+    const pages = paginateFit(
+      measured,
+      {
+        leadHeight: header ? h(root.querySelector('[data-part="lead"]')) : null,
+        essayMode,
+        checkHeight: showCheckBox ? h(root.querySelector('[data-part="check"]')) : 0,
+      },
+      targetPages,
+    );
     setLayout({ pages, wraps });
-  }, [fontsReady, items, header, essayMode, showCheckBox]);
+  }, [fontsReady, items, header, essayMode, showCheckBox, targetPages]);
 
   // 배치 뒤 실측 보정: 압축한 단이 상자·여백(줄 간격과 무관한 mm) 때문에 아직 넘치면 줄 간격을 더 줄인다(하한 86%).
   const pagesRef = useRef<HTMLDivElement>(null);

@@ -10,7 +10,7 @@ import { FORECAST_PAPER_FONTS_HREF } from "@/components/exam-forecast/paper/pape
 // 문제지는 A4 쪽 그대로 화면에 보인다(화면 = 인쇄 = PDF). 크롬 인쇄 대화상자에서 여백 「없음」.
 
 type Props =
-  | { mode: "paper"; title: string; paper: { header: PaperHeader | null; items: PaperItem[] }; footer: { left: string; right: string }; autoPrint?: boolean; essayMode?: "exam" | "inline"; showCheckBox?: boolean }
+  | { mode: "paper"; title: string; paper: { header: PaperHeader | null; items: PaperItem[] }; footer: { left: string; right: string }; autoPrint?: boolean; essayMode?: "exam" | "inline"; showCheckBox?: boolean; targetPages?: number }
   | { mode: "answers"; title: string; answers: { title: string; items: AnswerItem[] }; footer: { left: string; right: string }; autoPrint?: boolean };
 
 export function ForecastPrintClient(props: Props) {
@@ -65,7 +65,7 @@ export function ForecastPrintClient(props: Props) {
       </div>
       <div className="fcp-screen-pad">
         {props.mode === "paper" ? (
-          <PagedPaper header={props.paper.header} items={props.paper.items} footer={props.footer} essayMode={props.essayMode ?? "exam"} showCheckBox={props.showCheckBox ?? true} onReady={onReady} />
+          <PagedPaper header={props.paper.header} items={props.paper.items} footer={props.footer} essayMode={props.essayMode ?? "exam"} showCheckBox={props.showCheckBox ?? true} targetPages={props.targetPages} onReady={onReady} />
         ) : (
           <ForecastAnswerSheet title={props.answers.title} items={props.answers.items} />
         )}

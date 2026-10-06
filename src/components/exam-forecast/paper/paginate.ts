@@ -56,6 +56,26 @@ export interface PaginateOptions {
   essayMode: "exam" | "inline";
   /** 확인 사항 상자 높이. 0 이면 넣지 않는다 */
   checkHeight: number;
+  /** 줄 간격 압축 한도(기본 MAX_SQUEEZE) */
+  maxSqueeze?: number;
+  /** 우단 끝 쪼개기 조건(기본 SPLIT_FREE) */
+  splitFree?: number;
+}
+
+/** 목표 쪽수를 넘을 때만 단계적으로 푼다 — 압축 상한 1.16 은 실측 보정 하한 86%(1/0.86≈1.163)를 넘지 않게. 이미 맞는 시험지는 그대로 */
+const FIT_LEVELS: { maxSqueeze: number; splitFree: number }[] = [
+  { maxSqueeze: 1.15, splitFree: 0.25 },
+  { maxSqueeze: 1.16, splitFree: 0.15 },
+];
+
+export function paginateFit(items: MeasuredItem[], opts: PaginateOptions, targetPages?: number): PagePlan[] {
+  const base = paginate(items, opts);
+  if (!targetPages || base.length <= targetPages) return base;
+  for (const lv of FIT_LEVELS) {
+    const p = paginate(items, { ...opts, ...lv });
+    if (p.length <= targetPages) return p;
+  }
+  return base;
 }
 
 export function paginate(items: MeasuredItem[], opts: PaginateOptions): PagePlan[] {
@@ -78,7 +98,9 @@ export function paginate(items: MeasuredItem[], opts: PaginateOptions): PagePlan
   const need = (col: ColumnPlan, h: number) => col.used + (col.blocks.length ? MIN_GAP : 0) + h;
   const room = (col: ColumnPlan, h: number) => need(col, h) <= col.height + 0.5;
   /** 줄 간격을 줄이면 들어가는가 */
-  const squeeze = (col: ColumnPlan, h: number) => need(col, h) <= col.height * MAX_SQUEEZE;
+  const maxSqueeze = opts.maxSqueeze ?? MAX_SQUEEZE;
+  const splitFree = opts.splitFree ?? SPLIT_FREE;
+  const squeeze = (col: ColumnPlan, h: number) => need(col, h) <= col.height * maxSqueeze;
 
   let cur = newCol();
   const flowItems = opts.essayMode === "exam" ? items.filter((i) => !i.essay) : items;
@@ -95,7 +117,7 @@ export function paginate(items: MeasuredItem[], opts: PaginateOptions): PagePlan
     // (회차 감수 major 4건). 그러면 우단이 절반 가까이 비는 경우만 예외로 쪼갠다.
     const rightCol = cols.length % 2 === 0;
     const free = cur.height - cur.used;
-    const splitOk = !rightCol || free > cur.height * SPLIT_FREE;
+    const splitOk = !rightCol || free > cur.height * splitFree;
     if (splitOk && it.tail > 0 && (room(cur, it.head) || squeeze(cur, it.head)) && (cur.blocks.length > 0 || cur.lead)) {
       add(cur, it.key, "head", it.head);
       cur = newCol();
