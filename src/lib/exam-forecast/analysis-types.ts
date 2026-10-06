@@ -58,6 +58,7 @@ export interface ForecastAnalysis {
   predictionModelKo?: string;
   lenses?: LensReport[];
   transforms?: TransformFlow[];
+  fidelity?: FormatFidelity;
   stats?: {
     familyPoints?: { family: string; count: number; points: number }[];
     answerDist?: Record<string, number>;
@@ -106,6 +107,35 @@ export interface PassagePrediction {
   summarySentence?: string;
   keyVocab?: string[];
   essayCandidates?: { qtype: string; design: string }[];
+  /** 결정론 근거(scripts/exam-forecast/forecast_evidence.py) — 같은 종류 지문의 기출 선례 + 유형별 선례·우리 문항 짝 */
+  evidence?: PassageEvidence;
+}
+
+export interface PassageEvidence {
+  /** 이 지문의 원 출처 유형 묶음(예: 「어휘」「주제·제목·요지」「교과서 본문」) */
+  originFamily: string;
+  /** 직전 기출에서 같은 출처·같은 원 유형 묶음 지문이 나온 문항 */
+  sameOrigin: { refCode: string; examNo: string; qtype: string; points: number; source: string }[];
+  /** 직전 기출에서 같은 출처 묶음(교과서·학평·올림포스) 문항 수 */
+  sameSourceCount: number;
+  types: {
+    qtype: string;
+    probability: number;
+    /** same-origin = 같은 종류 지문이 그 유형으로 나온 선례 · same-source = 같은 출처 · same-type = 형식 선례만 */
+    relation: "same-origin" | "same-source" | "same-type" | "none";
+    precedents: string[];
+    ourCodes: string[];
+  }[];
+}
+
+/** 동형 대조(scripts/exam-forecast/forecast_evidence.py format_fidelity) */
+export interface FormatFidelity {
+  note: string;
+  examPages: number;
+  checks: { key: string; label: string }[];
+  summary: { check: string; label: string; match: number; total: number }[];
+  perSet: ({ no: number; items: number; pages: number | null; diffs: { number: string; check: string; detail: string }[] } & Record<string, unknown>)[];
+  perSlot: ({ number: string; refType: string; refPoints: number; sets: number } & Record<string, number | string>)[];
 }
 
 export interface PassageAnalysis {

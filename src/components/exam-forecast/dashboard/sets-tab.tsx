@@ -110,6 +110,7 @@ export function SetsTab({ slug, sets, questions, passages, pdfFiles }: { slug: s
           {[
             { f: "workbook-all", label: "문제집 PDF", name: "한광고_예측문항_문제집.pdf", primary: true },
             { f: "workbook-answers", label: "정답·해설 PDF", name: "한광고_예측문항_문제집_정답해설.pdf" },
+            { f: "workbook-textbook", label: "교과서 편만", name: "한광고_예측문항_교과서편.pdf" },
             { f: "workbook-hakpyeong", label: "학평 편만", name: "한광고_예측문항_학평편.pdf" },
             { f: "workbook-olympus", label: "올림포스 편만", name: "한광고_예측문항_올림포스편.pdf" },
           ]

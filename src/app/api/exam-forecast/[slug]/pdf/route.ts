@@ -17,12 +17,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   const { slug } = await params;
   const file = req.nextUrl.searchParams.get("file") ?? "";
   const saveAs = req.nextUrl.searchParams.get("name") ?? `${file}.pdf`;
+  // inline=1 → 화면 안 미리보기(동형 대조 나란히 보기). 기본은 내려받기.
+  const inline = req.nextUrl.searchParams.get("inline") === "1";
   if (!FILE_RE.test(file)) return NextResponse.json({ error: "잘못된 파일" }, { status: 400 });
   const pack = await getForecastPack(slug);
   if (!pack || !canAccessForecastPack(pack, staff)) return NextResponse.json({ error: "없는 자료" }, { status: 404 });
   try {
     const sb = getServiceSupabase();
-    const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(`${slug}/${file}.pdf`, 60, { download: saveAs });
+    const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(`${slug}/${file}.pdf`, 60, inline ? undefined : { download: saveAs });
     if (error || !data?.signedUrl) return NextResponse.json({ error: "파일을 찾을 수 없습니다." }, { status: 404 });
     return NextResponse.redirect(data.signedUrl, 302);
   } catch {

@@ -12,11 +12,14 @@ work-dir(.tmp-hanguang) 에서 읽는 것(없으면 건너뜀):
   analysis/range-info.json       범위 추정 근거 → pack.rangeInfo
   gen/questions.json             예측 문항(WF3·WF4 검수 통과본)
   gen/sets.json                  봉투 세트 구성
+  range/range-allowlist.json     범위 목록(범위 파일 수업용 자료에서 기계 추출) — 필수.
+                                 목록 밖 지문이 지문·문항·봉투 어디에든 있으면 번들을 만들지 않고 멈춘다.
 """
 import json, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from display_text import display  # noqa: E402
+from forecast_evidence import format_fidelity, passage_evidence  # noqa: E402
 
 def load(path, default=None):
     if not os.path.exists(path):
@@ -30,10 +33,33 @@ def plain(s):
     s = re.sub(r'\[\[SLOT:\d\]\]', '', s)
     return re.sub(r'[ \t]+', ' ', s).strip()
 
+HP_YEAR = {'HP': '2025년 9월', 'HP24': '2024년 9월'}
+
+
 def hp_label(code):
-    q = code.split('-', 1)[1]
-    q = q.replace('q', '')
-    return f"2025년 9월 고2 학평 {q}번"
+    prefix, q = code.split('-', 1)
+    q = q.replace('q', '').replace('-', '~')
+    return f"{HP_YEAR[prefix]} 고2 학평 {q}번"
+
+
+def range_gate(allow, rng, gen_q, gen_sets):
+    """범위 목록 밖 지문이 하나라도 있으면 멈춘다 — 범위에 없는 지문으로 만든 문항은 시험 대비 자료가 아니다."""
+    if not allow:
+        sys.exit('range/range-allowlist.json 이 없다 — make-range-allowlist.py 로 범위 파일에서 먼저 만든다')
+    ok = {p['code'] for p in allow['passages']}
+    bad = sorted({p['code'] for p in rng if p['code'] not in ok}
+                 | {q['passageCode'] for q in gen_q if q['passageCode'] not in ok}
+                 | {it['questionCode'].split('__')[0] for st in gen_sets for it in st['items'] if it['questionCode'].split('__')[0] not in ok})
+    if bad:
+        sys.exit(f'범위 밖 지문 {len(bad)}개 — 번들 중단: {bad}')
+    missing = sorted(ok - {p['code'] for p in rng})
+    if missing:
+        print('주의: 범위 지문 중 정규화 기록이 없는 것', missing)
+
+def tb_label(p):
+    # TB2-3 → 「영어Ⅱ 교과서 NE능률(오선영) 2과 본문 (3/5)」 — 출처 문구는 정규화 기록의 source 를 그대로
+    return (p.get('source') or p['code']).replace('영어Ⅱ 교과서 ', '영어Ⅱ ')
+
 
 def oly_label(code):
     _, qn, pr = code.split('-')
@@ -67,6 +93,7 @@ def main():
     range_info = load(os.path.join(wd, 'analysis/range-info.json'), {})
     gen_q = load(os.path.join(wd, 'gen/questions.json'), [])
     gen_sets = load(os.path.join(wd, 'gen/sets.json'), [])
+    range_gate(load(os.path.join(wd, 'range/range-allowlist.json')), rng, gen_q, gen_sets)
     # 사전 생성 PDF(올린 것만) — pdf/uploaded.json = 업로드된 파일 이름 목록, manifest.json = 쪽수
     uploaded = set(load(os.path.join(wd, 'pdf/uploaded.json'), []))
     pages = {m['file'][:-4]: m.get('pages') for m in load(os.path.join(wd, 'pdf/manifest-all.json'), [])}
@@ -87,10 +114,11 @@ def main():
     for i, p in enumerate(rng):
         code = p['code']
         hp = code.startswith('HP')
+        tb = code.startswith('TB')
         passages.append({
             'code': code,
-            'sourceGroup': '학평' if hp else '올림포스',
-            'sourceLabel': hp_label(code) if hp else oly_label(code),
+            'sourceGroup': '교과서' if tb else '학평' if hp else '올림포스',
+            'sourceLabel': tb_label(p) if tb else hp_label(code) if hp else oly_label(code),
             'sortOrder': i + 1,
             'titleKo': p.get('titleKo') or code,
             'titleEn': p.get('titleEn') or None,
@@ -143,12 +171,21 @@ def main():
         qs.append(dq)
     print('display text', used)
 
+    # 근거 데이터(결정론): 지문별 「왜 이렇게 예측했나」 선례 + 봉투 회차의 기출 형식 일치표
+    sem1 = load(os.path.join(wd, 'analysis/sem1-range-map.json'), {})
+    print('passage evidence', passage_evidence(passages, qs, sem1))
+    set_pages = {int(k[4:6]): v for k, v in pages.items() if re.match(r'set-\d\d-paper$', k) and v}
+    fidelity = format_fidelity(qs, gen_sets, set_pages)
+    if fidelity:
+        analysis = {**analysis, 'fidelity': fidelity}
+        print('fidelity', {r['label']: f"{r['match']}/{r['total']}" for r in fidelity['summary']})
+
     bundle = {
         'pack': {
             'slug': 'hanguang-2026-2mid',
             'schoolName': '한광고등학교',
             'title': '한광고 2학년 2학기 1차 정기시험 적중 예측',
-            'subtitle': '2025년 9월 고2 학평 20지문 + 올림포스 9대 변별유형 Practice 07~08(빈칸 08~10) 19지문',
+            'subtitle': '범위 — 영어Ⅱ 교과서 NE능률(오선영) 1~3과 · 올림포스 9대 변별유형 Practice 07~08(빈칸 08~10) 19 · 2025년 9월 고2 학평 18 · 2024년 9월 고2 학평 7',
             'examMeta': {
                 'gradeLabel': '2학년',
                 'schoolLine': '한광고등학교 2학기 1차 정기시험 대비 동형 모의고사',

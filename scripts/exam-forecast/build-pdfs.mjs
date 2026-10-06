@@ -1,7 +1,7 @@
 // exam-forecast PDF 사전 생성 — 앱의 인쇄 경로를 Playwright 로 열어 그대로 PDF 로 떠낸다(화면 = 인쇄 = PDF).
 //
 //   node scripts/exam-forecast/build-pdfs.mjs <base-url> <slug> <out-dir> <job> [<job> …]
-//     job:  ref | set:3 | set:3:answers | passage:HP-q20 | q:12-40,55[:answers] | all-sets | workbook:all|hakpyeong|olympus[:answers]
+//     job:  ref | set:3 | set:3:answers | passage:HP-q20 | q:12-40,55[:answers] | all-sets | workbook:all|textbook|hakpyeong|olympus[:answers]
 //   예) node scripts/exam-forecast/build-pdfs.mjs http://localhost:3210 hanguang-2026-2mid .tmp-hanguang/pdf ref set:1 set:1:answers
 //
 // 인증: 스태프 세션 쿠키를 주조해 격리된 브라우저 프로필에만 심는다(.tmp-studio-qa/mint-cookie.mjs — 로컬 QA 전용).

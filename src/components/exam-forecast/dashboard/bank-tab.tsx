@@ -138,7 +138,7 @@ export function BankTab({
         <div>
           <div className="mb-1.5 font-bold">출처</div>
           <div className="flex flex-wrap gap-1.5">
-            {["학평", "올림포스"].map((s) => (
+            {["교과서", "학평", "올림포스"].map((s) => (
               <Chip key={s} active={src.has(s)} onClick={() => setSrc(toggleIn(src, s))} color={SOURCE_COLOR[s]}>{s}</Chip>
             ))}
           </div>

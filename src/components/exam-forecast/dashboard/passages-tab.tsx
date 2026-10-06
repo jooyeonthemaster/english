@@ -7,6 +7,7 @@ import type { PassageAnalysis, PassagePrediction } from "@/lib/exam-forecast/ana
 import { FC, FAMILY_COLOR, SOURCE_COLOR, pct, serif } from "./theme";
 import type { ForecastSelection } from "./use-forecast-selection";
 import { QuestionDetails, QuestionPaperView, useQuestionBodies } from "./question-card";
+import { EvidencePanel } from "./evidence-panel";
 
 type Sort = "hit" | "order";
 
@@ -38,7 +39,7 @@ export function PassagesTab({
     <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
       <aside className="lg:sticky lg:top-4 lg:h-[calc(100vh-120px)] lg:overflow-y-auto">
         <div className="flex flex-wrap gap-1.5">
-          {["전체", "학평", "올림포스"].map((s) => (
+          {["전체", "교과서", "학평", "올림포스"].map((s) => (
             <button key={s} type="button" onClick={() => setSrc(s)} className="rounded-full border px-3 py-1 text-[12px] font-semibold" style={src === s ? { background: FC.ink, color: "#fff", borderColor: FC.ink } : { borderColor: FC.rule }}>
               {s}
             </button>
@@ -72,12 +73,12 @@ export function PassagesTab({
           })}
         </ul>
       </aside>
-      {current ? <PassageDetail key={current.code} slug={slug} passage={current} questions={questions.filter((q) => q.passageId === current.id && q.role === "forecast")} selection={selection} /> : null}
+      {current ? <PassageDetail key={current.code} slug={slug} passage={current} questions={questions.filter((q) => q.passageId === current.id && q.role === "forecast")} allQuestions={questions} selection={selection} /> : null}
     </div>
   );
 }
 
-function PassageDetail({ slug, passage, questions, selection }: { slug: string; passage: ForecastPassage; questions: ForecastQuestionSummary[]; selection: ForecastSelection }) {
+function PassageDetail({ slug, passage, questions, allQuestions, selection }: { slug: string; passage: ForecastPassage; questions: ForecastQuestionSummary[]; allQuestions: ForecastQuestionSummary[]; selection: ForecastSelection }) {
   const pred = passage.prediction as PassagePrediction;
   const ana = passage.analysis as PassageAnalysis;
   const types = [...(pred.predictedTypes ?? [])].sort((a, b) => b.probability - a.probability);
@@ -137,6 +138,8 @@ function PassageDetail({ slug, passage, questions, selection }: { slug: string; 
           </div>
         </div>
       </section>
+
+      <EvidencePanel slug={slug} passage={passage} allQuestions={allQuestions} />
 
       <section className="rounded-2xl border p-7" style={{ background: FC.card, borderColor: FC.rule }}>
         <p className="text-[12px] font-bold tracking-[0.16em]" style={{ color: FC.red }}>유형별 출제 확률 — 나온다면 이렇게 나온다</p>

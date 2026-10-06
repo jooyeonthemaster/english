@@ -13,6 +13,7 @@ import { PassagesTab } from "./passages-tab";
 import { BankTab } from "./bank-tab";
 import { SetsTab } from "./sets-tab";
 import { ReferenceTab } from "./reference-tab";
+import { FidelityTab } from "./fidelity-tab";
 
 export interface DashboardData {
   pack: ForecastPackView;
@@ -27,6 +28,7 @@ const TABS = [
   { key: "passages", label: "지문별 예측" },
   { key: "bank", label: "문항 은행" },
   { key: "sets", label: "봉투 모의고사" },
+  { key: "fidelity", label: "동형 대조" },
   { key: "reference", label: "기출 원본" },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
@@ -95,6 +97,7 @@ export function ForecastDashboard(data: DashboardData) {
         ) : null}
         {tab === "bank" ? <BankTab slug={pack.slug} passages={rangePassages} questions={questions} sets={sets} selection={selection} /> : null}
         {tab === "sets" ? <SetsTab slug={pack.slug} sets={sets} questions={questions} passages={passages} pdfFiles={Array.isArray(pack.examMeta.pdfFiles) ? (pack.examMeta.pdfFiles as string[]) : []} /> : null}
+        {tab === "fidelity" ? <FidelityTab slug={pack.slug} fidelity={analysis.fidelity} sets={sets} pdfFiles={Array.isArray(pack.examMeta.pdfFiles) ? (pack.examMeta.pdfFiles as string[]) : []} /> : null}
         {tab === "reference" ? <ReferenceTab slug={pack.slug} analysis={analysis} passages={passages} questions={questions} /> : null}
       </main>
 

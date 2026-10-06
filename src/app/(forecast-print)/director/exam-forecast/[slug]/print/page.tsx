@@ -17,7 +17,7 @@ import { ForecastPrintClient } from "@/components/exam-forecast/print/forecast-p
 //   ?set=3            봉투 모의고사 3회 문제지        (&answers=1 → 정답·해설)
 //   ?q=12-40,55       문항 번호(sortOrder) 목록      (&answers=1)
 //   ?passage=HP-q20   지문 한 개의 예측 문항 전부
-//   ?workbook=all     예측 문항 문제집(all | hakpyeong | olympus)
+//   ?workbook=all     예측 문항 문제집(all | textbook | hakpyeong | olympus)
 //   ?ref=1            실제 기출(재조판) — 형식 대조용
 
 export const metadata: Metadata = { title: "시험지 인쇄", robots: { index: false, follow: false } };
@@ -79,7 +79,7 @@ export default async function ForecastPrintPage({ params, searchParams }: { para
     title = `${p.sourceLabel} — ${p.titleKo}`;
   } else if (workbook) {
     const { getForecastWorkbookQuestions } = await import("@/lib/exam-forecast/queries");
-    const group = workbook === "hakpyeong" ? "학평" : workbook === "olympus" ? "올림포스" : undefined;
+    const group = workbook === "hakpyeong" ? "학평" : workbook === "olympus" ? "올림포스" : workbook === "textbook" ? "교과서" : undefined;
     qs = await getForecastWorkbookQuestions(pack.id, group);
     title = `예측 문항 문제집${group ? ` — ${group} 편` : ""}`;
   } else if (ref) {
