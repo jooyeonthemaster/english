@@ -5,7 +5,8 @@
 //   · 지문은 단 경계에서 쪼개지 않는다. 문항이 통째로 안 들어가면 「발문+지문」은 이 단 바닥에,
 //     「선지」만 다음 단 꼭대기로 넘긴다(기출 7·19·26번).
 //   · 논술형은 문항당 한 단, 다음 빈 단부터. 마지막 쪽 우단 바닥에 「확인 사항」 상자.
-//   · 「발문+지문 / 선지」 쪼개기는 같은 쪽 안(좌단→우단)만 — 다음 쪽으로 넘기면 양면 인쇄에서 뒤집어 대조해야 한다.
+//   · 「발문+지문 / 선지」 쪼개기는 같은 쪽 안(좌단→우단) 또는 펼침면(짝수 쪽 우단 → 홀수 쪽 좌단, 기출 7번 2→3쪽)만.
+//     홀수 쪽 우단에서 넘기면 같은 장의 뒷면이라 종이를 뒤집어 대조해야 한다 — 기출에 한 번도 없다.
 //
 // 좌표(mm): 테두리 y 12.9~287.0. 단 본문은 첫 줄 중심이 윗변 아래 6.9mm → 꼭대기 17.3, 바닥 283.8.
 
@@ -58,14 +59,19 @@ export interface PaginateOptions {
   checkHeight: number;
   /** 줄 간격 압축 한도(기본 MAX_SQUEEZE) */
   maxSqueeze?: number;
-  /** 우단 끝 쪼개기 조건(기본 SPLIT_FREE) */
+  /** 짝수 쪽 우단 → 다음 쪽(펼침면) 쪼개기 조건(기본 SPLIT_FREE) */
   splitFree?: number;
+  /** 홀수 쪽 우단 → 다음 쪽(같은 장 뒷면) 쪼개기 조건. 기본은 쪼개지 않음 */
+  flipSplitFree?: number;
 }
 
-/** 목표 쪽수를 넘을 때만 단계적으로 푼다 — 압축 상한 1.16 은 실측 보정 하한 86%(1/0.86≈1.163)를 넘지 않게. 이미 맞는 시험지는 그대로 */
-const FIT_LEVELS: { maxSqueeze: number; splitFree: number }[] = [
+/** 목표 쪽수를 넘을 때만 단계적으로 푼다 — 압축 상한 1.16 은 실측 보정 하한 86%(1/0.86≈1.163)를 넘지 않게.
+ *  뒷면 쪼개기는 압축으로도 안 될 때의 마지막 수단. 이미 맞는 시험지는 그대로 */
+const FIT_LEVELS: { maxSqueeze: number; splitFree: number; flipSplitFree?: number }[] = [
   { maxSqueeze: 1.15, splitFree: 0.25 },
   { maxSqueeze: 1.16, splitFree: 0.15 },
+  { maxSqueeze: 1.16, splitFree: 0.15, flipSplitFree: SPLIT_FREE },
+  { maxSqueeze: 1.16, splitFree: 0.15, flipSplitFree: 0.15 },
 ];
 
 export function paginateFit(items: MeasuredItem[], opts: PaginateOptions, targetPages?: number): PagePlan[] {
@@ -100,6 +106,7 @@ export function paginate(items: MeasuredItem[], opts: PaginateOptions): PagePlan
   /** 줄 간격을 줄이면 들어가는가 */
   const maxSqueeze = opts.maxSqueeze ?? MAX_SQUEEZE;
   const splitFree = opts.splitFree ?? SPLIT_FREE;
+  const flipSplitFree = opts.flipSplitFree ?? Infinity;
   const squeeze = (col: ColumnPlan, h: number) => need(col, h) <= col.height * maxSqueeze;
 
   let cur = newCol();
@@ -117,7 +124,9 @@ export function paginate(items: MeasuredItem[], opts: PaginateOptions): PagePlan
     // (회차 감수 major 4건). 그러면 우단이 절반 가까이 비는 경우만 예외로 쪼갠다.
     const rightCol = cols.length % 2 === 0;
     const free = cur.height - cur.used;
-    const splitOk = !rightCol || free > cur.height * splitFree;
+    // 지금 쪽 번호 = cols.length / 2 (우단일 때). 짝수 쪽이면 다음 쪽과 펼침면, 홀수 쪽이면 같은 장 뒷면
+    const evenPage = (cols.length / 2) % 2 === 0;
+    const splitOk = !rightCol || free > cur.height * (evenPage ? splitFree : flipSplitFree);
     if (splitOk && it.tail > 0 && (room(cur, it.head) || squeeze(cur, it.head)) && (cur.blocks.length > 0 || cur.lead)) {
       add(cur, it.key, "head", it.head);
       cur = newCol();

@@ -75,6 +75,8 @@ export const FORECAST_BLOCK_CSS = String.raw`
 .fcp-chunks { text-wrap: balance; }
 .fcp-chunk { white-space: nowrap; }
 .fcp-box-ko .fcp-p { font-family: var(--fcp-ko); font-size: var(--fcp-ko-fs); word-spacing: 0.22em; -webkit-text-stroke: 0; }
+/* 한글 해석 상자는 빈칸이 없다 — 기출(9쪽 논술형 1)처럼 양쪽 정렬로 상자 폭을 채운다 */
+.fcp-box.fcp-box-ko .fcp-p { text-align: justify; }
 .fcp-box-gap { margin-top: 5mm; }
 .fcp-arrow { text-align: center; }
 .fcp-summary { margin-top: 1mm; }

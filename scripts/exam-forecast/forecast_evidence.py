@@ -188,6 +188,7 @@ def format_fidelity(questions, sets, pages_by_set=None, exam_pages=10):
         got = [s['pages'] for s in per_set if s['pages']]
         summary.append({'check': 'pages', 'label': f'쪽수(기출 {exam_pages}쪽)', 'match': sum(1 for x in got if x == exam_pages), 'total': len(got)})
     note = ('발문 틀 = 숫자(단어 수 등)·쉼표와 마침표만 다른 것은 같은 틀(스캔본 기출의 「중.」「(A).(B)」 포함). '
-            '삽입 자리 「( ① )」는 글자든 토큰이든 같은 표지로 센다. 기준 = 2026 1학기 1차 실물 시험지 30문항.')
+            '삽입 자리 「( ① )」는 글자든 토큰이든 같은 표지로 센다. 기준 = 2026 1학기 1차 실물 시험지 30문항. '
+            '〔10~11〕 묶음 발문은 기출이 「(a)~(e)」로 찍고 10번에 (f) 까지 둔 오기라, 봉투는 라벨 수(10번 6개·11번 5개)는 그대로 두고 발문만 「(a)~(f)」로 바로잡았다 — 「발문 글자 그대로」에서 이 차이가 잡힌다.')
     return {'note': note, 'examPages': exam_pages, 'checks': [{'key': k, 'label': lab} for k, lab in CHECKS], 'summary': summary, 'perSet': per_set,
             'perSlot': sorted(slot_rows.values(), key=lambda r: (r['number'].startswith('S'), int(r['number'].lstrip('S'))))}

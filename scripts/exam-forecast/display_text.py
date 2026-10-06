@@ -10,12 +10,13 @@
 import hashlib, json, re
 
 ORD = ['첫째', '둘째', '셋째', '넷째', '다섯째', '여섯째', '일곱째', '여덟째', '아홉째', '열째',
-       '열한째', '열두째', '열셋째', '열넷째', '열다섯째']
-CIRC = '❶❷❸❹❺❻❼❽❾❿'
+       '열한째', '열두째', '열셋째', '열넷째', '열다섯째', '열여섯째', '열일곱째', '열여덟째', '열아홉째', '스무째']
+# 검은 원 숫자 1~10(U+2776~277F) 과 11~20(U+24EB~24F4) — 두 블록이 떨어져 있어 범위 하나로 못 쓴다
+CIRC = '❶❷❸❹❺❻❼❽❾❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴'
 # 「문장」(받침 ㅇ) 뒤에 붙는 조사 — 원래 숫자 읽기에 맞춰 붙은 받침 없는 조사를 고친다
 PARTICLE = {'는': '은', '를': '을', '가': '이', '와': '과', '로': '으로', '라는': '이라는', '라고': '이라고', '다': '이다'}
 # \b 는 한글도 단어 문자로 봐서 「D12를」「Q5를」처럼 조사가 붙으면 경계가 안 생긴다 — 영숫자 기준으로 끊는다
-FORBID = re.compile(r'레시피|스펙\s*§|§|브리프|targetAnswer|targetRationale|(?<![A-Za-z0-9])Q\d{1,2}(?![0-9])|(?<![A-Za-z0-9])x[0-2](?![A-Za-z0-9])|[❶-❿]')
+FORBID = re.compile(r'레시피|스펙\s*§|§|브리프|targetAnswer|targetRationale|(?<![A-Za-z0-9])Q\d{1,2}(?![0-9])|(?<![A-Za-z0-9])x[0-2](?![A-Za-z0-9])|[❶-❿⓫-⓴]')
 
 
 # 유형 코드 → 이름(src/lib/exam-forecast/types.ts FORECAST_QTYPES 의 label)
@@ -86,7 +87,9 @@ def _run(text, token_re, num_of):
 def sentence_refs(text, s_numbers=True):
     if not text:
         return text
-    out = _run(text, f'[{CIRC}]', lambda t: CIRC.index(t) + 1)
+    # 「❺❿에서」처럼 구분자 없이 붙은 번호는 「❺·❿」로 — 안 그러면 「다섯째 문장열째 문장」이 된다
+    out = re.sub(f'([{CIRC}])(?=[{CIRC}])', r'\1·', text)
+    out = _run(out, f'[{CIRC}]', lambda t: CIRC.index(t) + 1)
     out = _run(out, r'(?<![가-힣A-Za-z])문\d{1,2}(?![0-9])', lambda t: int(t[1:]))  # 「문4」 표기
     if s_numbers:
         out = _run(out, r'(?<![A-Za-z0-9])S\d{1,2}(?![0-9])', lambda t: int(t[1:]))

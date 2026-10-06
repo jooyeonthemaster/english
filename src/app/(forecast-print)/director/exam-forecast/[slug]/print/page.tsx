@@ -109,7 +109,7 @@ export default async function ForecastPrintPage({ params, searchParams }: { para
       countLine: "본 시험은 선택형 27문항, 논술형 3문항이며 쪽수는 {PAGES}쪽입니다.",
     };
     paper.items = paper.items.map((it, i) => ({ ...it, points: qs[i].points }));
-    return <ForecastPrintClient mode="paper" title={title} paper={paper} footer={{ left: "영어Ⅰ", right: "이 문제지에 대한 저작권은 한광고등학교에 있습니다." }} autoPrint={autoPrint} />;
+    return <ForecastPrintClient mode="paper" title={title} paper={paper} footer={{ left: "영어Ⅰ", right: "이 문제지에 대한 저작권은 한광고등학교에 있습니다." }} autoPrint={autoPrint} targetPages={EXAM_PAGES} />;
   }
   const paper = questionsToPaper(qs, title, meta, { sections: passageCode ? undefined : sectionOf });
   return <ForecastPrintClient mode="paper" title={title} paper={paper} footer={footer} autoPrint={autoPrint} essayMode="inline" showCheckBox={false} />;
