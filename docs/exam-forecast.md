@@ -26,9 +26,11 @@
 
 ### 열람 권한
 
-`/director/*` 이므로 원장 세션이 필요하고, 팩의 `examMeta.access.academyIds` 가 있으면 **그 학원만** 열 수 있다(없으면 원장 전원).
-판정은 `canAccessForecastPack`(`src/lib/exam-forecast/queries.ts`) 한 곳 — 화면·인쇄·API 가 같이 쓴다.
-넓히려면 DB 의 그 배열만 고친다(코드 변경·배포 불필요).
+기본은 원장 세션이 필요하고, 팩의 `examMeta.access.academyIds` 가 있으면 **그 학원만** 열 수 있다(없으면 원장 전원).
+`examMeta.access.public: true` 면 **공개 팩** — 링크만 있으면 로그인 없이 누구나 연다(학원 제한보다 우선, 검색 노출은 noindex 로 막음).
+비원장(비로그인·강사)이 `/director/exam-forecast/<slug>` 를 열면 proxy 가 셸 없는 `/forecast/<slug>` 로 보내고, 인쇄 화면은 그대로 통과시킨다 — 비공개 팩이면 두 페이지가 로그인·`/teacher` 로 되돌린다.
+판정은 `isForecastPackPublic`·`canAccessForecastPack`(`src/lib/exam-forecast/queries.ts`) — 화면·인쇄·API 가 같이 쓴다.
+넓히거나 공개·잠금을 바꾸려면 DB 의 `examMeta.access` 만 고친다(코드 변경·배포 불필요). 재적재 때는 `FORECAST_ACCESS_ACADEMY_IDS`·`FORECAST_PUBLIC=1` 환경변수로 `build-bundle.py` 가 같은 값을 다시 쓴다.
 
 ## 2. 화면
 

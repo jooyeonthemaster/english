@@ -9,11 +9,13 @@ import {
   getForecastQuestionsByIds,
   getForecastQuestionsByOrders,
   getForecastSets,
+  isForecastPackPublic,
 } from "@/lib/exam-forecast/queries";
 import { questionsToAnswers, questionsToPaper, resolveMeta, setToAnswers, setToPaper } from "@/lib/exam-forecast/paper-items";
 import { ForecastPrintClient } from "@/components/exam-forecast/print/forecast-print-client";
 
-// 인쇄 전용 화면(앱 셸 없음). 경로 그룹 (forecast-print) — /director/* 이므로 proxy 가 DIRECTOR 를 강제한다.
+// 인쇄 전용 화면(앱 셸 없음). 경로 그룹 (forecast-print) — /director/* 지만 proxy 가 이 경로만은 통과시키고
+// 권한은 아래에서 판정한다(공개 팩은 비로그인도 연다).
 //   ?set=3            봉투 모의고사 3회 문제지        (&answers=1 → 정답·해설)
 //   ?q=12-40,55       문항 번호(sortOrder) 목록      (&answers=1)
 //   ?passage=HP-q20   지문 한 개의 예측 문항 전부
@@ -35,12 +37,14 @@ function one(v: string | string[] | undefined): string | undefined {
 export default async function ForecastPrintPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: SP }) {
   const { slug } = await params;
   const sp = await searchParams;
-  const staff = await getStaffSession();
-  if (!staff) redirect(`/login?callbackUrl=/director/exam-forecast/${slug}`);
-  if (staff.role !== "DIRECTOR") redirect("/teacher");
-
   const pack = await getForecastPack(slug);
-  if (!pack || !canAccessForecastPack(pack, staff)) notFound();
+  // 공개 팩은 누구나. 비공개면 예전처럼 원장 세션 + 학원 제한(proxy 가 비원장도 통과시키므로 여기서 막는다)
+  if (!pack || !isForecastPackPublic(pack)) {
+    const staff = await getStaffSession();
+    if (!staff) redirect(`/login?callbackUrl=/director/exam-forecast/${slug}`);
+    if (staff.role !== "DIRECTOR") redirect("/teacher");
+    if (!pack || !canAccessForecastPack(pack, staff)) notFound();
+  }
   const meta = resolveMeta(pack.examMeta);
   const passages = await getForecastPassages(pack.id);
   const plabel = new Map(passages.map((p) => [p.code, p.sourceLabel]));

@@ -30,6 +30,15 @@ export const proxy = auth(async (req) => {
     }
   }
 
+  // 적중 예측 팩 — 공개 팩은 로그인 없이 연다. 공개 여부는 DB 값이라 여기선 못 보고 페이지가 판정한다
+  // (비공개면 페이지가 로그인·/teacher 로 되돌린다). 대시보드는 원장 앱 셸 안이라 셸 없는 /forecast 로 보내고,
+  // 인쇄 화면은 원래 셸이 없으니 그대로 통과시킨다.
+  const forecast = pathname.match(/^\/director\/exam-forecast\/([^/]+)(\/print)?$/);
+  if (forecast && !(isStaffLoggedIn && staffRole === "DIRECTOR")) {
+    if (forecast[2]) return NextResponse.next();
+    return NextResponse.redirect(new URL(`/forecast/${forecast[1]}${req.nextUrl.search}`, req.nextUrl.origin));
+  }
+
   if (pathname.startsWith("/director")) {
     if (!isStaffLoggedIn) {
       const loginUrl = new URL("/login", req.nextUrl.origin);

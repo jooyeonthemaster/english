@@ -51,11 +51,18 @@ function asArr<T>(v: unknown): T[] {
   return Array.isArray(v) ? (v as T[]) : [];
 }
 
+/** 공개 팩 — examMeta.access.public === true 면 로그인 없이 누구나 연다(링크 공유용). */
+export function isForecastPackPublic(pack: Pick<ForecastPackView, "examMeta">): boolean {
+  return asObj(pack.examMeta.access).public === true;
+}
+
 /**
- * 열람 권한 — examMeta.access.academyIds 가 있으면 그 학원 스태프만. 없으면 원장 전원.
+ * 열람 권한 — 공개 팩은 누구나(비로그인 포함). 아니면 examMeta.access.academyIds 가 있으면 그 학원 스태프만, 없으면 원장 전원.
  * (학교 시험지 원본·교재 지문이 들어 있어 기본은 잠가 둔다. 넓히려면 DB 의 examMeta.access 만 고친다.)
  */
-export function canAccessForecastPack(pack: Pick<ForecastPackView, "examMeta">, staff: { academyId: string }): boolean {
+export function canAccessForecastPack(pack: Pick<ForecastPackView, "examMeta">, staff: { academyId: string } | null): boolean {
+  if (isForecastPackPublic(pack)) return true;
+  if (!staff) return false;
   const access = asObj(pack.examMeta.access);
   const ids = asArr<string>(access.academyIds);
   return ids.length === 0 || ids.includes(staff.academyId);

@@ -108,6 +108,7 @@ def main():
             pp['answers'] = f'set-{n}-answers'
         st['pdfPaths'] = pp
     access_ids = [a for a in os.environ.get('FORECAST_ACCESS_ACADEMY_IDS', '').split(',') if a]
+    access_public = os.environ.get('FORECAST_PUBLIC', '') == '1'
     research_src = {f['examQ'].replace('논술형', 'S').replace(' ', '').lstrip('Q'): f for f in (load(os.path.join(wd, 'analysis/research.json'), {}) or {}).get('findings', [])}
 
     passages = []
@@ -192,8 +193,9 @@ def main():
                 'subjectLine': '영어Ⅱ (과목코드: 12)',
                 'subjectShort': '영어Ⅱ',
                 'footerRight': '이 문제지에 대한 저작권은 스모트(SMOAT)에 있습니다.',
-                # 열람 허용 학원(비우면 원장 전원) — 학교 시험지 원본·교재 지문이 들어 있어 기본은 자기 학원만
-                'access': {'academyIds': access_ids},
+                # 열람 허용 학원(비우면 원장 전원) — 학교 시험지 원본·교재 지문이 들어 있어 기본은 자기 학원만.
+                # FORECAST_PUBLIC=1 이면 링크만 있으면 로그인 없이 누구나(학원 제한보다 우선)
+                'access': {'academyIds': access_ids, **({'public': True} if access_public else {})},
                 'pdfFiles': sorted(uploaded),
             },
             'analysis': analysis,
