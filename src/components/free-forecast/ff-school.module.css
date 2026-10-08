@@ -1,0 +1,133 @@
+/* 무료 적중 예측 랜딩 — 학교 섹션(「전국 공통 문제 말고, ○○고 기출 그대로」) 전용. 공용 토큰은 free-forecast.module.css 의 .root */
+/* 클래스를 두 번 쓴 규칙(.x.x): 같은 요소의 공용 규칙과 같은 속성을 정한다 — 파일 순서와 상관없이 이기게 */
+
+/* 출제 버릇 카드 — 1열 → 2열 → 3열 (Tailwind 임의 격자는 767px 이하에서 전역 규칙에 1열로 강제되므로 여기서 정한다) */
+.quirks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+}
+@media (min-width: 560px) {
+  /* 카드마다 「태그 · 제목 · 본문」 세 줄을 부모 격자와 나눠 쓴다(subgrid) — 같은 줄 카드의 제목 줄 높이가 가장 긴 제목에 맞춰져
+     본문 시작선이 맞는다(제목이 한 줄/두 줄로 갈리면 본문이 25~30px 어긋났다 — 3차 게이트 「카드 줄 머리선」).
+     줄 트랙은 모두 auto — 본문 칸을 1fr 로 두면 높이가 정해지지 않은 격자라 1fr 트랙이 모두 가장 큰 것에 맞춰져,
+     카드 줄이 아니라 페이지 전체에서 가장 긴 본문에 모든 카드가 늘었다(768 본문 아래 빈 면 23~27px — 3차 R3-10) */
+  .quirks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+  .quirkCard {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    align-content: start;
+  }
+}
+@media (min-width: 1024px) {
+  .quirks {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.tag.tag {
+  display: inline-block;
+  line-height: 1;
+  padding: 0.18em 0.4em 0.12em;
+  border-radius: 0.2em;
+  font-size: clamp(20px, 1.5vw, 34px);
+}
+
+/* 해부 타일 */
+.tile {
+  display: flex;
+  flex-direction: column;
+}
+.tileType {
+  min-height: 2.75em;
+}
+
+/* 선생님 습관 줄 — 모바일 1열(↓), 640px 이상 「원래 → 실제」 */
+.habitHead,
+.habitRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px var(--gap);
+  align-items: center;
+}
+.habitHead {
+  display: none;
+}
+@media (min-width: 640px) {
+  .habitHead,
+  .habitRow {
+    grid-template-columns: minmax(0, 0.85fr) clamp(32px, 2.6vw, 56px) minmax(0, 1.3fr);
+  }
+  .habitHead {
+    display: grid;
+  }
+  .habitRow > :nth-child(2) {
+    justify-self: center;
+  }
+  .habitFrom {
+    justify-self: end;
+    text-align: right;
+  }
+  .arrowDown {
+    display: none;
+  }
+}
+.arrowRight {
+  display: none;
+}
+@media (min-width: 640px) {
+  .arrowRight {
+    display: inline-flex;
+  }
+}
+/* 「실제 기출」 칸 — 모바일은 ↓ 와 글을 나눠, 글이 두 줄로 접혀도 둘째 줄이 화살표 밑으로 들어가지 않게(글 기둥이 화살표 오른쪽에 선다).
+   640px 이상은 ↓ 가 숨고 → 가 따로 있으니 보통 블록 */
+.habitTo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3em;
+}
+@media (min-width: 640px) {
+  .habitTo {
+    display: block;
+  }
+}
+
+/* 대조 결과 숫자 — 칸이 좁으면 칸 폭에 맞춰 줄어 한 줄을 지킨다 */
+.proofCell {
+  container-type: inline-size;
+}
+.proofNum.proofNum {
+  white-space: nowrap;
+  font-size: min(clamp(30px, 3.4vw, 80px), 30cqi);
+  line-height: 1;
+}
+.proofLabel {
+  font-size: var(--t-small);
+  line-height: 1.35;
+}
+@media (min-width: 768px) {
+  .proofLabel {
+    font-size: var(--t-body);
+  }
+}
+
+/* 발문 대조 — 기출과 같은 글자는 형광, 다른 글자는 빨강. 줄 길이를 고르게(「…고르시오.」만 떨어지지 않게).
+   숫자 폭 고정: 「17」「16」 폭 차(4.8px)에 balance 가 반응해 두 문단의 줄바꿈이 갈렸다(2차 검수 360 등 18개 폭) */
+.stem.stem {
+  text-wrap: balance;
+  font-variant-numeric: tabular-nums;
+}
+.same {
+  background: linear-gradient(transparent 55%, rgba(255, 229, 0, 0.55) 55%);
+}
+.diff {
+  background: var(--ff-red-ink);
+  color: #fff;
+  border-radius: 0.15em;
+  padding-inline: 0.12em;
+}

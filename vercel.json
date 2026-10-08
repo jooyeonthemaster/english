@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/analytics-retention",
       "schedule": "30 18 * * *"
+    },
+    {
+      "path": "/api/cron/free-forecast-purge",
+      "schedule": "15 19 * * *"
     }
   ]
 }

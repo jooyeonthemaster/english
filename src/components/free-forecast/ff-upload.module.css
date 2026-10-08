@@ -1,0 +1,419 @@
+/* 무료 적중 예측 랜딩 — 업로드 칸·하단 막대·알림·끌어다 놓기 덮개·기출 DB 창 전용. 공용 토큰은 free-forecast.module.css 의 .root */
+/* 클래스를 두 번 쓴 규칙(.x.x): 같은 요소의 공용 규칙과 같은 속성을 정한다 — 파일 순서와 상관없이 이기게 */
+
+/* 업로드 칸 */
+.slotCard {
+  container-type: inline-size;
+}
+/* 흰 카드 안 컨트롤(놓는 칸·📸·✕)의 노랑 포커스 고리는 흰색 대비 1.27:1 — 검정으로(19:1). 공용 .root :focus-visible 보다 특이도 높게 */
+.slotCard.slotCard :focus-visible {
+  outline-color: var(--ff-ink);
+}
+.drop {
+  border: var(--bw) dashed var(--ff-ink);
+  border-radius: calc(var(--radius) - 6px);
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+.dropActive {
+  background: var(--ff-yellow) !important;
+  transform: scale(1.015);
+}
+.dropTitle.dropTitle {
+  font-size: 10.5cqi;
+  line-height: 1;
+}
+.slotFoot {
+  height: clamp(84px, 6.6vw, 120px);
+}
+/* 큰 카드 제목 — 한 줄을 카드 폭(cqi)에 맞춘다(13.2 는 Black Han Sans 로 잰 값).
+   .root h3 의 text-wrap:balance(0,1,1)는 단축 속성이라 text-wrap-mode:wrap 까지 정해 같은 요소의 Tailwind whitespace-nowrap 을 이겼다 —
+   대체 글꼴일 때 ②③ 제목이 두 줄이 되어 놓는 칸이 28~75px 어긋났다(3차 R3-20). 그래서 여기서 두 번 써 (0,2,0) 으로 */
+.slotTitle.slotTitle {
+  white-space: nowrap;
+  font-size: 13.2cqi;
+  line-height: 1.1;
+}
+/* 글꼴 대기 — 거대 제목(.fitLine)과 같은 신호(page.tsx 가 감싸개에 다는 data-ff-font). 오기 전에는 자리만 두고 숨기고, 끝내 안 오면 82% 로 */
+:global([data-ff-font="pending"]) .slotTitle {
+  visibility: hidden;
+}
+:global([data-ff-font="fallback"]) .slotTitle.slotTitle,
+:global([data-ff-font="ready"]:not([data-ff-font-all])) .slotTitle.slotTitle {
+  font-size: calc(13.2cqi * 0.82);
+}
+/* 「기출 DB에서 고르기」(고정 높이 아래 칸) — 대체 글꼴이면 768 에서 두 줄로 칸을 넘었다(3차 업로드 수정자 관찰). 제목과 같은 82%.
+   글자 크기는 상태별 규칙이 같은 요소를 덮어야 하므로 Tailwind 가 아니라 여기서만 정한다(함정 1) */
+.dbLabel {
+  font-size: clamp(17px, 1.25vw, 30px);
+}
+:global([data-ff-font="fallback"]) .dbLabel,
+:global([data-ff-font="ready"]:not([data-ff-font-all])) .dbLabel {
+  font-size: calc(clamp(17px, 1.25vw, 30px) * 0.82);
+}
+
+/* md 미만 타일 — 완료와 실패가 섞이면 빨강 테두리(노랑 위 4.35:1). 타일은 공용 .card(테두리 단축 속성)라 Tailwind 테두리 색은 진다 */
+.cardWarn.cardWarn {
+  border-color: var(--ff-red-ink);
+}
+/* 노랑 타일 위 「⚠」 글자 — --ff-red-ink 는 노랑 위 4.35:1 이라 13px 글자 기준(4.5:1)에 모자란다. 한 단계 어둡게(5.3:1) */
+.warnInk {
+  color: #b80c0c;
+}
+
+/* md 미만 「무엇을 올리는지」 목록의 번호 — 타일 번호 배지와 같은 빨강 네모, 크기는 안내 글자 한 줄(--t-small × 1.55)에 맞춘다 */
+.hintNo {
+  font-size: calc(var(--t-small) * 1.15);
+  width: 1.35em;
+  height: 1.35em;
+  border-radius: 0.28em;
+}
+
+/* 올린 파일 한 줄 — [완료·실패·%] 이름 … 크기 ✕.
+   카드 폭이 좁으면(.slotCard 컨테이너 360px 이하 — 화면 768~약 1357px) 이름에 첫 줄 전체를 주고 배지·크기·✕ 는 둘째 줄로.
+   (한 줄일 때 768 에서 이름이 51px, 거부 줄은 0px 이었다 — 2차 검수)
+   실패 사유는 어느 폭이든 아래 줄 전체 — 서버 사유는 30자까지 길어 한 줄에 두면 이름이 사라지거나 ✕ 가 잘린다.
+   「내 자료」(md 미만 목록)도 .slotCard 컨테이너다(화면 약 424px 이하에서 이름이 첫 줄 전체 — 3차 R3-18).
+   그래도 넘치는 이름은 가운데를 줄인다(ff-slot-card.tsx 의 FileName — 뒤 10자는 늘 보인다) */
+.fileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 2px;
+}
+.fileMeta {
+  flex-shrink: 0;
+}
+.fileErr.fileErr {
+  order: 1;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+@container (max-width: 360px) {
+  .fileName.fileName {
+    order: -1;
+    flex-basis: 100%;
+  }
+}
+/* 빼기 ✕ 키보드 포커스 — 줄(li)이 진행 막대 때문에 overflow:hidden 이라 바깥 고리가 위아래 8px·오른쪽 4px 잘려 반달만 보였고,
+   「내 자료」(흰 바탕, .slotCard 밖)에서는 노랑 고리라 1.27:1 이었다. 잘리지 않는 안쪽 검정 원(지름 34px)으로 */
+.rmBtn.rmBtn.rmBtn:focus-visible {
+  outline: none;
+  background: radial-gradient(circle, var(--ff-ink) 0 17px, transparent 17.5px);
+  color: #fff;
+}
+@media (forced-colors: active) {
+  .rmBtn.rmBtn.rmBtn:focus-visible {
+    outline: 3px solid CanvasText;
+    outline-offset: -6px;
+  }
+}
+.chipGroup {
+  display: inline-flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* 손가락(터치) / 마우스 문구 갈라 보이기 */
+.coarseOnly {
+  display: none;
+}
+@media (hover: none) and (pointer: coarse) {
+  .fineOnly {
+    display: none;
+  }
+  .coarseOnly {
+    display: inline;
+  }
+}
+
+/* 하단 고정 업로드 막대 */
+.dock {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 60;
+  background: var(--ff-ink);
+  border-top: var(--bw) solid var(--ff-yellow);
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 calc(-1 * var(--bw)) 0 0 #000;
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.2s ease;
+}
+.dockHidden {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+.dockGrid {
+  /* 주의: 전역 smoat-large-ui 가 767px 이하에서 class 에 「grid-cols-[」가 든 요소를 한 칸으로 강제한다(!important).
+     그래서 막대 격자는 Tailwind 임의값 대신 여기서 정한다. */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(6px, 0.7vw, 14px);
+  padding-block: clamp(8px, 0.8vw, 14px);
+}
+@media (min-width: 768px) {
+  .dockGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  }
+}
+@media (min-width: 1024px) {
+  /* 이메일 칸 0.85fr(최소 170px) — 1.15fr·최소 220px 이면 1024~1099 에서 칸 제목(15px)이 2~7px 모자라 「그 시험의 범위 지…」로 잘렸다.
+     1024 에서 제목 여유 약 8px, 이메일 칸 약 176px(자리표시 「자료 받을 이메일」 146px) */
+  .dockGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(170px, 0.85fr) auto;
+  }
+}
+
+/* 막대 칸 — 짜임(세로·가로)·여백·번호 배지 크기·이름 두 벌·상태 두 벌·원형 아이콘의 보임은 여기서만 정한다.
+   같은 요소에 Tailwind 의 max-md:flex-col·md:hidden 을 섞지 않는다(모듈 규칙이 이겨 어느 쪽이 걸렸는지 안 보인다).
+   md 미만: 번호 위 · 두 줄 이름 · 짧은 상태(세로) / md 이상: 번호 | 한 줄 이름 · 전체 상태 | 원형 아이콘(가로).
+   칸 버튼이 컨테이너다 — 좁은 칸(md~lg)은 전체 상태 대신 짧은 상태(전체 문구가 말줄임되면 「⚠ 실패」가 잘린다) */
+.dockSlot {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: clamp(6px, 0.6vw, 10px) clamp(6px, 0.8vw, 16px);
+}
+.dockNo {
+  width: clamp(26px, 2.6vw, 52px);
+  font-size: clamp(17px, 1.7vw, 34px);
+}
+.dockLines {
+  display: block;
+}
+.dockTitle,
+.dockFull,
+.dockIcon {
+  display: none;
+}
+@media (min-width: 768px) {
+  .dockSlot {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(6px, 0.7vw, 14px);
+  }
+  .dockLines,
+  .dockShort {
+    display: none;
+  }
+  .dockTitle {
+    display: block;
+  }
+  .dockFull {
+    display: inline;
+  }
+  .dockIcon {
+    display: grid;
+  }
+}
+/* 좁은 칸 → 짧은 상태. 문구 길이 등급(data-len, ff-dock.tsx)마다 경계가 다르다 — 칸 안쪽 폭 실측(r3/upload2/status-edge*.mjs, 768~1904):
+   한 마디(10자 이하: 「올리는 중 100%」「✓ DB 240지문」「⚠ 30개 실패」)는 md 이상 어디서나 들어가 바꾸지 않는다(최소 안쪽 175.7px).
+   m(11~17자: 「⚠ 1개 실패 · ✓ 파일 1개」「✓ 파일 1개 + DB 5지문」) 넘침 최대 189.4px → 200px 이하에서 짧게.
+   l(18~20자: 「⚠ 12개 실패 · ✓ 파일 12개」「⚠ 9개 실패 · ✓ DB 240지문」) 넘침 최대 224.4px → 226px 이하.
+   x(21자 이상 — 실패·파일·DB 세 마디) 넘침 최대 354.5px(1904 폭) → 360px 이하 */
+@container (max-width: 200px) {
+  .dockStatus[data-len] .dockFull {
+    display: none;
+  }
+  .dockStatus[data-len] .dockShort {
+    display: inline;
+  }
+}
+@container (max-width: 226px) {
+  .dockStatus:is([data-len="l"], [data-len="x"]) .dockFull {
+    display: none;
+  }
+  .dockStatus:is([data-len="l"], [data-len="x"]) .dockShort {
+    display: inline;
+  }
+}
+@container (max-width: 360px) {
+  .dockStatus[data-len="x"] .dockFull {
+    display: none;
+  }
+  .dockStatus[data-len="x"] .dockShort {
+    display: inline;
+  }
+}
+
+/* 낮은 화면(높이 520px 이하 — 가로로 든 폰·노트북 브라우저 확대 200%) — 한 줄 압축형.
+   막대가 119px(md 미만)·72px(md) 이면 화면 높이의 26~33% 를 먹어 히어로 첫 화면이 막대에 걸렸다(2차 검수).
+   높이 예산은 932×430 이 정한다: 히어로 「24시간 안에」 줄 아래끝이 384px 라 막대가 45px 이하여야 걸치지 않는다 → 약 41px.
+   칸 = 번호 배지 + 짧은 상태 한 줄(칸이 넓으면 이름도 한 줄 말줄임), 받기 버튼도 한 줄 */
+@media (max-height: 520px) {
+  .dockGrid.dockGrid {
+    padding-block: 4px;
+  }
+  .dockSlot.dockSlot {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px;
+  }
+  .dockNo.dockNo {
+    width: 22px;
+    font-size: 15px;
+  }
+  .dockText.dockText {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dockStatus.dockStatus {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .dockLines.dockLines,
+  .dockTitle.dockTitle,
+  .dockFull.dockFull,
+  .dockIcon.dockIcon,
+  .ctaBr {
+    display: none;
+  }
+  .dockShort.dockShort {
+    display: inline;
+  }
+  /* 이름은 칸 안쪽이 180px 이상일 때만(md 이상 — 844·932 가로 폰). md 미만 칸(안쪽 약 127~150px)은 번호 + 상태만 */
+  @container (min-width: 180px) {
+    .dockTitle.dockTitle.dockTitle {
+      display: block;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}
+
+/* 알림(토스트) */
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  box-shadow: 0 0 0 3px var(--ff-ink);
+  transition: bottom 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* 폭은 글 폭(최대 92vw·640px). 폭을 안 주면 left:50% 때문에 줄어들기 상한이 50vw 라 폰에서 한 문장이 4~5줄로 접혔고,
+   전역 :where(:not(table)[class*="w-["])(0,1,1) 가 Tailwind 「shadow-[」 안의 「w-[」에 걸려 max-width 를 100% 로 덮었다(3차 R3-01).
+   그래서 그림자는 위 모듈로 옮기고, 폭은 두 클래스(0,2,0)로 정한다 */
+.toast.toast {
+  width: max-content;
+  max-width: min(92vw, 640px);
+}
+
+/* 화면 아무 데나 끌어다 놓을 때 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(11, 11, 12, 0.92);
+  backdrop-filter: blur(4px);
+}
+
+/* 기출 DB 창(<dialog>) */
+.picker {
+  border: 0;
+  padding: 0;
+  margin: auto auto 0;
+  width: 100%;
+  max-width: 980px;
+  max-height: 92dvh;
+  background: transparent;
+  overflow: visible;
+}
+@media (min-width: 640px) {
+  .picker {
+    margin: auto;
+    width: calc(100% - 48px);
+  }
+}
+.picker::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+/* 창 짜임 치수 — 낮은 화면(높이 500px 이하)에서 줄이는 값은 여기서만 정한다(같은 요소에 Tailwind 치수를 섞지 않는다).
+   844×390 에서 목록 칸이 116px(화면의 30%)뿐이었다. 머리 여백·부제만 줄이면 목록이 36~42%(740×360·667×375·844×390·640×400)라
+   제목 줄(글자 26px·닫기 36px)·학년 칩(36px)·담기 줄(40px)과 창 높이(92→96dvh)까지 조여 45% 이상으로(r3/upload2/v-rest.mjs) */
+.pkBox {
+  max-height: 92dvh;
+}
+.pkHead {
+  padding-block: 16px;
+}
+.pkTitle {
+  font-size: clamp(24px, 7.4vw, 40px);
+}
+.pkClose {
+  width: 44px;
+  height: 44px;
+}
+.pkChips {
+  margin-top: 12px;
+}
+.pkChip {
+  min-height: 40px;
+  padding-inline: 18px;
+}
+/* 담기 줄은 창 바닥 — 폰에서는 창이 화면 아래끝에 붙어(바닥 시트) 홈 표시줄(안전 영역)에 버튼이 걸리지 않게 */
+.pkFoot {
+  padding-top: 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.pkApply {
+  min-height: 48px;
+}
+/* 좁은 폰(380px 미만) — 「고1 고2 고3 연도」를 한 줄로(칩 좌우 여백 18→12px, 연도 칸 문구는 ff-gichul-picker.tsx 가 「연도」로 줄인다),
+   부제는 「「…」 칸에 담습니다」 한 줄만. 320×640 에서 칩 두 줄·부제 두 줄이라 목록 칸이 화면의 43% 였다(3차 R3-23) */
+@media (max-width: 379px) {
+  .pkChip.pkChip {
+    padding-inline: 12px;
+  }
+  .pkSubMore {
+    display: none;
+  }
+}
+@media (max-height: 500px) {
+  .picker.picker,
+  .pkBox.pkBox {
+    max-height: 96dvh;
+  }
+  .pkHead.pkHead {
+    padding-block: 8px;
+  }
+  .pkSub.pkSub {
+    display: none;
+  }
+  .pkTitle.pkTitle {
+    font-size: 26px;
+  }
+  .pkClose.pkClose {
+    width: 36px;
+    height: 36px;
+  }
+  .pkChips.pkChips {
+    margin-top: 8px;
+  }
+  .pkChip.pkChip {
+    min-height: 36px;
+  }
+  .pkFoot.pkFoot {
+    padding-top: 8px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .pkApply.pkApply {
+    min-height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock,
+  .toast {
+    transition: none;
+  }
+}
